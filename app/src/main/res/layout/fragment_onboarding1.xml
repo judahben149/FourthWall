@@ -36,39 +36,38 @@
         android:id="@+id/tv_sub_headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="72dp"
         android:fontFamily="@font/cera_pro_light"
-        android:text="Send Money. Fast."
-        android:layout_marginBottom="124dp"
+        android:text="Send money across borders. Fast."
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/btn_next"
-        app:layout_constraintStart_toStartOf="@id/tv_headline"
-        app:layout_constraintTop_toBottomOf="@+id/tv_headline" />
+        app:layout_constraintStart_toStartOf="@id/tv_headline" />
 
     <ImageView
         android:id="@+id/ic_prop_1"
-        android:layout_width="250dp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_headline"
+        android:layout_width="124dp"
+        android:layout_height="124dp"
+        android:layout_marginStart="200dp"
         android:layout_marginBottom="64dp"
-        android:layout_height="250dp"
-        android:layout_marginStart="128dp"
+        android:contentDescription="Curves"
         android:src="@drawable/curves"
-        app:layout_constraintStart_toStartOf="@id/tv_headline"
-        app:layout_constraintTop_toTopOf="@id/tv_headline" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_headline"
+        app:layout_constraintStart_toStartOf="@id/tv_headline" />
 
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_next"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginHorizontal="48dp"
         android:layout_marginBottom="24dp"
         android:backgroundTint="@color/base_purple"
-        android:text="Next"
         android:fontFamily="@font/cera_pro_medium"
+        android:text="Next"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
