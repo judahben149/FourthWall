@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".presentation.OnboardingFragment">
+
+
+    <ImageView
+        android:id="@+id/ic_big_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_marginTop="124dp"
+        android:contentDescription="@string/_3d_image_of_money"
+        android:maxHeight="250dp"
+        android:src="@drawable/img_money"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:fontFamily="@font/cera_pro_medium"
+        android:text="Swift Payments"
+        android:textColor="@color/white"
+        android:textSize="38sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_sub_headline"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_sub_headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/cera_pro_light"
+        android:text="Send Money. Fast."
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/btn_next"
+        app:layout_constraintStart_toStartOf="@id/tv_headline"
+        app:layout_constraintTop_toBottomOf="@+id/tv_headline" />
+
+    <ImageView
+        android:id="@+id/ic_prop_1"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="128dp"
+        android:src="@drawable/curves"
+        app:layout_constraintStart_toStartOf="@id/tv_headline"
+        app:layout_constraintTop_toTopOf="@id/tv_headline" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginHorizontal="48dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/base_purple"
+        android:text="Next"
+        android:fontFamily="@font/cera_pro_medium"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
