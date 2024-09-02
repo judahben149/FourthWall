@@ -64,6 +64,9 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
+    // Gson
+    implementation(libs.gson)
+
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
 
