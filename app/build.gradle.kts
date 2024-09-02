@@ -67,6 +67,12 @@ dependencies {
     // Gson
     implementation(libs.gson)
 
+    // Retrofit & OkHttp
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
 
