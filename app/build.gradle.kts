@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment)
 
+    // Hilt
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
     implementation(libs.glide)
