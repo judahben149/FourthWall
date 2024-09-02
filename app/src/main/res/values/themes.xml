@@ -11,4 +11,21 @@
     </style>
 
     <style name="Theme.FourthWall" parent="Base.Theme.FourthWall" />
+
+    <style name="CustomBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconTint">@drawable/bottom_nav_item_color</item>
+        <item name="itemTextColor">@drawable/bottom_nav_item_text_color</item>
+        <item name="itemIconSize">24dp</item>
+        <item name="fontFamily">@font/cera_pro_medium</item>
+        <item name="itemTextAppearanceActive">@style/TextAppearance.CustomBottomNavigationView.Active</item>
+        <item name="itemTextAppearanceInactive">@style/TextAppearance.CustomBottomNavigationView.Inactive</item>
+    </style>
+
+    <style name="TextAppearance.CustomBottomNavigationView.Active" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TextAppearance.CustomBottomNavigationView.Inactive" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">0sp</item>
+    </style>
 </resources>

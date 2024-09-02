@@ -5,17 +5,17 @@
 
     <color name="base_purple">#A259FF</color>
 
-<!--    Bottom Nav Bar icon colours-->
+    <!--    Bottom Nav Bar icon colours-->
     <color name="selected_icon_color">#A259FF</color>
-    <color name="unselected_icon_color">#5C5C5C</color>
+    <color name="unselected_icon_color">#424242</color>
     <color name="selected_text_color">#A259FF</color>
-    <color name="bottom_nav_background_color">#171717</color>
+    <color name="bottom_nav_background_color">#EFEFEF</color>
 
-    <!--    layout background-->
-    <color name="layoutBackground">#FFFFFFFF</color>
-    <color name="textOnBackground">#FF000000</color>
+<!--    layout-->
+    <color name="layoutBackground">#FF000000</color>
+    <color name="textOnBackground">#FFFFFFFF</color>
 
-    <!--    Primary button-->
+<!--    Primary button-->
     <color name="primaryBtnBackgroundTint">#A259FF</color>
     <color name="primaryBtnTextOnBackground">#FFFFFFFF</color>
 </resources>
