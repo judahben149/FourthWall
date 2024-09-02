@@ -1,4 +1,4 @@
-package com.judahben149.fourthwall.utils
+package com.judahben149.fourthwall.utils.views
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
