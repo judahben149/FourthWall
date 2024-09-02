@@ -15,5 +15,6 @@ interface OrderDao {
     @Insert
     suspend fun insertOrder(order: Order)
 
-
+    @Query("UPDATE orders SET orderStatus = :newStatus WHERE orderId = :orderId")
+    suspend fun updateOrderStatus(orderId: Int, newStatus: Int)
 }
