@@ -8,8 +8,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentOnboarding1Binding
-import com.judahben149.fourthwall.utils.animateBounce
-import com.judahben149.fourthwall.utils.setup3DBounceAnimation
+import com.judahben149.fourthwall.utils.views.setup3DBounceAnimation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
