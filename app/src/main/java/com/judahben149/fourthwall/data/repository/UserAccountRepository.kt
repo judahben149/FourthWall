@@ -4,8 +4,13 @@ import com.judahben149.fourthwall.data.local.UserAccountDao
 import com.judahben149.fourthwall.data.local.entities.CurrencyAccount
 import com.judahben149.fourthwall.data.local.entities.UserAccount
 import com.judahben149.fourthwall.data.local.relations.UserWithCurrencyAccounts
+import com.judahben149.fourthwall.domain.models.PfiData
+import com.judahben149.fourthwall.utils.PfiDataParser
 
-class UserAccountRepository (private val userAccountDao: UserAccountDao) {
+class UserAccountRepository (
+    private val userAccountDao: UserAccountDao,
+    private val pfiDataParser: PfiDataParser
+    ) {
 
     suspend fun insertUserAccount(userAccount: UserAccount) {
         userAccountDao.insertUserAccount(userAccount)
@@ -17,5 +22,9 @@ class UserAccountRepository (private val userAccountDao: UserAccountDao) {
 
     suspend fun getUserWithCurrencyAccounts(userId: String): UserWithCurrencyAccounts? {
         return userAccountDao.getUserWithCurrencyAccounts(userId)
+    }
+
+    suspend fun getPfiData(): List<PfiData> {
+        return pfiDataParser.parseJsonFromAssets()
     }
 }

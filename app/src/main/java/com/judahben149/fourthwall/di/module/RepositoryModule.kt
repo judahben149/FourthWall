@@ -4,6 +4,7 @@ import com.judahben149.fourthwall.data.local.OrderDao
 import com.judahben149.fourthwall.data.local.UserAccountDao
 import com.judahben149.fourthwall.data.repository.OrderRepository
 import com.judahben149.fourthwall.data.repository.UserAccountRepository
+import com.judahben149.fourthwall.utils.PfiDataParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +24,10 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun providesUserAccountRepository(userAccountDao: UserAccountDao): UserAccountRepository {
-        return UserAccountRepository(userAccountDao)
+    fun providesUserAccountRepository(
+        userAccountDao: UserAccountDao,
+        pfiDataParser: PfiDataParser
+    ): UserAccountRepository {
+        return UserAccountRepository(userAccountDao, pfiDataParser)
     }
 }
