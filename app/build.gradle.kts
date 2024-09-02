@@ -59,6 +59,11 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.glide)
 
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
 
