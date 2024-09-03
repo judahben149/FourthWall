@@ -1,4 +1,4 @@
-package com.judahben149.fourthwall.domain.usecase
+package com.judahben149.fourthwall.domain.usecase.pfi
 
 import com.judahben149.fourthwall.data.repository.UserAccountRepository
 import com.judahben149.fourthwall.domain.models.PfiData

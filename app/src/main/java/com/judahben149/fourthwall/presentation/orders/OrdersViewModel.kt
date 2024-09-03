@@ -3,9 +3,9 @@ package com.judahben149.fourthwall.presentation.orders
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.judahben149.fourthwall.data.local.entities.Order
-import com.judahben149.fourthwall.domain.usecase.GetAllOrdersUseCase
-import com.judahben149.fourthwall.domain.usecase.InsertOrdersUseCase
-import com.judahben149.fourthwall.domain.usecase.UpdateOrderStatusUseCase
+import com.judahben149.fourthwall.domain.usecase.orders.GetAllOrdersUseCase
+import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
+import com.judahben149.fourthwall.domain.usecase.orders.UpdateOrderStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

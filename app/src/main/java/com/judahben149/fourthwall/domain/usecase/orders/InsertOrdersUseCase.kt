@@ -1,4 +1,4 @@
-package com.judahben149.fourthwall.domain.usecase
+package com.judahben149.fourthwall.domain.usecase.orders
 
 import com.judahben149.fourthwall.data.local.entities.Order
 import com.judahben149.fourthwall.data.repository.OrderRepository

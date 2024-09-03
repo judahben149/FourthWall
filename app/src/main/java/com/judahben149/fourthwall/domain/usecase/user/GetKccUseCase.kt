@@ -1,4 +1,4 @@
-package com.judahben149.fourthwall.domain.usecase
+package com.judahben149.fourthwall.domain.usecase.user
 
 import com.judahben149.fourthwall.data.repository.CredentialsRepository
 import javax.inject.Inject
