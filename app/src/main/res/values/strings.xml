@@ -15,4 +15,7 @@
     <string name="full_name">Full Name</string>
     <string name="text_continue">Continue</string>
     <string name="user_agreement_clause">FourthWall will securely store your DID (Decentralized Identifier) and VC (Verifiable Credentials) for use in transaction orders. \n\nYou can revoke them in settings at a later time.</string>
+    <string name="i_understand_and_accept">I understand, and accept</string>
+    <string name="get_credentials">Get Credentials</string>
+    <string name="bottom_sheet_drag_handle">Bottom sheet drag handle</string>
 </resources>
