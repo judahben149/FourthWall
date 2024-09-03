@@ -73,6 +73,9 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
 
+    // Country Picker - Flags
+    implementation(libs.country.picker)
+
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
 
