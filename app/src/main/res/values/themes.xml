@@ -28,4 +28,17 @@
     <style name="TextAppearance.CustomBottomNavigationView.Inactive" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">0sp</item>
     </style>
+
+    <style name="CustomTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/tv_layout_stroke_color_selector</item>
+        <item name="boxStrokeWidth">1dp</item>
+    </style>
+
+    <style name="CountryPickerStyle">
+        <item name="android:textColor">@color/textOnBackground</item>
+        <item name="android:textColorHint">@color/textHintOnBackground</item>
+        <item name="android:background">@color/layoutAboveBackground</item>
+        <item name="android:fontFamily">@font/cera_pro_light</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

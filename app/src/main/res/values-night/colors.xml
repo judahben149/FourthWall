@@ -14,6 +14,8 @@
 <!--    layout-->
     <color name="layoutBackground">#FF000000</color>
     <color name="textOnBackground">#FFFFFFFF</color>
+    <color name="textHintOnBackground">#BABABA</color>
+    <color name="layoutAboveBackground">#252525</color>
 
 <!--    Primary button-->
     <color name="primaryBtnBackgroundTint">#A259FF</color>

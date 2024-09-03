@@ -4,6 +4,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="base_purple">#A259FF</color>
+    <color name="shaded_base_purple">#6B3CA6</color>
 
 <!--    Bottom Nav Bar icon colours-->
     <color name="selected_icon_color">#A259FF</color>
@@ -14,8 +15,16 @@
     <!--    layout background-->
     <color name="layoutBackground">#FFFFFFFF</color>
     <color name="textOnBackground">#FF000000</color>
+    <color name="textHintOnBackground">#424242</color>
+    <color name="layoutAboveBackground">#E3E3E3</color>
 
     <!--    Primary button-->
     <color name="primaryBtnBackgroundTint">#A259FF</color>
+    <color name="disabledPrimaryBtnBackgroundTint">#B3B3B3</color>
     <color name="primaryBtnTextOnBackground">#FFFFFFFF</color>
+
+<!--    Textview-->
+    <color name="tvStrokeInFocus">#A259FF</color>
+    <color name="tvStrokeNotInFocus">#CACACA</color>
+
 </resources>
