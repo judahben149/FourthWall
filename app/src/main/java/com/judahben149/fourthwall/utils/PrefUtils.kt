@@ -42,3 +42,23 @@ fun SharedPreferences.fetchLong(key: String, defaultValue: Long): Long {
 fun SharedPreferences.fetchBoolean(key: String, defaultValue: Boolean): Boolean {
     return this.getBoolean(key, defaultValue)
 }
+
+fun SharedPreferences.storeSecret(key: String, value: String) {
+    val editor = this.edit()
+    editor.putString(key, value)
+    editor.apply()
+}
+
+fun SharedPreferences.storeSecret(key: String, value: Int) {
+    val editor = this.edit()
+    editor.putInt(key, value)
+    editor.apply()
+}
+
+fun SharedPreferences.getSecretString(key: String, defaultValue: String): String {
+    return this.getString(key, defaultValue) ?: defaultValue
+}
+
+fun SharedPreferences.getSecretInt(key: String, defaultValue: Int): Int {
+    return this.getInt(key, defaultValue)
+}
