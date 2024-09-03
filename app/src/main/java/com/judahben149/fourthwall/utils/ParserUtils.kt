@@ -1,7 +1,8 @@
 package com.judahben149.fourthwall.utils
 
 import android.content.Context
-import com.google.gson.Gson
+import android.util.Log
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.judahben149.fourthwall.domain.models.PfiData
 import com.judahben149.fourthwall.domain.models.PfiDataResponse
@@ -19,13 +20,14 @@ class PfiDataParser @Inject constructor(private val context: Context) {
             val inputStream = context.assets.open(fileName)
             val reader = InputStreamReader(inputStream)
 
-            val gson = Gson()
+            val gson = GsonBuilder().setLenient().create()
             val pfiDataResponseType = object : TypeToken<PfiDataResponse>() {}.type
 
             val pfiDataResponse: PfiDataResponse = gson.fromJson(reader, pfiDataResponseType)
             pfiDataResponse.pfiData
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.d("TAG", "parseJsonFromAssets: ${e.message}")
             emptyList()
         }
     }
