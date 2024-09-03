@@ -33,12 +33,25 @@ object PrefsModule {
     fun providesEncryptedSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
             val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
-            return EncryptedSharedPreferences.create(
-                FILE_ENCRYPTED_SHARED_PREFERENCES,
-                masterKeyAlias,
-                context,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-            )
+            return try {
+                EncryptedSharedPreferences.create(
+                    FILE_ENCRYPTED_SHARED_PREFERENCES,
+                    masterKeyAlias,
+                    context,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+
+            } catch (ex: Exception) {
+                context.deleteSharedPreferences(FILE_ENCRYPTED_SHARED_PREFERENCES)
+
+                EncryptedSharedPreferences.create(
+                    FILE_ENCRYPTED_SHARED_PREFERENCES,
+                    masterKeyAlias,
+                    context,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+            }
     }
 }
