@@ -3,12 +3,15 @@ package com.judahben149.fourthwall.di.module
 import android.content.Context
 import android.content.SharedPreferences
 import com.judahben149.fourthwall.domain.SessionManager
+import com.judahben149.fourthwall.utils.Constants.ENCRYPTED_SHARED_PREFERENCES
+import com.judahben149.fourthwall.utils.Constants.SHARED_PREFERENCES
 import com.judahben149.fourthwall.utils.PfiDataParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -23,8 +26,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesSessionManager(sharedPreferences: SharedPreferences): SessionManager {
-        return SessionManager(sharedPreferences)
+    fun providesSessionManager(
+        @Named(SHARED_PREFERENCES)
+        sharedPreferences: SharedPreferences,
+        @Named(ENCRYPTED_SHARED_PREFERENCES)
+        encryptedSharedPreferences: SharedPreferences,
+    ): SessionManager {
+        return SessionManager(sharedPreferences, encryptedSharedPreferences)
     }
 
     @Provides
