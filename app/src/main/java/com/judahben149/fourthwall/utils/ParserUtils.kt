@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class PfiDataParser @Inject constructor(private val context: Context) {
 
-    suspend fun parseJsonFromAssets(fileName: String = "pfi_data"): List<PfiData> = withContext(
+    suspend fun parseJsonFromAssets(fileName: String = "pfi_data.json"): List<PfiData> = withContext(
         Dispatchers.IO) {
         try {
             val inputStream = context.assets.open(fileName)
