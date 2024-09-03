@@ -1,6 +1,7 @@
 package com.judahben149.fourthwall.presentation
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -59,11 +60,31 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (!isCurrentlyNavigatingFromBottomNav) {
                 when (destination.id) {
-                    R.id.homeFragment -> binding.bottomNav.selectedItemId = R.id.navigation_home
-                    R.id.ordersFragment -> binding.bottomNav.selectedItemId = R.id.navigation_orders
-                    R.id.dashboardFragment -> binding.bottomNav.selectedItemId = R.id.navigation_dashboard
+                    R.id.homeFragment -> {
+                        binding.bottomNav.selectedItemId = R.id.navigation_home
+                        toggleBottomNavVisibility(true)
+                    }
+                    R.id.ordersFragment -> {
+                        binding.bottomNav.selectedItemId = R.id.navigation_orders
+                        toggleBottomNavVisibility(true)
+                    }
+                    R.id.dashboardFragment -> {
+                        binding.bottomNav.selectedItemId = R.id.navigation_dashboard
+                        toggleBottomNavVisibility(true)
+                    }
+                    else -> {
+                        toggleBottomNavVisibility(false)
+                    }
                 }
             }
+        }
+    }
+
+    private fun toggleBottomNavVisibility(isVisible: Boolean) {
+        if (isVisible) {
+            binding.bottomNav.visibility = View.VISIBLE
+        } else {
+            binding.bottomNav.visibility = View.GONE
         }
     }
 
