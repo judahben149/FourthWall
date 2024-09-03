@@ -3,10 +3,15 @@ package com.judahben149.fourthwall.presentation.registration
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.judahben149.fourthwall.data.local.entities.CurrencyAccount
+import com.judahben149.fourthwall.data.local.entities.UserAccount
+import com.judahben149.fourthwall.data.local.relations.UserWithCurrencyAccounts
 import com.judahben149.fourthwall.data.remote.result.NetworkResult
 import com.judahben149.fourthwall.domain.SessionManager
-import com.judahben149.fourthwall.domain.usecase.GetKccUseCase
+import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
+import com.judahben149.fourthwall.domain.usecase.user.InsertUserWithCurrencyAccountsUseCase
 import com.judahben149.fourthwall.utils.AndroidKeyManager
+import com.judahben149.fourthwall.utils.Constants.BASE_USER_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +27,8 @@ import javax.inject.Inject
 class UserRegistrationViewModel @Inject constructor(
     private val applicationContext: Context,
     private val getKccUseCase: GetKccUseCase,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val insertUserCurrencyUseCase: InsertUserWithCurrencyAccountsUseCase,
 ): ViewModel() {
 
     private val _state = MutableStateFlow(UserRegistrationState())
@@ -85,6 +91,7 @@ class UserRegistrationViewModel @Inject constructor(
                 }
 
                 is NetworkResult.Success -> {
+                    registerUserInDatabase()
                     sessionManager.storeKCC(result.data)
                     // Store Did here
 
@@ -106,6 +113,31 @@ class UserRegistrationViewModel @Inject constructor(
 
         val keyManager = AndroidKeyManager(applicationContext)
         return DidDht.create(keyManager)
+    }
+
+    private fun registerUserInDatabase() {
+        val userAccount = UserAccount(
+            userId = BASE_USER_ID,
+            userName = state.value.name
+        )
+
+        val currencyAccount = CurrencyAccount(
+            userId = BASE_USER_ID,
+            currencyCode = state.value.currencyCode,
+            balance = 0.0,
+            isPrimaryAccount = 1
+        )
+
+        val currencyAccounts = listOf(currencyAccount)
+        val userWithCurrencyAccounts = UserWithCurrencyAccounts(userAccount, currencyAccounts)
+
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                insertUserCurrencyUseCase(userWithCurrencyAccounts)
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
     }
 
     private fun setGetCredBtnLoading() {
@@ -134,9 +166,17 @@ class UserRegistrationViewModel @Inject constructor(
         evaluateContinueBtnStatus()
     }
 
-    fun updateCountry(countryCode: String) {
+    fun updateCountryCode(countryCode: String) {
         _state.update {
             it.copy(countryCode = countryCode)
+        }
+
+        evaluateContinueBtnStatus()
+    }
+
+    fun updateCurrencyCode(currencyCode: String) {
+        _state.update {
+            it.copy(currencyCode = currencyCode)
         }
 
         evaluateContinueBtnStatus()
@@ -182,6 +222,7 @@ class UserRegistrationViewModel @Inject constructor(
 data class UserRegistrationState(
     val name: String = "",
     val countryCode: String = "",
+    val currencyCode: String = "",
     val userDid: String = "",
     val hasUserAgreed: Boolean = false,
     val continueBtnState: ContinueButtonState = ContinueButtonState.Disabled(),

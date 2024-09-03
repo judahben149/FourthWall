@@ -20,6 +20,11 @@ class UserAccountRepository (
         userAccountDao.insertCurrencyAccount(currencyAccount)
     }
 
+    suspend fun insertUserWithCurrencyAccounts(userWithCurrencyAccounts: UserWithCurrencyAccounts) {
+        userAccountDao.insertUserAccount(userWithCurrencyAccounts.userAccount)
+        userAccountDao.insertCurrencyAccounts(userWithCurrencyAccounts.currencyAccounts)
+    }
+
     suspend fun getUserWithCurrencyAccounts(userId: String): UserWithCurrencyAccounts? {
         return userAccountDao.getUserWithCurrencyAccounts(userId)
     }

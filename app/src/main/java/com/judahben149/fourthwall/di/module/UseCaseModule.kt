@@ -2,9 +2,11 @@ package com.judahben149.fourthwall.di.module
 
 import com.judahben149.fourthwall.data.repository.CredentialsRepository
 import com.judahben149.fourthwall.data.repository.OrderRepository
-import com.judahben149.fourthwall.domain.usecase.GetAllOrdersUseCase
-import com.judahben149.fourthwall.domain.usecase.GetKccUseCase
-import com.judahben149.fourthwall.domain.usecase.InsertOrdersUseCase
+import com.judahben149.fourthwall.data.repository.UserAccountRepository
+import com.judahben149.fourthwall.domain.usecase.orders.GetAllOrdersUseCase
+import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
+import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
+import com.judahben149.fourthwall.domain.usecase.user.InsertUserWithCurrencyAccountsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,5 +33,13 @@ object UseCaseModule {
     @Singleton
     fun providesGetKccUseCase(credentialsRepository: CredentialsRepository): GetKccUseCase {
         return GetKccUseCase(credentialsRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesInsertUserWithCurrencyAccountsUseCase(
+        userAccountRepository: UserAccountRepository
+    ): InsertUserWithCurrencyAccountsUseCase {
+        return InsertUserWithCurrencyAccountsUseCase(userAccountRepository)
     }
 }

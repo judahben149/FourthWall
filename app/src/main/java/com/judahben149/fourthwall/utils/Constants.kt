@@ -1,6 +1,9 @@
 package com.judahben149.fourthwall.utils
 
 object Constants {
+    // Values
+    const val BASE_USER_ID = 100
+
     // DI Module provider names
     const val FOURTH_WALL_SHARED_PREF = "FOURTH_WALL_SHARED_PREF"
     const val SHARED_PREFERENCES = "SHARED_PREFERENCES"
@@ -9,6 +12,7 @@ object Constants {
 
     // Database
     const val DATABASE_NAME = "FOURTH_WALL_ROOM_DATABASE"
+    const val USER_ID = "USER_ID"
 
     //Pref Keys
     const val HAS_COMPLETED_ONBOARDING = "HAS_COMPLETED_ONBOARDING"

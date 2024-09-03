@@ -17,7 +17,8 @@ import androidx.room.Index
 )
 data class CurrencyAccount(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val userId: String, // Do not alter the name "userId", it is relationally linked to another entity
+    val userId: Int, // Do not alter the name "userId", it is relationally linked to another entity
     val currencyCode: String,
-    val balance: Double
+    val balance: Double,
+    val isPrimaryAccount: Int = 0
 )

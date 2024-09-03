@@ -18,6 +18,9 @@ interface UserAccountDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCurrencyAccount(currencyAccount: CurrencyAccount)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCurrencyAccounts(currencyAccounts: List<CurrencyAccount>)
+
     @Transaction
     @Query("SELECT * FROM user_accounts WHERE userId = :userId")
     suspend fun getUserWithCurrencyAccounts(userId: String): UserWithCurrencyAccounts?

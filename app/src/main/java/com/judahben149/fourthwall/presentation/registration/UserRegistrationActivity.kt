@@ -166,7 +166,8 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
             }
 
             this.country = it
-            viewModel.updateCountry(country.code)
+            viewModel.updateCountryCode(country.code)
+            viewModel.updateCurrencyCode(country.currency)
         }
     }
 
