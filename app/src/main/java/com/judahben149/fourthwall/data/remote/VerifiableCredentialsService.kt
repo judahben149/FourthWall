@@ -10,7 +10,7 @@ interface VerifiableCredentialsService {
     @GET(KCC_ENDPOINT)
     suspend fun getKcc(
         @Query("name") name: String,
-        @Query("country") country: String,
+        @Query("country") countryCode: String,
         @Query("did") did: String
     ): Response<String>
 }
