@@ -31,7 +31,7 @@
 
     <style name="CustomTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/tv_layout_stroke_color_selector</item>
-        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidth">1.5dp</item>
     </style>
 
     <style name="CountryPickerStyle">
