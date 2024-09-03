@@ -10,7 +10,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.ActivityOnboardingBinding
 import com.judahben149.fourthwall.domain.SessionManager
-import com.judahben149.fourthwall.presentation.MainActivity
+import com.judahben149.fourthwall.presentation.registration.UserRegistrationActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -54,7 +54,7 @@ class OnboardingActivity : AppCompatActivity() {
                 if (viewPager.currentItem < 2) {
                     viewPager.currentItem += 1
                 } else {
-                    navigateToHomeScreen()
+                    navigateToRegistrationScreen()
                 }
             }
         }
@@ -75,14 +75,10 @@ class OnboardingActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToHomeScreen() {
-        sessionManager.updateHasCompletedOnboarding(true)
-
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    private fun navigateToRegistrationScreen() {
+        val intent = Intent(this, UserRegistrationActivity::class.java)
         startActivity(intent)
         finish()
-
     }
 
 
