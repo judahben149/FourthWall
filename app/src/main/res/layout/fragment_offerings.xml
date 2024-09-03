@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layoutBackground"
+    tools:context=".presentation.exchange.OfferingsFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back_icon"
+        app:navigationIconTint="@color/textOnBackground">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/cera_pro_medium"
+            android:textColor="@color/textOnBackground"
+            android:textSize="20sp" />
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cera_pro_medium"
+                android:text="@string/you_send"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:id="@+id/layout_pay_out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/outlined_box_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/layout_name">
+
+                <EditText
+                    android:id="@+id/tv_pay_out"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center"
+                    android:layout_marginStart="-6dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:fontFamily="@font/cera_pro_medium"
+                    android:hint="@string/amount"
+                    android:importantForAutofill="no"
+                    android:inputType="numberDecimal"
+                    android:padding="16dp"
+                    android:textColor="@color/textOnBackground"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_currency_pay_out"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/cera_pro_bold"
+                    android:layout_gravity="center_vertical"
+                    tools:text="USD"
+                    />
+
+                <ImageView
+                    android:id="@+id/iv_select_pay_out_currency"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.5"
+                    android:contentDescription="@string/drop_down_arrow_icon"
+                    android:paddingStart="2dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="6dp"
+                    android:paddingBottom="6dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/ic_dropdown_arrow"
+                    app:tint="@color/textOnBackground" />
+            </LinearLayout>
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:fontFamily="@font/cera_pro_medium"
+                android:text="@string/recipient_gets"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:id="@+id/layout_pay_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/outlined_box_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/layout_name">
+
+                <EditText
+                    android:id="@+id/tv_pay_in"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center"
+                    android:layout_marginStart="-6dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:fontFamily="@font/cera_pro_medium"
+                    android:hint="@string/amount"
+                    android:importantForAutofill="no"
+                    android:inputType="numberDecimal"
+                    android:padding="16dp"
+                    android:textColor="@color/textOnBackground"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_currency_pay_in"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/cera_pro_bold"
+                    android:layout_gravity="center_vertical"
+                    tools:text="USD"
+                    />
+
+                <ImageView
+                    android:id="@+id/iv_select_pay_in_currency"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.5"
+                    android:contentDescription="@string/drop_down_arrow_icon"
+                    android:paddingStart="2dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="6dp"
+                    android:paddingBottom="6dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/ic_dropdown_arrow"
+                    app:tint="@color/textOnBackground" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/layout_bottom_btn_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:baselineAligned="false"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="48dp"
+            android:layout_marginBottom="16dp"
+            android:layout_weight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_continue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/primaryBtnBackgroundTint"
+                android:fontFamily="@font/cera_pro_medium"
+                android:text="@string/text_continue"
+                android:textColor="@color/primaryBtnTextOnBackground"
+                android:textSize="18sp" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progress_bar"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_centerInParent="true"
+                android:indeterminate="true"
+                android:visibility="invisible"
+                app:indicatorColor="@color/white"
+                app:indicatorSize="24dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

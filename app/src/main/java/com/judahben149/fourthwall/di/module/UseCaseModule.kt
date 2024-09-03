@@ -1,11 +1,13 @@
 package com.judahben149.fourthwall.di.module
 
 import com.judahben149.fourthwall.data.repository.CredentialsRepository
+import com.judahben149.fourthwall.data.repository.OfferingsRepository
 import com.judahben149.fourthwall.data.repository.OrderRepository
 import com.judahben149.fourthwall.data.repository.UserAccountRepository
 import com.judahben149.fourthwall.domain.usecase.orders.GetAllOrdersUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
 import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
+import com.judahben149.fourthwall.domain.usecase.pfi.GetPfiOfferingsUseCase
 import com.judahben149.fourthwall.domain.usecase.user.InsertUserWithCurrencyAccountsUseCase
 import dagger.Module
 import dagger.Provides
@@ -41,5 +43,13 @@ object UseCaseModule {
         userAccountRepository: UserAccountRepository
     ): InsertUserWithCurrencyAccountsUseCase {
         return InsertUserWithCurrencyAccountsUseCase(userAccountRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetPfiOfferingsUseCase(
+        offeringsRepository: OfferingsRepository
+    ): GetPfiOfferingsUseCase {
+        return GetPfiOfferingsUseCase(offeringsRepository)
     }
 }

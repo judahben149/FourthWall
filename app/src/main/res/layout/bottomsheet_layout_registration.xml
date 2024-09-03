@@ -19,7 +19,8 @@
             android:layout_marginTop="8dp"
             android:layout_gravity="center_horizontal"
             android:alpha="0.5"
-            android:src="@drawable/ic_line" />
+            android:src="@drawable/ic_line"
+            android:contentDescription="@string/bottom_sheet_drag_handle" />
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:fontFamily="@font/cera_pro_medium"
-            android:text="I understand, and accept"
+            android:text="@string/i_understand_and_accept"
             android:textColor="@color/shaded_base_purple" />
 
 
@@ -59,7 +60,7 @@
                 android:layout_height="match_parent"
                 android:backgroundTint="@color/primaryBtnBackgroundTint"
                 android:fontFamily="@font/cera_pro_medium"
-                android:text="Get Credentials"
+                android:text="@string/get_credentials"
                 android:textColor="@color/primaryBtnTextOnBackground"
                 android:textSize="16sp" />
 
