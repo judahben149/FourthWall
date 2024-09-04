@@ -1,6 +1,6 @@
 [versions]
 agp = "8.3.1"
-kotlin = "1.9.10"
+kotlin = "1.9.22"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -9,7 +9,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
-securityCrypto = "1.1.0-alpha01"
+securityCrypto = "1.1.0-alpha06"
 ksp = "1.9.10-1.0.13"
 hilt = "2.48.1"
 navigationFragment = "2.7.7"
@@ -19,6 +19,7 @@ gson = "2.10.1"
 retrofit = "2.9.0"
 okhttp = "4.12.0"
 countryPicker = "2.0.0"
+flagKit = "1.0.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +48,7 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 
 country-picker = { group = "com.github.mukeshsolanki", name = "country-picker-android", version.ref = "countryPicker" }
+flag-kit = { group = "com.github.murgupluoglu", name = "flagkit-android", version.ref = "flagKit" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
