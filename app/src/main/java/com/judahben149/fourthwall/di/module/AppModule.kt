@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.utils.Constants.ENCRYPTED_SHARED_PREFERENCES
 import com.judahben149.fourthwall.utils.Constants.SHARED_PREFERENCES
-import com.judahben149.fourthwall.utils.PfiDataParser
+import com.judahben149.fourthwall.utils.text.PfiDataParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

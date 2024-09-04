@@ -6,7 +6,7 @@ import com.judahben149.fourthwall.data.remote.VerifiableCredentialsService
 import com.judahben149.fourthwall.data.repository.CredentialsRepository
 import com.judahben149.fourthwall.data.repository.OrderRepository
 import com.judahben149.fourthwall.data.repository.UserAccountRepository
-import com.judahben149.fourthwall.utils.PfiDataParser
+import com.judahben149.fourthwall.utils.text.PfiDataParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

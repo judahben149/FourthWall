@@ -5,7 +5,7 @@ import com.judahben149.fourthwall.data.local.entities.CurrencyAccount
 import com.judahben149.fourthwall.data.local.entities.UserAccount
 import com.judahben149.fourthwall.data.local.relations.UserWithCurrencyAccounts
 import com.judahben149.fourthwall.domain.models.PfiData
-import com.judahben149.fourthwall.utils.PfiDataParser
+import com.judahben149.fourthwall.utils.text.PfiDataParser
 
 class UserAccountRepository (
     private val userAccountDao: UserAccountDao,
