@@ -1,4 +1,4 @@
-package com.judahben149.fourthwall.utils
+package com.judahben149.fourthwall.utils.text
 
 import android.content.Context
 import android.util.Log
