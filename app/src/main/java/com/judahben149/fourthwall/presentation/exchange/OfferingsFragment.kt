@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -57,6 +56,7 @@ class OfferingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.shimmerLayout.startShimmer()
         setTextFieldFilters()
         setupBottomSheet()
         setupBottomSheetRecyclerView()
@@ -65,39 +65,51 @@ class OfferingsFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.ivSelectPayInCurrency.setOnClickListener {
-            clearEditTextFocus()
-            currentCurrencyType = CurrencyType.PayIn
-            val payInCurrencies = viewModel.state.value.supportedCurrencyPairs.map { it.first }.distinct()
-            showCurrencyBottomSheet(payInCurrencies)
-        }
+        binding.run {
+            // This is to increase the touch target area
+            ivSelectPayInCurrency.setOnClickListener { setPayInCurrency() }
+            tvCurrencyPayIn.setOnClickListener { setPayInCurrency() }
+            ivFlagPayIn.setOnClickListener { setPayInCurrency() }
 
-        binding.ivSelectPayOutCurrency.setOnClickListener {
-            clearEditTextFocus()
-            currentCurrencyType = CurrencyType.PayOut
-            val selectedPayInCurrency = viewModel.state.value.selectedPayInCurrency
+            ivSelectPayOutCurrency.setOnClickListener { setPayOutCurrency() }
+            tvCurrencyPayOut.setOnClickListener { setPayOutCurrency() }
+            ivFlagPayOut.setOnClickListener { setPayOutCurrency() }
 
-            selectedPayInCurrency?.let {
-                val payOutCurrencies = viewModel.state.value.supportedCurrencyPairs.filter { currencyPair ->
-                    currencyPair.first.code == selectedPayInCurrency.code
-                }.map { it.second }.distinct()
+            etPayIn.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-                showCurrencyBottomSheet(payOutCurrencies)
-            } ?: showSnack("Select pay in currency", binding.root)
-        }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-        binding.etPayIn.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                s?.let {
-                    val payInAmount = it.toString()
-                    viewModel.updatePayInAmount(payInAmount)
+                override fun afterTextChanged(s: Editable?) {
+                    s?.let {
+                        val payInAmount = it.toString()
+                        viewModel.updatePayInAmount(payInAmount)
+                    }
                 }
-            }
-        })
+            })
+        }
+    }
+
+    private fun setPayInCurrency() {
+        clearEditTextFocus()
+        currentCurrencyType = CurrencyType.PayIn
+
+        val payInCurrencies = viewModel.state.value.supportedCurrencyPairs.map { it.first }.distinct()
+        showCurrencyBottomSheet(payInCurrencies)
+    }
+
+    private fun setPayOutCurrency() {
+        clearEditTextFocus()
+        currentCurrencyType = CurrencyType.PayOut
+        val selectedPayInCurrency = viewModel.state.value.selectedPayInCurrency
+
+        selectedPayInCurrency?.let {
+            val payOutCurrencies = viewModel.state.value.supportedCurrencyPairs.filter { currencyPair ->
+                currencyPair.first.code == selectedPayInCurrency.code
+            }.map { it.second }.distinct()
+
+            showCurrencyBottomSheet(payOutCurrencies)
+        } ?: showSnack("Select pay in currency", binding.root)
     }
 
     private fun setupBottomSheetRecyclerView() {
@@ -209,6 +221,34 @@ class OfferingsFragment : Fragment() {
                         }
                     }
 
+                    when(state.selectedOffering) {
+                        null -> {
+                            binding.run {
+                                tvPfi.text = "--"
+                                chipChangePfi.isEnabled = false
+                            }
+                        }
+                    }
+
+                    when(state.getOfferingsState) {
+                        is GetOfferingsRequestState.Error -> {
+
+                        }
+
+                        GetOfferingsRequestState.Loading -> {
+
+                        }
+
+                        GetOfferingsRequestState.Success -> {
+                            binding.shimmerLayout.apply {
+                                stopShimmer()
+                                visibility = View.GONE
+                            }
+
+                            binding.layoutPfiContent.visibility = View.VISIBLE
+                        }
+                    }
+
                     when(val payoutState = state.payOutAmountState) {
                         is PayOutAmountState.Available -> {
                             binding.tvPayOut.apply {
@@ -234,33 +274,38 @@ class OfferingsFragment : Fragment() {
 
                     when(state.isBestOfferAvailable) {
                         null -> {
-                            binding.layoutBestOffer.visibility = View.GONE
-                            binding.layoutOnlyOffer.visibility = View.GONE
+                            // Hasn't gotten any offers yet
+                            binding.tvOnlyOffer.visibility = View.GONE
+                            binding.tvBestOffer.visibility = View.GONE
+
+                            binding.tvProvider.visibility = View.INVISIBLE
                         }
 
                         false -> {
+                            // Auto-selected offer is the only one available
                             val pfiName = viewModel.getSelectedPfiName()
 
                             pfiName?.let {  pfi ->
-                                binding.layoutOnlyOffer.visibility = View.VISIBLE
+                                binding.tvOnlyOffer.visibility = View.VISIBLE
+                                binding.tvProvider.visibility = View.VISIBLE
+                                binding.layoutPfiContent.visibility = View.VISIBLE
 
-                                binding.tvPfiNameOnlyOffer.apply {
-                                    text = pfi
-                                    setTextColor(ContextCompat.getColor(context, R.color.black))
-                                }
+                                binding.tvPfi.text = pfi
+                                binding.chipChangePfi.isEnabled = true
                             }
                         }
 
                         true -> {
+                            // Auto-selected offer is the best one
                             val pfiName = viewModel.getSelectedPfiName()
 
                             pfiName?.let {  pfi ->
-                                binding.layoutBestOffer.visibility = View.VISIBLE
+                                binding.tvBestOffer.visibility = View.VISIBLE
+                                binding.tvProvider.visibility = View.VISIBLE
+                                binding.layoutPfiContent.visibility = View.VISIBLE
 
-                                binding.tvPfiNameBestOffer.apply {
-                                    text = pfi
-                                    setTextColor(ContextCompat.getColor(context, R.color.green_offers))
-                                }
+                                binding.tvPfi.text = pfi
+                                binding.chipChangePfi.isEnabled = true
                             }
                         }
                     }

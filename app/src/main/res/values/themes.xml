@@ -41,4 +41,14 @@
         <item name="android:fontFamily">@font/cera_pro_light</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="CircularShapeAppearance" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+
+    <style name="FourthWallChipTextAppearance" parent="ShapeAppearanceOverlay.Material3.Chip">
+        <item name="fontFamily">@font/cera_pro_light</item>
+    </style>
 </resources>

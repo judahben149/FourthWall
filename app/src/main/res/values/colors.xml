@@ -5,6 +5,7 @@
 
     <color name="base_purple">#A259FF</color>
     <color name="shaded_base_purple">#6B3CA6</color>
+    <color name="light_purple_tint">#E8D5FF</color>
     <color name="green_offers">#00A108</color>
     <color name="red_error">#690001</color>
 
@@ -29,4 +30,6 @@
     <color name="tvStrokeInFocus">#A259FF</color>
     <color name="tvStrokeNotInFocus">#CACACA</color>
 
+<!--    Shimmer-->
+    <color name="shimmer_color">#DDDDDD</color>
 </resources>

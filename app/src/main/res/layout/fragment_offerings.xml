@@ -39,7 +39,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
+                android:layout_marginHorizontal="24dp"
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
@@ -94,7 +94,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="6dp"
                         android:fontFamily="@font/cera_pro_bold"
-                        android:textSize="16sp"
+                        android:textSize="20sp"
                         tools:text="USD" />
 
                     <ImageView
@@ -114,10 +114,119 @@
                 </LinearLayout>
 
 
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmer_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/layout_shimmer_offerings" />
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/layout_pfi_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/layout_offer_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_provider"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/cera_pro_medium"
+                            android:text="@string/provider"
+                            android:textSize="13sp" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_only_offer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:fontFamily="@font/cera_pro_medium"
+                            android:text="@string/only_offer"
+                            android:textColor="@color/textOnBackground"
+                            android:textSize="13sp"
+                            android:visibility="gone" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_best_offer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:fontFamily="@font/cera_pro_medium"
+                            android:text="@string/best_offer"
+                            android:textColor="@color/green_offers"
+                            android:textSize="13sp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/layout_pfi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:visibility="visible"
+                        app:strokeWidth="0.3dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="72dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="24dp"
+                                android:alpha="0.7"
+                                android:src="@drawable/ic_liquidity_house"
+
+                                app:shapeAppearanceOverlay="@style/CircularShapeAppearance" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_pfi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/cera_pro_light"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                tools:text="AquaFinance Flowable" />
+
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip_change_pfi"
+                                style="@style/FourthWallChipTextAppearance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="24dp"
+                                android:backgroundTint="@color/light_purple_tint"
+                                android:fontFamily="@font/cera_pro_light"
+                                android:text="Change"
+                                android:textSize="12sp"
+                                app:chipCornerRadius="16dp"
+                                app:chipStrokeWidth="0dp" />
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="64dp"
+                    android:layout_marginTop="36dp"
                     android:fontFamily="@font/cera_pro_medium"
                     android:text="@string/recipient_gets"
                     android:textSize="13sp" />
@@ -167,7 +276,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="6dp"
                         android:fontFamily="@font/cera_pro_bold"
-                        android:textSize="16sp"
+                        android:textSize="20sp"
                         tools:text="USD" />
 
                     <ImageView
@@ -185,60 +294,6 @@
                         android:src="@drawable/ic_dropdown_arrow"
                         app:tint="@color/textOnBackground" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_only_offer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_only_offer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/cera_pro_medium"
-                        android:text="@string/only_offer"
-                        android:textColor="@color/textOnBackground"
-                        android:textSize="13sp" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_pfi_name_only_offer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/cera_pro_medium"
-                        android:text=""
-                        android:textColor="@color/green_offers"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_best_offer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_best_offer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/cera_pro_medium"
-                        android:text="@string/best_offer"
-                        android:textColor="@color/green_offers"
-                        android:textSize="13sp" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_pfi_name_best_offer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/cera_pro_medium"
-                        android:text=""
-                        android:textColor="@color/green_offers"
-                        android:textSize="13sp" />
                 </LinearLayout>
             </LinearLayout>
 

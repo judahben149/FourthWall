@@ -23,7 +23,8 @@
     <string name="amount">Amount</string>
     <string name="country_flag">Country Flag</string>
     <string name="_0_0">0.0</string>
-    <string name="best_offer">Best offer  -  </string>
+    <string name="best_offer"> - Best offer</string>
     <string name="item_currency_text">%1$s (%2$s)</string>
-    <string name="only_offer">Only offer  -  </string>
+    <string name="only_offer"> - Only offer</string>
+    <string name="provider">Provider</string>
 </resources>
