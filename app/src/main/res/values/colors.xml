@@ -5,6 +5,8 @@
 
     <color name="base_purple">#A259FF</color>
     <color name="shaded_base_purple">#6B3CA6</color>
+    <color name="green_offers">#00A108</color>
+    <color name="red_error">#690001</color>
 
 <!--    Bottom Nav Bar icon colours-->
     <color name="selected_icon_color">#A259FF</color>
@@ -20,7 +22,7 @@
 
     <!--    Primary button-->
     <color name="primaryBtnBackgroundTint">#A259FF</color>
-    <color name="disabledPrimaryBtnBackgroundTint">#B3B3B3</color>
+    <color name="disabledPrimaryBtnBackgroundTint">#AAAAAA</color>
     <color name="primaryBtnTextOnBackground">#FFFFFFFF</color>
 
 <!--    Textview-->

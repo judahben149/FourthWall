@@ -3,11 +3,17 @@ package com.judahben149.fourthwall.utils.views
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.Context
 import android.content.res.Resources
+import android.graphics.Typeface
+import android.util.TypedValue
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
@@ -100,9 +106,11 @@ fun MaterialButton.disable(res: Resources, pgBar: CircularProgressIndicator? = n
     // Disable clicking
     this.isClickable = false
     this.isEnabled = false
+    this.alpha = 1F
+    this.textScaleX = 1F
 
     pgBar?.let {
-        visibility = View.INVISIBLE
+        pgBar.visibility = View.INVISIBLE
     }
 }
 
@@ -131,6 +139,20 @@ fun MaterialButton.isLoading(res: Resources, pgBar: CircularProgressIndicator) {
 
     this.textScaleX = 0F
     pgBar.visibility = View.VISIBLE
+}
+
+fun TextView.setAmountFont(context: Context) {
+    this.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28f)
+    val customFont = ResourcesCompat.getFont(context, R.font.cera_pro_medium)
+
+    this.setTypeface(customFont, Typeface.BOLD)
+    this.setTextColor(ContextCompat.getColor(context, R.color.textOnBackground))
+}
+
+fun TextView.setErrorFont(context: Context) {
+    this.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+    this.setTypeface(null, Typeface.NORMAL)
+    this.setTextColor(ContextCompat.getColor(context, R.color.red_error))
 }
 
 fun showSnack(message: String, rootView: View, duration: Int = Snackbar.LENGTH_SHORT) {
