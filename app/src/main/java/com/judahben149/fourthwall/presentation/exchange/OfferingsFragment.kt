@@ -9,7 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
@@ -19,15 +21,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.textview.MaterialTextView
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentOfferingsBinding
 import com.judahben149.fourthwall.domain.models.Currency
+import com.judahben149.fourthwall.utils.CurrencyUtils
 import com.judahben149.fourthwall.utils.text.DecimalDigitsInputFilter
+import com.judahben149.fourthwall.utils.views.animateBorderColorForError
 import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
 import com.judahben149.fourthwall.utils.views.isLoading
 import com.judahben149.fourthwall.utils.views.setAmountFont
-import com.judahben149.fourthwall.utils.views.setErrorFont
 import com.judahben149.fourthwall.utils.views.showSnack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -43,6 +47,7 @@ class OfferingsFragment : Fragment() {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
 
     private lateinit var currencyAdapter: CurrencyAdapter
+    private lateinit var otherOfferingsAdapter: OtherOfferingsAdapter
     private lateinit var currentCurrencyType: CurrencyType
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,6 +83,7 @@ class OfferingsFragment : Fragment() {
         setupBottomSheetRecyclerView()
         observeState()
         setupListeners()
+        recallData()
     }
 
     private fun setupListeners() {
@@ -97,6 +103,10 @@ class OfferingsFragment : Fragment() {
                 navController.navigate(R.id.action_offeringsFragment_to_requestQuoteFragment)
             }
 
+            chipExplorePfi.setOnClickListener {
+                exploreOtherOfferings()
+            }
+
             etPayIn.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -112,12 +122,19 @@ class OfferingsFragment : Fragment() {
         }
     }
 
+    private fun exploreOtherOfferings() {
+        if (viewModel.state.value.offeringsList.isNotEmpty()) {
+            clearEditTextFocus()
+            showBottomSheetForOfferings()
+        }
+    }
+
     private fun setPayInCurrency() {
         clearEditTextFocus()
         currentCurrencyType = CurrencyType.PayIn
 
         val payInCurrencies = viewModel.state.value.supportedCurrencyPairs.map { it.first }.distinct()
-        showCurrencyBottomSheet(payInCurrencies)
+        showCurrencyBottomSheetForCurrencies(payInCurrencies)
     }
 
     private fun setPayOutCurrency() {
@@ -130,7 +147,7 @@ class OfferingsFragment : Fragment() {
                 currencyPair.first.code == selectedPayInCurrency.code
             }.map { it.second }.distinct()
 
-            showCurrencyBottomSheet(payOutCurrencies)
+            showCurrencyBottomSheetForCurrencies(payOutCurrencies)
         } ?: showSnack("Select pay in currency", binding.root)
     }
 
@@ -142,29 +159,79 @@ class OfferingsFragment : Fragment() {
                 CurrencyType.PayIn -> {
                     viewModel.updateSelectedPayInCurrency(currency.code)
 
-                    binding.tvCurrencyPayIn.text = currency.code
-                    Glide.with(binding.ivFlagPayIn)
-                        .load(countryFlag)
-                        .into(binding.ivFlagPayIn)
+                    updateViewWithCurrencyInfo(
+                        currency.code,
+                        countryFlag,
+                        binding.tvCurrencyPayIn,
+                        binding.ivFlagPayIn
+                    )
 
                 }
                 CurrencyType.PayOut -> {
-//                    viewModel.invalidateCurrencySelection()
                     viewModel.updateSelectedPayOutCurrency(currency.code)
 
-                    binding.tvCurrencyPayOut.text = currency.code
-                    Glide.with(binding.ivFlagPayOut)
-                        .load(countryFlag)
-                        .into(binding.ivFlagPayOut)
+                    updateViewWithCurrencyInfo(
+                        currency.code,
+                        countryFlag,
+                        binding.tvCurrencyPayOut,
+                        binding.ivFlagPayOut
+                    )
                 }
             }
 
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
+        otherOfferingsAdapter = OtherOfferingsAdapter(requireContext()) { offeringId ->
+            viewModel.updateSelectedOffering(offeringId)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
 
         binding.rvCurrencies.layoutManager = LinearLayoutManager(requireContext())
         binding.rvCurrencies.adapter = currencyAdapter
+
+        binding.rvOtherOfferings.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvOtherOfferings.adapter = otherOfferingsAdapter
+    }
+
+    private fun recallData() {
+        viewModel.state.value.run {
+            selectedPayInCurrency?.let {
+                val countryFlag = CurrencyUtils.getCountryFlag(requireContext(), it.code)
+
+                updateViewWithCurrencyInfo(
+                    it.code,
+                    countryFlag,
+                    binding.tvCurrencyPayIn,
+                    binding.ivFlagPayIn
+                )
+            }
+
+            selectedPayOutCurrency?.let {
+                val countryFlag = CurrencyUtils.getCountryFlag(requireContext(), it.code)
+
+                updateViewWithCurrencyInfo(
+                    it.code,
+                    countryFlag,
+                    binding.tvCurrencyPayOut,
+                    binding.ivFlagPayOut
+                )
+            }
+        }
+    }
+
+    private fun updateViewWithCurrencyInfo(
+        currencyCode: String,
+        @DrawableRes countryFlag: Int?,
+        tv: MaterialTextView,
+        iv: ImageView
+    ) {
+        tv.text = currencyCode
+
+        Glide.with(iv)
+            .load(countryFlag)
+            .into(iv)
     }
 
     private fun clearPayOutCurrencyDetails() {
@@ -247,7 +314,7 @@ class OfferingsFragment : Fragment() {
                         null -> {
                             binding.run {
                                 tvPfi.text = "--"
-                                chipChangePfi.isEnabled = false
+                                chipExplorePfi.isEnabled = false
                             }
                         }
                     }
@@ -280,10 +347,7 @@ class OfferingsFragment : Fragment() {
                         }
 
                         is PayOutAmountState.Error -> {
-                            binding.tvPayOut.apply {
-                                setErrorFont(requireContext())
-                                text = payoutState.message
-                            }
+                            binding.layoutPayIn.animateBorderColorForError()
                         }
 
                         is PayOutAmountState.Inactive -> {
@@ -294,7 +358,7 @@ class OfferingsFragment : Fragment() {
                         }
                     }
 
-                    when(state.isBestOfferAvailable) {
+                    when(state.isBestOfferSelected) {
                         null -> {
                             // Hasn't gotten any offers yet
                             binding.tvOnlyOffer.visibility = View.GONE
@@ -313,7 +377,7 @@ class OfferingsFragment : Fragment() {
                                 binding.layoutPfiContent.visibility = View.VISIBLE
 
                                 binding.tvPfi.text = pfi
-                                binding.chipChangePfi.isEnabled = true
+                                binding.chipExplorePfi.isEnabled = true
                             }
                         }
 
@@ -327,7 +391,7 @@ class OfferingsFragment : Fragment() {
                                 binding.layoutPfiContent.visibility = View.VISIBLE
 
                                 binding.tvPfi.text = pfi
-                                binding.chipChangePfi.isEnabled = true
+                                binding.chipExplorePfi.isEnabled = true
                             }
                         }
                     }
@@ -336,10 +400,32 @@ class OfferingsFragment : Fragment() {
         }
     }
 
-    private fun showCurrencyBottomSheet(currencies: List<Currency>) {
+    private fun showCurrencyBottomSheetForCurrencies(currencies: List<Currency>) {
+        binding.rvOtherOfferings.visibility = View.GONE
+        binding.rvCurrencies.visibility = View.VISIBLE
+        binding.tvBSTitle.text = "Select Currency"
+
         startAnimatingScrim()
+
         currencyAdapter.updateCurrencies(currencies)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun showBottomSheetForOfferings() {
+        binding.rvCurrencies.visibility = View.GONE
+        binding.rvOtherOfferings.visibility = View.VISIBLE
+        binding.tvBSTitle.text = "Explore offerings"
+
+        startAnimatingScrim()
+
+        val pfiAndOfferingsPair = viewModel.pairOfferingsWithPfiNames()
+        otherOfferingsAdapter.updateOfferings(pfiAndOfferingsPair)
+
+        bottomSheetBehavior.apply {
+            skipCollapsed = true
+            expandedOffset = (resources.displayMetrics.heightPixels * 0.3).toInt()
+            state = BottomSheetBehavior.STATE_EXPANDED
+        }
     }
 
     private fun startAnimatingScrim() {

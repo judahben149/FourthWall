@@ -235,7 +235,7 @@ class OfferingsViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             selectedOffering = bestOffering,
-                            isBestOfferAvailable = validOfferings.size > 1
+                            isBestOfferSelected = validOfferings.size > 1
                         )
                     }
                 }
@@ -245,12 +245,29 @@ class OfferingsViewModel @Inject constructor(
         refreshPayOutAmountState()
     }
 
+    private fun pickOtherOffering() {
+        invalidateOfferingSelection()
+    }
+
     private fun invalidateOfferingSelection() {
         _state.update {
             it.copy(
                 selectedOffering = null,
-                isBestOfferAvailable = null
+                isBestOfferSelected = null
             )
+        }
+    }
+
+    fun updateSelectedOffering(offeringId: String) {
+        invalidateOfferingSelection()
+        val offering = state.value.offeringsList.find { it.metadata.id == offeringId }
+
+        offering?.let {
+            _state.update { state ->
+                state.copy(
+                    selectedOffering = offering
+                )
+            }
         }
     }
 
@@ -277,6 +294,36 @@ class OfferingsViewModel @Inject constructor(
             }
         }
     }
+
+    fun getPfiNameFromOfferingId(offeringId: String): String {
+        val offering = state.value.offeringsList.find { it.metadata.id == offeringId }
+
+        return offering?.let { off ->
+            val pfiName = state.value.pfiData.find { it.pfiDid == off.metadata.from }?.pfiName ?: ""
+            pfiName
+        } ?: ""
+    }
+
+    fun pairOfferingsWithPfiNames(): List<Pair<String, Offering>> {
+        val selectedPayInCurrency = state.value.selectedPayInCurrency
+        val selectedPayOutCurrency = state.value.selectedPayOutCurrency
+
+        if (selectedPayInCurrency == null || selectedPayOutCurrency == null) return emptyList()
+
+        val offeringList = state.value.offeringsList.filter { off ->
+            (off.data.payin.currencyCode == selectedPayInCurrency.code) &&
+                    (off.data.payout.currencyCode == selectedPayOutCurrency.code)
+        }.distinct()
+
+        val pairsList = mutableListOf<Pair<String, Offering>>()
+
+        offeringList.forEach { off ->
+            val pfiName = getPfiNameFromOfferingId(off.metadata.id)
+            pairsList.add(Pair(pfiName, off))
+        }
+
+        return pairsList
+    }
 }
 
 data class OfferingsFlowState(
@@ -287,7 +334,8 @@ data class OfferingsFlowState(
     val btnState: OfferingsBtnState = OfferingsBtnState.Loading,
     val payOutAmountState: PayOutAmountState = PayOutAmountState.Inactive("0.0"),
     val selectedOffering: Offering? = null,
-    val isBestOfferAvailable: Boolean? = false,
+    val isBestOfferSelected: Boolean? = false,
+    val userDisregardsBestOffer: Boolean = false,
     val supportedCurrencyPairs: List<Pair<Currency, Currency>> = emptyList(),
     val supportedPayInCurrencies: List<Currency> = emptyList(),
     val supportedPayOutCurrencies: List<Currency> = emptyList(),

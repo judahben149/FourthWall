@@ -22,6 +22,7 @@ countryPicker = "2.0.0"
 flagKit = "1.0.2"
 shimmer = "0.5.0"
 hilt-navigation-fragment = "1.2.0"
+timber = "5.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +55,7 @@ okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-i
 country-picker = { group = "com.github.mukeshsolanki", name = "country-picker-android", version.ref = "countryPicker" }
 flag-kit = { group = "com.github.murgupluoglu", name = "flagkit-android", version.ref = "flagKit" }
 shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "shimmer" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

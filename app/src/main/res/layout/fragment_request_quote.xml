@@ -8,7 +8,6 @@
 
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="6dp"
@@ -20,7 +19,7 @@
         app:navigationIconTint="@color/textOnBackground">
 
         <ImageButton
-            android:id="@+id/customNavigationIcon"
+            android:id="@+id/tool_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
@@ -36,9 +35,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/cera_pro_medium"
+            android:textStyle="bold"
+            android:text="Offering details"
+            android:fontFamily="@font/cera_pro_light"
             android:textColor="@color/textOnBackground"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
     </com.google.android.material.appbar.MaterialToolbar>
 
 
