@@ -12,12 +12,16 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.judahben149.fourthwall.R
+import android.animation.ArgbEvaluator
+import android.animation.PropertyValuesHolder
+import android.graphics.drawable.GradientDrawable
 
 fun ImageView.animateBounce() {
     this.animate()
@@ -98,6 +102,62 @@ fun ImageView.setupDeFiNetworkAnimation() {
         playTogether(pulseAnimation, rotateAnimation)
         start()
     }
+}
+
+fun View.dpToPx(dp: Float): Int {
+    return (dp * resources.displayMetrics.density).toInt()
+}
+
+
+fun View.animateBorderColorForError(durationMs: Long = 2000) {
+    val drawable = background as? GradientDrawable ?: return
+    val context = context ?: return
+
+    val originalColor = ContextCompat.getColor(context, R.color.tvStrokeNotInFocus)
+    val errorColor = ContextCompat.getColor(context, R.color.bright_red_error)
+
+    val originalStrokeWidth = dpToPx(1.5F)
+    val errorStrokeWidth = dpToPx(2.0F)
+
+    val colorHolder = PropertyValuesHolder.ofObject("color", ArgbEvaluator(), originalColor, errorColor)
+    val strokeHolder = PropertyValuesHolder.ofInt("stroke", originalStrokeWidth, errorStrokeWidth)
+
+    val toErrorAnimator = ValueAnimator().apply {
+        setValues(colorHolder, strokeHolder)
+        duration = durationMs / 4
+        addUpdateListener { animator ->
+            val color = animator.getAnimatedValue("color") as Int
+            val stroke = animator.getAnimatedValue("stroke") as Int
+            drawable.setStroke(stroke, color)
+            invalidate()
+        }
+    }
+
+    val holdErrorAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+        duration = durationMs / 2
+    }
+
+    val toOriginalAnimator = ValueAnimator().apply {
+        setValues(
+            PropertyValuesHolder.ofObject("color", ArgbEvaluator(), errorColor, originalColor),
+            PropertyValuesHolder.ofInt("stroke", errorStrokeWidth, originalStrokeWidth)
+        )
+        duration = durationMs / 4
+        addUpdateListener { animator ->
+            val color = animator.getAnimatedValue("color") as Int
+            val stroke = animator.getAnimatedValue("stroke") as Int
+            drawable.setStroke(stroke, color)
+            invalidate()
+        }
+    }
+
+    toErrorAnimator.start()
+    toErrorAnimator.addListener(onEnd = {
+        holdErrorAnimator.start()
+    })
+    holdErrorAnimator.addListener(onEnd = {
+        toOriginalAnimator.start()
+    })
 }
 
 fun MaterialButton.disable(res: Resources, pgBar: CircularProgressIndicator? = null) {

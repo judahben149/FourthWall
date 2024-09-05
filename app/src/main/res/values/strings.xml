@@ -18,7 +18,7 @@
     <string name="i_understand_and_accept">I understand, and accept</string>
     <string name="get_credentials">Get Credentials</string>
     <string name="bottom_sheet_drag_handle">Bottom sheet drag handle</string>
-    <string name="recipient_gets">Recipient gets</string>
+    <string name="recipient_gets">Recipient gets (excluding fees)</string>
     <string name="you_send">You send</string>
     <string name="amount">Amount</string>
     <string name="country_flag">Country Flag</string>
@@ -28,4 +28,6 @@
     <string name="only_offer"> - Only offer</string>
     <string name="provider">Provider</string>
     <string name="back_button">Back Button</string>
+    <string name="find_offerings">Find offerings</string>
+    <string name="value_detail_placeholder">(1 %1$s gets %2$s %3$s)</string>
 </resources>
