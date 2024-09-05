@@ -84,6 +84,9 @@ dependencies {
     // Shimmer
     implementation(libs.shimmer)
 
+    // Timber
+    implementation(libs.timber)
+
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
 
