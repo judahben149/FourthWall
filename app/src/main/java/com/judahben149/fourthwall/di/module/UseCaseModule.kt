@@ -5,6 +5,7 @@ import com.judahben149.fourthwall.data.repository.OfferingsRepository
 import com.judahben149.fourthwall.data.repository.OrderRepository
 import com.judahben149.fourthwall.data.repository.UserAccountRepository
 import com.judahben149.fourthwall.domain.usecase.orders.GetAllOrdersUseCase
+import com.judahben149.fourthwall.domain.usecase.orders.InsertOrderListUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
 import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
 import com.judahben149.fourthwall.domain.usecase.pfi.GetPfiOfferingsUseCase
@@ -23,6 +24,12 @@ object UseCaseModule {
     @Singleton
     fun providesInsertOrdersUseCase(orderRepository: OrderRepository): InsertOrdersUseCase {
         return InsertOrdersUseCase(orderRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesInsertOrderListUseCase(orderRepository: OrderRepository): InsertOrderListUseCase {
+        return InsertOrderListUseCase(orderRepository)
     }
 
     @Provides

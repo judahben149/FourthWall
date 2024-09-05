@@ -21,6 +21,7 @@
     <color name="textOnBackground">#FF000000</color>
     <color name="textHintOnBackground">#424242</color>
     <color name="layoutAboveBackground">#E3E3E3</color>
+    <color name="itemLayoutAboveBackground">#F4F4F4</color>
 
     <!--    Primary button-->
     <color name="primaryBtnBackgroundTint">#A259FF</color>
@@ -30,6 +31,7 @@
 <!--    Textview-->
     <color name="tvStrokeInFocus">#A259FF</color>
     <color name="tvStrokeNotInFocus">#CACACA</color>
+    <color name="textColorGreyed">#858585</color>
 
 <!--    Shimmer-->
     <color name="shimmer_color">#DDDDDD</color>

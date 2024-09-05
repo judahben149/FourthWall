@@ -32,3 +32,12 @@ class PfiDataParser @Inject constructor(private val context: Context) {
         }
     }
 }
+
+
+private fun getStatusText(status: Int): String {
+    return when (status) {
+        0 -> "In-Transit"
+        1 -> "Success"
+        else -> "Failed"
+    }
+}

@@ -4,14 +4,19 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "orders")
-data class Order(
-    @PrimaryKey val orderId: Int,
-    val amount: Long,
+data class OrderEntity(
+    @PrimaryKey(autoGenerate = true)
+    val orderId: Int,
+    val payInAmount: Double,
+    val payOutAmount: Double,
     val payInCurrency: String,
     val payOutCurrency: String,
     val payOutMethod: Int,
     val orderTime: Long,
+    val orderType: Int,
     val orderStatus: Int,
-    val pfiName: String
+    val pfiName: String,
+    val receiverName: String,
+    val walletAddress: String
 )
 

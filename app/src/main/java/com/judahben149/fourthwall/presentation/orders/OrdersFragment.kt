@@ -1,20 +1,63 @@
 package com.judahben149.fourthwall.presentation.orders
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.judahben149.fourthwall.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.judahben149.fourthwall.databinding.FragmentOrdersBinding
+import com.judahben149.fourthwall.domain.mappers.toOrder
+import com.judahben149.fourthwall.utils.DummyDataUtils
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class OrdersFragment : Fragment() {
+
+    private var _binding: FragmentOrdersBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var orderAdapter: OrderAdapter
+    private val viewModel: OrdersViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_orders, container, false)
+    ): View {
+        _binding = FragmentOrdersBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        observeState()
+        viewModel.insertOrderList(DummyDataUtils.generateDummyOrders(20))
+
+    }
+
+    private fun observeState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                viewModel.state.value.allOrders.collect { it ->
+                    orderAdapter.submitOrders(it.map { it.toOrder() })
+                }
+            }
+        }
+    }
+
+    private fun setupRecyclerView() {
+        orderAdapter = OrderAdapter(requireContext())
+
+        binding.rvOrders.apply {
+            adapter = orderAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
     }
 }

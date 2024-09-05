@@ -1,9 +1,11 @@
 package com.judahben149.fourthwall.utils
 
 import android.content.Context
-import android.icu.util.Currency
+import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.domain.models.CurrencyPair
 import com.murgupluoglu.flagkit.FlagKit
+import java.text.NumberFormat
+import java.util.Currency
 import java.util.Locale
 
 object CurrencyUtils {
@@ -52,6 +54,8 @@ object CurrencyUtils {
     }
 
     fun getCountryFlag(context: Context, currencyCode: String): Int? {
+        if (currencyCode == "BTC") return R.drawable.ic_btc
+
         val countryCode = getCountryCode(currencyCode)
         return countryCode?.let { FlagKit.getResId(context, it) }
     }
@@ -214,4 +218,12 @@ object CurrencyUtils {
         "ZMW" to "ZM",
         "ZWL" to "ZW"
     )
+
+    fun Double.formatCurrency(currencyCode: String): String {
+        val format = NumberFormat.getCurrencyInstance(Locale.getDefault())
+        val currency = Currency.getInstance(currencyCode)
+        format.currency = currency
+        format.maximumFractionDigits = currency.defaultFractionDigits
+        return format.format(this)
+    }
 }

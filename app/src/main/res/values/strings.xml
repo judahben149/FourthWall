@@ -23,11 +23,17 @@
     <string name="amount">Amount</string>
     <string name="country_flag">Country Flag</string>
     <string name="_0_0">0.0</string>
-    <string name="best_offer"> - Best offer</string>
+    <string name="best_offer"> (Best offer)</string>
     <string name="item_currency_text">%1$s (%2$s)</string>
-    <string name="only_offer"> - Only offer</string>
+    <string name="only_offer"> (Only offer)</string>
     <string name="provider">Provider</string>
     <string name="back_button">Back Button</string>
     <string name="find_offerings">Find offerings</string>
     <string name="value_detail_placeholder">(1 %1$s gets %2$s %3$s)</string>
+    <string name="in_transit">In-Transit</string>
+    <string name="failed">Failed</string>
+    <string name="successful">Successful</string>
+    <string name="currency_image">Currency image</string>
+    <string name="forward_button">Forward Button</string>
+    <string name="order_time">• %1$s</string>
 </resources>
