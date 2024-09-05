@@ -57,6 +57,9 @@ dependencies {
     // Hilt
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.fragment)
+
+    // Glide
     implementation(libs.glide)
 
     // Room

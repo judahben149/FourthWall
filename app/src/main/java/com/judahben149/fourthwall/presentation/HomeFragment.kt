@@ -45,7 +45,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnSeeOfferings.setOnClickListener {
-            navController.navigate(R.id.action_homeFragment_to_offeringsFragment)
+            navController.navigate(R.id.action_homeFragment_to_order_flow_nav)
         }
     }
 

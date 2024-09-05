@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/order_flow_nav"
+    app:startDestination="@id/offeringsFragment">
+
+
+    <fragment
+        android:id="@+id/offeringsFragment"
+        android:name="com.judahben149.fourthwall.presentation.exchange.OfferingsFragment"
+        android:label="fragment_offerings"
+        tools:layout="@layout/fragment_offerings" >
+        <action
+            android:id="@+id/action_offeringsFragment_to_requestQuoteFragment"
+            app:destination="@id/requestQuoteFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/requestQuoteFragment"
+        android:name="com.judahben149.fourthwall.presentation.rfq.RequestQuoteFragment"
+        android:label="fragment_request_quote"
+        tools:layout="@layout/fragment_request_quote" />
+</navigation>

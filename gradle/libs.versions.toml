@@ -21,6 +21,7 @@ okhttp = "4.12.0"
 countryPicker = "2.0.0"
 flagKit = "1.0.2"
 shimmer = "0.5.0"
+hilt-navigation-fragment = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +36,8 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-navigation-fragment = { group = "androidx.hilt", name = "hilt-navigation-fragment", version.ref = "hilt-navigation-fragment" }
+
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }

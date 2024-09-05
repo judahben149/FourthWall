@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_nav.xml"
+    android:id="@+id/main_nav"
     app:startDestination="@id/homeFragment">
 
     <fragment
@@ -11,8 +11,8 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_offeringsFragment"
-            app:destination="@id/offeringsFragment" />
+            android:id="@+id/action_homeFragment_to_order_flow_nav"
+            app:destination="@id/order_flow_nav" />
     </fragment>
 
     <fragment
@@ -25,13 +25,6 @@
         android:name="com.judahben149.fourthwall.presentation.orders.OrdersFragment"
         android:label="fragment_orders"
         tools:layout="@layout/fragment_orders" />
-    <fragment
-        android:id="@+id/offeringsFragment"
-        android:name="com.judahben149.fourthwall.presentation.exchange.OfferingsFragment"
-        android:label="fragment_offerings"
-        tools:layout="@layout/fragment_offerings" >
-        <action
-            android:id="@+id/action_offeringsFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+
+    <include app:graph="@navigation/order_flow_nav" />
 </navigation>

@@ -9,9 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -38,12 +38,28 @@ class OfferingsFragment : Fragment() {
     private var _binding: FragmentOfferingsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: OfferingsViewModel by viewModels()
+    private val viewModel: OfferingsViewModel by hiltNavGraphViewModels(R.id.order_flow_nav)
     private val navController by lazy { findNavController() }
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
 
     private lateinit var currencyAdapter: CurrencyAdapter
     private lateinit var currentCurrencyType: CurrencyType
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (navController.currentDestination?.id == R.id.offeringsFragment) {
+                    navController.popBackStack(R.id.order_flow_nav, true, false)
+                } else {
+                    isEnabled = false
+                    requireActivity().onBackPressed()
+                }
+            }
+        })
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +82,8 @@ class OfferingsFragment : Fragment() {
 
     private fun setupListeners() {
         binding.run {
+            toolBar.setOnClickListener { navController.popBackStack(R.id.order_flow_nav, true, false) }
+
             // This is to increase the touch target area
             ivSelectPayInCurrency.setOnClickListener { setPayInCurrency() }
             tvCurrencyPayIn.setOnClickListener { setPayInCurrency() }
@@ -74,6 +92,10 @@ class OfferingsFragment : Fragment() {
             ivSelectPayOutCurrency.setOnClickListener { setPayOutCurrency() }
             tvCurrencyPayOut.setOnClickListener { setPayOutCurrency() }
             ivFlagPayOut.setOnClickListener { setPayOutCurrency() }
+
+            btnContinue.setOnClickListener {
+                navController.navigate(R.id.action_offeringsFragment_to_requestQuoteFragment)
+            }
 
             etPayIn.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
