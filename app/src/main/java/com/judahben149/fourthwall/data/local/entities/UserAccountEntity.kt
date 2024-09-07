@@ -4,8 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "user_accounts")
-data class UserAccount(
+data class UserAccountEntity(
     @PrimaryKey
     val userId: Int,
-    val userName: String
+    val userName: String,
+    val userCountryCode: String
 )

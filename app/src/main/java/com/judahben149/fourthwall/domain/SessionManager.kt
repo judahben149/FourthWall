@@ -2,6 +2,7 @@ package com.judahben149.fourthwall.domain
 
 import android.content.SharedPreferences
 import com.judahben149.fourthwall.utils.Constants
+import com.judahben149.fourthwall.utils.Constants.BASE_USER_ID
 import com.judahben149.fourthwall.utils.Constants.KCC_VC_JWT
 import com.judahben149.fourthwall.utils.storeSecret
 import javax.inject.Inject
@@ -22,4 +23,6 @@ class SessionManager @Inject constructor(
     fun storeKCC(kcc: String) {
         encryptedSharedPrefs.storeSecret(KCC_VC_JWT, kcc)
     }
+
+    fun getUserId(): Int = BASE_USER_ID
 }

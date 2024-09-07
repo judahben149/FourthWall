@@ -1,45 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/layoutBackground"
-    tools:context=".presentation.HomeFragment">
+    android:background="@color/itemLayoutAboveBackground"
+    tools:context=".presentation.home.HomeFragment">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_headline"
+        android:id="@+id/tvHomeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="124dp"
-        android:fontFamily="@font/cera_pro_light"
-        android:text="@string/home_page"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="48dp"
+        android:fontFamily="@font/cera_pro_medium"
+        android:text="Home"
         android:textColor="@color/textOnBackground"
-        android:textSize="38sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        android:textSize="32sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_see_offerings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Send money"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivProfile"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_profile_3"
+        app:layout_constraintBottom_toBottomOf="@+id/tvHomeTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvHomeTitle"
+        app:shapeAppearance="@style/CircularShapeAppearance" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/layout_blur"
+        android:layout_width="match_parent"
+        android:layout_height="172dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#33A259FF"
+        app:cardCornerRadius="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_headline" />
+        app:layout_constraintTop_toBottomOf="@id/tvHomeTitle"
+        app:strokeWidth="0dp">
 
-    <TextView
-        android:id="@+id/tv_show"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        <eightbitlab.com.blurview.BlurView
+            android:id="@+id/blurView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:outlineProvider="background">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_balance_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:alpha="0.7"
+                    android:fontFamily="@font/cera_pro_medium"
+                    android:text="@string/main_balance"
+                    android:textColor="@color/textOnBackground"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@id/layout_amount_balance"
+                    app:layout_constraintEnd_toEndOf="@+id/layout_amount_balance"
+                    app:layout_constraintHorizontal_bias="0.1"
+                    app:layout_constraintStart_toStartOf="@+id/layout_amount_balance" />
+
+                <LinearLayout
+                    android:id="@+id/layout_amount_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.4">
+
+                    <TextView
+                        android:id="@+id/tv_amount_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/cera_pro_medium"
+                        tools:text="$1,600"
+                        android:textColor="@color/textOnBackground"
+                        android:textSize="34sp" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_send_money"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:backgroundTint="#4DA259FF"
+                    android:drawableEnd="@drawable/ic_forward"
+                    android:fontFamily="@font/cera_pro_medium"
+                    android:text="@string/send"
+                    android:textColor="@color/textOnBackground"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btn_add_account"
+                    app:layout_constraintHorizontal_weight="2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_amount_balance" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_add_account"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="24dp"
+                    android:backgroundTint="#DBA3E4"
+                    android:maxWidth="56dp"
+                    android:minHeight="56dp"
+                    android:padding="0dp"
+                    android:paddingStart="8dp"
+                    android:textColor="@color/textOnBackground"
+                    app:icon="@drawable/ic_plus"
+                    app:iconGravity="textStart"
+                    app:iconSize="28dp"
+                    app:iconTint="@color/textOnBackground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@id/btn_send_money"
+                    app:layout_constraintTop_toBottomOf="@id/layout_amount_balance" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/btn_balance_visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/btn_fund_wallet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#90DBA3E4"
+                        android:text="@string/fund"
+                        android:textAppearance="@style/FourthWallChipTextAppearance"
+                        android:textColor="@color/textOnBackground"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </eightbitlab.com.blurview.BlurView>
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintVertical_bias="0"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="@color/layoutBackground"
+        app:cardCornerRadius="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/update" />
+        app:layout_constraintTop_toBottomOf="@id/layout_blur"
+        app:strokeWidth="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="12dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="42dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:backgroundTint="@color/itemLayoutAboveBackground"
+                android:padding="0dp"
+                android:paddingStart="12dp"
+                app:icon="@drawable/ic_swap2"
+                app:iconTint="@color/textOnBackground" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/cera_pro_medium"
+                android:text="@string/recent"
+                android:textSize="18sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSeeAllOrders"
+                android:layout_width="42dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@color/itemLayoutAboveBackground"
+                android:padding="0dp"
+                android:paddingStart="10dp"
+                app:icon="@drawable/ic_forward"
+                app:iconSize="24dp"
+                app:iconTint="@color/textOnBackground" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvLatestOrders"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="64dp"
+            tools:itemCount="6"
+            tools:listitem="@layout/item_recent_orders" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/pgBar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="36dp"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            app:indicatorColor="@color/base_purple"
+            app:indicatorSize="24dp" />
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

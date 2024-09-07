@@ -36,4 +36,8 @@
     <string name="currency_image">Currency image</string>
     <string name="forward_button">Forward Button</string>
     <string name="order_time">• %1$s</string>
+    <string name="fund">Fund</string>
+    <string name="send">Send</string>
+    <string name="recent">Recent</string>
+    <string name="main_balance">Main balance:</string>
 </resources>

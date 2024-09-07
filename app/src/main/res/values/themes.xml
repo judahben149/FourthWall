@@ -48,7 +48,9 @@
     </style>
 
 
-    <style name="FourthWallChipTextAppearance" parent="ShapeAppearanceOverlay.Material3.Chip">
+    <style name="FourthWallChipTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
         <item name="fontFamily">@font/cera_pro_light</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

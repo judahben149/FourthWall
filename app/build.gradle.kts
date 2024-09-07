@@ -87,6 +87,12 @@ dependencies {
     // Timber
     implementation(libs.timber)
 
+    // Blur View
+    implementation(libs.blur.view)
+
+    // Lottie animations
+    implementation(libs.lottie.animation)
+
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
 

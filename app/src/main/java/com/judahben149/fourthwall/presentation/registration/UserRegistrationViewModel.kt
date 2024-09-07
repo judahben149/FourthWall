@@ -3,8 +3,8 @@ package com.judahben149.fourthwall.presentation.registration
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.judahben149.fourthwall.data.local.entities.CurrencyAccount
-import com.judahben149.fourthwall.data.local.entities.UserAccount
+import com.judahben149.fourthwall.data.local.entities.CurrencyAccountEntity
+import com.judahben149.fourthwall.data.local.entities.UserAccountEntity
 import com.judahben149.fourthwall.data.local.relations.UserWithCurrencyAccounts
 import com.judahben149.fourthwall.data.remote.result.NetworkResult
 import com.judahben149.fourthwall.domain.SessionManager
@@ -116,20 +116,21 @@ class UserRegistrationViewModel @Inject constructor(
     }
 
     private fun registerUserInDatabase() {
-        val userAccount = UserAccount(
+        val userAccountEntity = UserAccountEntity(
             userId = BASE_USER_ID,
-            userName = state.value.name
+            userName = state.value.name,
+            userCountryCode = state.value.countryCode
         )
 
-        val currencyAccount = CurrencyAccount(
+        val currencyAccountEntity = CurrencyAccountEntity(
             userId = BASE_USER_ID,
             currencyCode = state.value.currencyCode,
             balance = 0.0,
             isPrimaryAccount = 1
         )
 
-        val currencyAccounts = listOf(currencyAccount)
-        val userWithCurrencyAccounts = UserWithCurrencyAccounts(userAccount, currencyAccounts)
+        val currencyAccounts = listOf(currencyAccountEntity)
+        val userWithCurrencyAccounts = UserWithCurrencyAccounts(userAccountEntity, currencyAccounts)
 
         try {
             viewModelScope.launch(Dispatchers.IO) {
