@@ -148,7 +148,7 @@
                         android:id="@+id/btn_fund_wallet"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#90DBA3E4"
+                        android:backgroundTint="@color/chipButtonBackground"
                         android:text="@string/fund"
                         android:textAppearance="@style/FourthWallChipTextAppearance"
                         android:textColor="@color/textOnBackground"

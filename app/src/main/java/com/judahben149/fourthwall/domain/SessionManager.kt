@@ -24,5 +24,9 @@ class SessionManager @Inject constructor(
         encryptedSharedPrefs.storeSecret(KCC_VC_JWT, kcc)
     }
 
+    fun getKCC(default: String): String? {
+        return encryptedSharedPrefs.getString(KCC_VC_JWT, default)
+    }
+
     fun getUserId(): Int = BASE_USER_ID
 }

@@ -28,6 +28,13 @@
     <color name="disabledPrimaryBtnBackgroundTint">#AAAAAA</color>
     <color name="primaryBtnTextOnBackground">#FFFFFFFF</color>
 
+<!--    Chip Buttons-->
+    <color name="chipButtonBackground">#90DBA3E4</color>
+    <color name="chipDefaultTint">#90DBA3E4</color>
+    <color name="chipSelectedTint">#DBA3E4</color>
+
+
+
 <!--    Textview-->
     <color name="tvStrokeInFocus">#A259FF</color>
     <color name="tvStrokeNotInFocus">#CACACA</color>
