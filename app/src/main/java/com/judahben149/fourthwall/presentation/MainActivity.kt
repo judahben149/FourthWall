@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricPrompt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
@@ -11,10 +12,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.ActivityMainBinding
+import com.judahben149.fourthwall.utils.biometrics.BiometricAuthListener
+import com.judahben149.fourthwall.utils.biometrics.BiometricUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BiometricAuthListener {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
@@ -35,7 +38,20 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        performBiometricsCheck()
         setupNavigation()
+    }
+
+    private fun performBiometricsCheck() {
+        if (BiometricUtils.isBiometricReady(this)) {
+            BiometricUtils.showBiometricPrompt(
+                activity = this,
+                listener = this,
+                cryptoObject = null,
+            )
+        } else {
+            //
+        }
     }
 
     private fun setupNavigation() {
@@ -101,5 +117,13 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onBiometricAuthenticateError(error: Int, errMsg: String) {
+        performBiometricsCheck()
+    }
+
+    override fun onBiometricAuthenticateSuccess(result: BiometricPrompt.AuthenticationResult) {
+
     }
 }

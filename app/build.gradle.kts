@@ -93,6 +93,9 @@ dependencies {
     // Lottie animations
     implementation(libs.lottie.animation)
 
+    // Biometrics
+    implementation(libs.biometrics)
+
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
 

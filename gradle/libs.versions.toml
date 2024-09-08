@@ -25,6 +25,7 @@ hilt-navigation-fragment = "1.2.0"
 timber = "5.0.1"
 blur-view = "version-2.0.5"
 lottie = "5.2.0"
+biometrics = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -61,6 +62,7 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 
 blur-view = { group = "com.github.Dimezis", name = "BlurView", version.ref = "blur-view" }
 lottie-animation = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+biometrics = { group = "androidx.biometric", name = "biometric", version.ref = "biometrics" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
