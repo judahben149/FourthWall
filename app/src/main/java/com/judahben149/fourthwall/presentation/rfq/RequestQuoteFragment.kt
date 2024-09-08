@@ -12,6 +12,7 @@ import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentRequestQuoteBinding
 import com.judahben149.fourthwall.presentation.exchange.OfferingsViewModel
 import com.judahben149.fourthwall.utils.log
+import com.judahben149.fourthwall.utils.text.parseRequiredPaymentDetails
 import com.judahben149.fourthwall.utils.views.ChipManager
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,7 +42,7 @@ class RequestQuoteFragment : Fragment() {
         collectPayInPayoutDetails()
 
         //
-        createRfq()
+//        createRfq()
         seeSelectedOffering()
     }
 
@@ -116,14 +117,36 @@ class RequestQuoteFragment : Fragment() {
                         val payFields = emptyList<PayField>()
 
 //                        val fieldsList
-//                        val title = it.path("title").asText()
+                        val title = it.path("title").asText().log("Field Name ---  Title ---> ")
+                        it.path("required").asText().log("Field Name ---  Title ---> ")
+                        it.path("required").asText().log("Field Name ---  Title ---> ")
 //                        val required = it.path("title").asText()
 //                        val title = it.path("title").asText()
                     }
                 }
+
+                it1.parseRequiredPaymentDetails()?.log("ACTUALLY MEHN ----->")
             }
         }
     }
+
+    data class SchemaField(
+        val title: String,
+        val description: String,
+        val type: String
+    )
+
+    data class RequiredPaymentDetailsSchema(
+        val title: String,
+        val type: String,
+        val required: List<String>,
+        val properties: Map<String, SchemaField>
+    )
+
+    data class RequiredPaymentDetails(
+        val kind: String,
+        val schema: RequiredPaymentDetailsSchema
+    )
 
     data class PayField(
         val actualName: String,
