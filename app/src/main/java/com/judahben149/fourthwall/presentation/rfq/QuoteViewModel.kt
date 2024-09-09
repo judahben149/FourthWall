@@ -19,40 +19,31 @@ class QuoteViewModel @Inject constructor(
     val state: StateFlow<QuoteState> = _state
 
 
-//    fun parsePaymentMethodFields() {
-//        try {
-//            state.value.selectedOffering?.let { off ->
-//                // Use the selected payment kind to parse out the fields
-//
-//                state.value.selectedPaymentKind?.let { pair ->
-//                    val selectedKind = off.data.payin.methods.find { it.kind == pair.first }
-//
-//                    // Begin to traverse the selected payment kind to parse out the fields
-//                    selectedKind?.let { payMethod ->
-//                        // start with Pay In fields
-//                        val payInFields = emptyMap<Int, PayFields>()
-//
-//                        payMethod.parseRequiredPaymentDetails()?.let { details ->
-//
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (ex: Exception) {
-//            //Show graceful error message
-//        }
-//    }
-
     fun updateSelectedOffering(offering: Offering) {
-        _state.update { it ->
-            it.copy(
+        _state.update { state ->
+            val availablePaymentKindsList = mutableListOf<PaymentKind>()
+
+            offering.data.payin.methods.forEachIndexed { methodIndex, payInMethod ->
+                val payOutMethodCorresponding = offering.data.payout.methods[methodIndex]
+
+                val newPaymentKind = PaymentKind(
+                    kind = payInMethod.kind.formatKindEnum(),
+                    formattedKindName = payInMethod.kind.formatKind(),
+                    payInMethod = payInMethod.kind.formatKindEnum().name,
+                    payOutMethod = payOutMethodCorresponding.kind.formatKindEnum().name,
+                    isSelected = false
+                )
+
+                availablePaymentKindsList.add(newPaymentKind)
+            }
+
+            state.copy(
                 selectedOffering = offering,
-                paymentKinds = offering.data.payin.methods.map {
-                    PaymentKind(it.kind.formatKindEnum(), it.kind.formatKind(), false)
-                }
+                paymentKinds = availablePaymentKindsList
             )
         }
     }
+
 
     fun updateSelectedPaymentKind(paymentKind: PaymentKind) {
         _state.update {
@@ -64,10 +55,11 @@ class QuoteViewModel @Inject constructor(
 
 
     private fun String.formatKind(): String {
+        val sanitizedString = this.trim().lowercase()
+
         return when {
-            this.contains("usd_bank", true) -> "USD Transfer"
-            this.contains("wallet", true) -> "Wallet Address"
-            this.contains("transfer", true) -> "Transfer"
+            sanitizedString.contains("wallet") -> "Wallet Address"
+            sanitizedString.contains("transfer") -> "Bank Transfer"
             else -> this
         }
     }
@@ -96,16 +88,7 @@ data class PaymentKind(
     val kind: PaymentMethods,
     val formattedKindName: String,
     val isSelected: Boolean,
-
-    val walletAddress: String = "",
-    val bankAccountPayIn: String = "",
-    val bankAccountPayOut: String = "",
-    val bankAccountPayInUsd: String = "",
-    val bankAccountPayOutUsd: String = "",
-    val routingNumber: String = "",
-
     var payInMethod: String = "",
-    var payInAmount: String = "",
     var payInBankAccount: String = "",
     var payInRoutingNumber: String = "",
     var payInWalletAddress: String = "",
