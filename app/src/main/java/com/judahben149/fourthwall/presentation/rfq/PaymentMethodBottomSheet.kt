@@ -8,8 +8,12 @@ import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.judahben149.fourthwall.databinding.BottomsheetLayoutPaymentMethodBinding
-import com.judahben149.fourthwall.domain.models.enums.PayOutMethods
+import com.judahben149.fourthwall.domain.models.enums.PaymentMethods
+import com.judahben149.fourthwall.utils.views.disable
+import com.judahben149.fourthwall.utils.views.enable
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PaymentMethodBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: BottomsheetLayoutPaymentMethodBinding? = null
@@ -18,19 +22,19 @@ class PaymentMethodBottomSheet : BottomSheetDialogFragment() {
     private lateinit var behavior: BottomSheetBehavior<View>
 
     private lateinit var viewModel: QuoteViewModel
-    private lateinit var payOutMethods: PayOutMethods
-    private lateinit var methodDetails: Pair<String, String>
+    private lateinit var paymentKind: PaymentKind
+    private var previouslySelectedKind: PaymentKind? = null
 
     companion object {
         fun newInstance(
             viewModel: QuoteViewModel,
-            method: PayOutMethods,
-            methodDetails: Pair<String, String>
+            paymentKind: PaymentKind,
+            previouslySelectedKind: PaymentKind?
         ): PaymentMethodBottomSheet {
             return PaymentMethodBottomSheet().apply {
                 this.viewModel = viewModel
-                this.payOutMethods = method
-                this.methodDetails = methodDetails
+                this.paymentKind = paymentKind
+                this.previouslySelectedKind = previouslySelectedKind
             }
         }
     }
@@ -50,62 +54,148 @@ class PaymentMethodBottomSheet : BottomSheetDialogFragment() {
         behavior = BottomSheetBehavior.from(view.parent as View)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
+        prefillData()
         setupListeners()
+        decideViewToShow()
+    }
+
+    private fun prefillData() {
+        previouslySelectedKind?.let {
+            when(paymentKind.kind) {
+                PaymentMethods.WALLET_ADDRESS ->  {
+                    binding.etWalletAddress.setText(paymentKind.walletAddress)
+                }
+
+                PaymentMethods.BANK_TRANSFER -> {
+                    binding.etBankAccountPayIn.setText(paymentKind.bankAccountPayIn)
+                    binding.etBankAccountPayOut.setText(paymentKind.bankAccountPayOut)
+                }
+
+                PaymentMethods.BANK_TRANSFER_USD -> {
+                    binding.etBankAccountPayInUsd.setText(paymentKind.bankAccountPayInUsd)
+                    binding.etBankAccountPayOutUsd.setText(paymentKind.bankAccountPayOutUsd)
+                    binding.etRoutingNumberUsd.setText(paymentKind.routingNumber)
+                }
+            }
+        }
     }
 
     private fun setupListeners() {
-        when (payOutMethods) {
-            PayOutMethods.WALLET_ADDRESS -> binding.etWalletAddress.doAfterTextChanged {
-                validateInputs(
-                    payOutMethods
-                )
+        when (paymentKind.kind) {
+            PaymentMethods.WALLET_ADDRESS -> binding.etWalletAddress.doAfterTextChanged {
+                validateInputs(paymentKind.kind)
             }
 
-            PayOutMethods.BANK_TRANSFER -> {
-                binding.etBankAccountPayIn.doAfterTextChanged { validateInputs(payOutMethods) }
-                binding.etBankAccountPayOut.doAfterTextChanged { validateInputs(payOutMethods) }
+            PaymentMethods.BANK_TRANSFER -> {
+                binding.etBankAccountPayIn.doAfterTextChanged { validateInputs(paymentKind.kind) }
+                binding.etBankAccountPayOut.doAfterTextChanged { validateInputs(paymentKind.kind) }
             }
 
-            PayOutMethods.BANK_TRANSFER_USD -> {
-                binding.etBankAccountPayInUsd.doAfterTextChanged { validateInputs(payOutMethods) }
-                binding.etBankAccountPayOutUsd.doAfterTextChanged { validateInputs(payOutMethods) }
-                binding.etRoutingNumberUsd.doAfterTextChanged { validateInputs(payOutMethods) }
+            PaymentMethods.BANK_TRANSFER_USD -> {
+                binding.etBankAccountPayInUsd.doAfterTextChanged { validateInputs(paymentKind.kind) }
+                binding.etBankAccountPayOutUsd.doAfterTextChanged { validateInputs(paymentKind.kind) }
+                binding.etRoutingNumberUsd.doAfterTextChanged { validateInputs(paymentKind.kind) }
             }
         }
 
         binding.btnUpdate.setOnClickListener {
-            viewModel.updateSelectedPaymentKind(methodDetails)
+            when (paymentKind.kind) {
+                PaymentMethods.WALLET_ADDRESS ->  {
+                    val address = binding.etWalletAddress.text.toString()
+
+                    paymentKind = paymentKind.copy(
+                        walletAddress = address
+                    )
+                }
+
+                PaymentMethods.BANK_TRANSFER -> {
+                    val bankAccountPayIn = binding.etBankAccountPayIn.text.toString()
+                    val bankAccountPayOut = binding.etBankAccountPayOut.text.toString()
+
+                    paymentKind = paymentKind.copy(
+                        bankAccountPayIn = bankAccountPayIn,
+                        bankAccountPayOut = bankAccountPayOut
+                    )
+                }
+
+                PaymentMethods.BANK_TRANSFER_USD -> {
+                    val bankAccountPayInUsd = binding.etBankAccountPayInUsd.text.toString()
+                    val bankAccountPayOutUsd = binding.etBankAccountPayOutUsd.text.toString()
+                    val routingNumber = binding.etRoutingNumberUsd.text.toString()
+
+                    paymentKind = paymentKind.copy(
+                        bankAccountPayInUsd = bankAccountPayInUsd,
+                        bankAccountPayOutUsd = bankAccountPayOutUsd,
+                        routingNumber = routingNumber
+                    )
+                }
+            }
+
+            viewModel.updateSelectedPaymentKind(paymentKind)
             dismiss()
         }
     }
 
-    private fun validateInputs(method: PayOutMethods) {
+    private fun decideViewToShow() {
+        when (paymentKind.kind) {
+            PaymentMethods.WALLET_ADDRESS -> {
+                binding.layoutWalletAddress.visibility = View.VISIBLE
+            }
+
+            PaymentMethods.BANK_TRANSFER -> {
+                binding.layoutBankAccount.visibility = View.VISIBLE
+            }
+
+            PaymentMethods.BANK_TRANSFER_USD -> {
+                binding.layoutBankAccountUsd.visibility = View.VISIBLE
+            }
+        }
+        
+        //disable button
+        binding.btnUpdate.disable(resources)
+    }
+
+    private fun validateInputs(method: PaymentMethods) {
         when (method) {
-            PayOutMethods.WALLET_ADDRESS -> {
+            PaymentMethods.WALLET_ADDRESS -> {
                 if (binding.etWalletAddress.text?.isNotBlank() == true) {
-                    binding.btnUpdate.isEnabled = true
+                    enableBtn()
+                } else {
+                    disableBtn()
                 }
             }
 
-            PayOutMethods.BANK_TRANSFER -> {
+            PaymentMethods.BANK_TRANSFER -> {
                 if (
                     (binding.etBankAccountPayIn.text?.isNotBlank() == true) &&
                     (binding.etBankAccountPayOut.text?.isNotBlank() == true)
                 ) {
-                    binding.btnUpdate.isEnabled = true
+                    enableBtn()
+                } else {
+                    disableBtn()
                 }
             }
 
-            PayOutMethods.BANK_TRANSFER_USD -> {
+            PaymentMethods.BANK_TRANSFER_USD -> {
                 if (
                     (binding.etBankAccountPayInUsd.text?.isNotBlank() == true) &&
                     (binding.etBankAccountPayOutUsd.text?.isNotBlank() == true) &&
                     (binding.etRoutingNumberUsd.text?.isNotBlank() == true)
                 ) {
-                    binding.btnUpdate.isEnabled = true
+                    enableBtn()
+                } else {
+                    disableBtn()
                 }
             }
         }
+    }
+
+    private fun enableBtn() {
+        binding.btnUpdate.enable(resources)
+    }
+
+    private fun disableBtn() {
+        binding.btnUpdate.disable(resources)
     }
 
     override fun onDestroyView() {

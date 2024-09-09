@@ -25,14 +25,15 @@ object CurrencyUtils {
         CurrencyPair("USD", "MXN")
     )
 
-    fun filterSupportedPairs(baseCurrency: String): List<CurrencyPair> {
-        return supportedCurrencyPairs.filter { it.from == "USD" }
-    }
-
     fun getCurrencyName(currencyCode: String, locale: Locale = Locale.getDefault()): String? {
         return try {
-            val currency = Currency.getInstance(currencyCode)
-            currency.getDisplayName(locale)
+            when(currencyCode) {
+                "USDC" -> "USD Coin"
+                else -> {
+                    val currency = Currency.getInstance(currencyCode)
+                    currency.getDisplayName(locale)
+                }
+            }
         } catch (ex: Exception) {
             null
         }
@@ -55,6 +56,7 @@ object CurrencyUtils {
 
     fun getCountryFlag(context: Context, currencyCode: String): Int? {
         if (currencyCode == "BTC") return R.drawable.ic_btc
+        if (currencyCode == "USDC") return R.drawable.ic_usdc_logo
 
         val countryCode = getCountryCode(currencyCode)
         return countryCode?.let { FlagKit.getResId(context, it) }

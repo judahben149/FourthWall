@@ -4,7 +4,7 @@ import com.judahben149.fourthwall.data.local.entities.OrderEntity
 import com.judahben149.fourthwall.domain.models.Order
 import com.judahben149.fourthwall.domain.models.enums.OrderStatus
 import com.judahben149.fourthwall.domain.models.enums.OrderType
-import com.judahben149.fourthwall.domain.models.enums.PayOutMethods
+import com.judahben149.fourthwall.domain.models.enums.PaymentMethods
 
 fun Order.toOrderEntity(): OrderEntity {
     return OrderEntity(
@@ -30,7 +30,7 @@ fun OrderEntity.toOrder(): Order {
         payOutAmount = payOutAmount,
         payInCurrency = payInCurrency,
         payOutCurrency = payOutCurrency,
-        payOutMethod = PayOutMethods.entries.getOrNull(payOutMethod)!!,
+        payOutMethod = PaymentMethods.entries.getOrNull(payOutMethod)!!,
         orderTime = orderTime,
         orderType = OrderType.entries.getOrNull(orderType)!!,
         orderStatus = OrderStatus.entries.getOrNull(orderStatus)!!,

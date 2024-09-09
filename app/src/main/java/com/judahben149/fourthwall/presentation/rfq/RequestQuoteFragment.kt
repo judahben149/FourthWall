@@ -7,15 +7,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentRequestQuoteBinding
-import com.judahben149.fourthwall.presentation.exchange.CurrencyAdapter
 import com.judahben149.fourthwall.presentation.exchange.OfferingsViewModel
 import com.judahben149.fourthwall.utils.log
-import com.judahben149.fourthwall.utils.text.parseRequiredPaymentDetails
-import com.judahben149.fourthwall.utils.views.ChipManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RequestQuoteFragment : Fragment() {
@@ -56,22 +57,49 @@ class RequestQuoteFragment : Fragment() {
 
         confirmCredentialsAvailability()
 
-        // Set possible payment methods
-        chipAdapter = PaymentMethodChipAdapter()
-        val possiblePaymentKinds = viewModel.state.value.possiblePaymentKinds
+        // Set available payment methods
+        val availablePaymentKinds = viewModel.state.value.paymentKinds
         val chipPaymentKindList = mutableListOf<Pair<String, Boolean>>()
 
-        possiblePaymentKinds.forEachIndexed { index, possiblePaymentKind ->
+        availablePaymentKinds.forEach { possiblePaymentKind ->
             chipPaymentKindList.add(
-                Pair(index, possiblePaymentKind.formattedKind)
+                Pair(possiblePaymentKind.formattedKind, possiblePaymentKind.isSelected)
             )
         }
 
 
+        chipAdapter = PaymentMethodChipAdapter { chipClickedText ->
+            val previouslySelectedKind = viewModel.state.value.selectedPaymentKind
+            val paymentTypeClicked = availablePaymentKinds.find { it.formattedKind == chipClickedText }
+
+            paymentTypeClicked?.let {
+                val bottomSheet = PaymentMethodBottomSheet.newInstance(
+                    viewModel,
+                    previouslySelectedKind ?: it,
+                    previouslySelectedKind
+                )
+
+                bottomSheet.show(childFragmentManager, "BOTTOM_SHEET_PAYMENT_METHOD")
+            }
+        }
+
+        binding.rvPaymentMethods.adapter = chipAdapter
+
     }
 
     private fun observeState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
 
+                viewModel.state.collect { state ->
+
+                    state.paymentKinds.let {
+                        val paymentKinds = viewModel.state.value.paymentKinds.map { Pair(it.formattedKind, it.isSelected) }
+                        chipAdapter.updatePaymentKinds(paymentKinds)
+                    }
+                }
+            }
+        }
     }
 
     private fun confirmCredentialsAvailability() {

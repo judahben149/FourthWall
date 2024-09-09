@@ -31,7 +31,6 @@ class PfiDataParser @Inject constructor(private val context: Context) {
             pfiDataResponse.pfiData
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.d("TAG", "parseJsonFromAssets: ${e.message}")
             emptyList()
         }
     }
@@ -46,38 +45,38 @@ private fun getStatusText(status: Int): String {
     }
 }
 
-fun PaymentMethod.parseRequiredPaymentDetails(): RequestQuoteFragment.RequiredPaymentDetails? {
-    val gson = Gson()
-
-    return try {
-        val jsonObject = gson.fromJson(requiredPaymentDetails.toString(), JsonObject::class.java)
-
-        val title = jsonObject.get("title").asString
-        val type = jsonObject.get("type").asString
-        val required = gson.fromJson<List<String>>(jsonObject.get("required"), object : TypeToken<List<String>>() {}.type)
-
-        val propertiesObject = jsonObject.getAsJsonObject("properties")
-        val properties = mutableMapOf<String, RequestQuoteFragment.SchemaField>()
-
-        propertiesObject.keySet().forEach { key ->
-            val fieldObject = propertiesObject.getAsJsonObject(key)
-            properties[key] = RequestQuoteFragment.SchemaField(
-                title = fieldObject.get("title").asString,
-                description = fieldObject.get("description").asString,
-                type = fieldObject.get("type").asString
-            )
-        }
-
-        val schema = RequestQuoteFragment.RequiredPaymentDetailsSchema(
-            title = title,
-            type = type,
-            required = required,
-            properties = properties
-        )
-
-        RequestQuoteFragment.RequiredPaymentDetails(kind, schema)
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
-}
+//fun PaymentMethod.parseRequiredPaymentDetails(): RequestQuoteFragment.RequiredPaymentDetails? {
+//    val gson = Gson()
+//
+//    return try {
+//        val jsonObject = gson.fromJson(requiredPaymentDetails.toString(), JsonObject::class.java)
+//
+//        val title = jsonObject.get("title").asString
+//        val type = jsonObject.get("type").asString
+//        val required = gson.fromJson<List<String>>(jsonObject.get("required"), object : TypeToken<List<String>>() {}.type)
+//
+//        val propertiesObject = jsonObject.getAsJsonObject("properties")
+//        val properties = mutableMapOf<String, RequestQuoteFragment.SchemaField>()
+//
+//        propertiesObject.keySet().forEach { key ->
+//            val fieldObject = propertiesObject.getAsJsonObject(key)
+//            properties[key] = RequestQuoteFragment.SchemaField(
+//                title = fieldObject.get("title").asString,
+//                description = fieldObject.get("description").asString,
+//                type = fieldObject.get("type").asString
+//            )
+//        }
+//
+//        val schema = RequestQuoteFragment.RequiredPaymentDetailsSchema(
+//            title = title,
+//            type = type,
+//            required = required,
+//            properties = properties
+//        )
+//
+//        RequestQuoteFragment.RequiredPaymentDetails(kind, schema)
+//    } catch (e: Exception) {
+//        e.printStackTrace()
+//        null
+//    }
+//}

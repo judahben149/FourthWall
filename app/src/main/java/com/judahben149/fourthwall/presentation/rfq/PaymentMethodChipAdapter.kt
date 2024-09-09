@@ -12,8 +12,8 @@ class PaymentMethodChipAdapter(
 
     private var methods: List<Pair<String, Boolean>> = emptyList()
 
-    fun updatePaymentMethods(newMethods: List<Pair<String, Boolean>>) {
-        methods = newMethods
+    fun updatePaymentKinds(updatedKinds: List<Pair<String, Boolean>>) {
+        methods = updatedKinds
         notifyDataSetChanged()
     }
 
