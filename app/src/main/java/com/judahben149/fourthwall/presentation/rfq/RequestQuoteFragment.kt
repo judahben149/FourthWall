@@ -10,6 +10,7 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentRequestQuoteBinding
+import com.judahben149.fourthwall.presentation.exchange.CurrencyAdapter
 import com.judahben149.fourthwall.presentation.exchange.OfferingsViewModel
 import com.judahben149.fourthwall.utils.log
 import com.judahben149.fourthwall.utils.text.parseRequiredPaymentDetails
@@ -25,6 +26,7 @@ class RequestQuoteFragment : Fragment() {
     private val navController by lazy { findNavController() }
     private val offeringsViewModel: OfferingsViewModel by hiltNavGraphViewModels(R.id.order_flow_nav)
     private val viewModel: QuoteViewModel by viewModels()
+    private lateinit var chipAdapter: PaymentMethodChipAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +41,7 @@ class RequestQuoteFragment : Fragment() {
 
         setListeners()
         setData()
+        observeState()
         collectPayInPayoutDetails()
 
         //
@@ -54,9 +57,9 @@ class RequestQuoteFragment : Fragment() {
         confirmCredentialsAvailability()
 
         // Set possible payment methods
-        val chipManager = ChipManager(requireContext())
+        chipAdapter = PaymentMethodChipAdapter()
         val possiblePaymentKinds = viewModel.state.value.possiblePaymentKinds
-        val chipPaymentKindList = mutableListOf<Pair<Int, String>>()
+        val chipPaymentKindList = mutableListOf<Pair<String, Boolean>>()
 
         possiblePaymentKinds.forEachIndexed { index, possiblePaymentKind ->
             chipPaymentKindList.add(
@@ -64,23 +67,11 @@ class RequestQuoteFragment : Fragment() {
             )
         }
 
-        chipManager.populateChipGroup(
-            binding.chipGroupPaymentMethod,
-            chipPaymentKindList
-        ) { chipClickedId ->
-            val selectedKind = chipPaymentKindList.find { it.first == chipClickedId }
 
-            selectedKind?.let { selected ->
-                // Get the actual kind from the possible kinds list
-                val selectedPossibleKind =
-                    possiblePaymentKinds.find { it.formattedKind == selected.second }
+    }
 
-                // Now, update it in the viewModel
-                selectedPossibleKind?.let {
-                    viewModel.updateSelectedPaymentKind(Pair(it.kind, it.formattedKind))
-                }
-            }
-        }
+    private fun observeState() {
+
     }
 
     private fun confirmCredentialsAvailability() {
@@ -103,57 +94,7 @@ class RequestQuoteFragment : Fragment() {
 //        offeringsViewModel.state.value.selectedOffering?.let { offering ->
 //            offering.data.requiredClaims.toString().log("Required Claims --->")
 //        }
-
-        offeringsViewModel.state.value.selectedOffering?.data?.payin?.let { it ->
-            it.methods[0].let { it1 ->
-                it1.requiredPaymentDetails?.let {
-                    it.let {
-                        it.fields()?.forEach { entry ->
-                            entry.toString().log("See schema ooo oboyyziee ---> ")
-                        }
-
-                        it.fieldNames().log("Field Names ---->>>>")
-
-                        val payFields = emptyList<PayField>()
-
-//                        val fieldsList
-                        val title = it.path("title").asText().log("Field Name ---  Title ---> ")
-                        it.path("required").asText().log("Field Name ---  Title ---> ")
-                        it.path("required").asText().log("Field Name ---  Title ---> ")
-//                        val required = it.path("title").asText()
-//                        val title = it.path("title").asText()
-                    }
-                }
-
-                it1.parseRequiredPaymentDetails()?.log("ACTUALLY MEHN ----->")
-            }
-        }
     }
-
-    data class SchemaField(
-        val title: String,
-        val description: String,
-        val type: String
-    )
-
-    data class RequiredPaymentDetailsSchema(
-        val title: String,
-        val type: String,
-        val required: List<String>,
-        val properties: Map<String, SchemaField>
-    )
-
-    data class RequiredPaymentDetails(
-        val kind: String,
-        val schema: RequiredPaymentDetailsSchema
-    )
-
-    data class PayField(
-        val actualName: String,
-        val title: String,
-        val description: String,
-        val inputType: String,
-    )
 
     private fun setListeners() {
         binding.run {

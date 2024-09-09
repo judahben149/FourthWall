@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), BiometricAuthListener {
             insets
         }
 
-        performBiometricsCheck()
+//        performBiometricsCheck()
         setupNavigation()
     }
 

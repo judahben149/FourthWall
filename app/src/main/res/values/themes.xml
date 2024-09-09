@@ -53,4 +53,12 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="ChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipIcon">@drawable/ic_tick</item>
+        <item name="chipIconVisible">true</item>
+        <item name="chipIconEnabled">true</item>
+        <item name="chipIconSize">24dp</item>
+        <item name="chipIconTint">@color/black</item>
+    </style>
 </resources>

@@ -153,13 +153,14 @@
                             android:layout_margin="12dp"
                             android:orientation="horizontal">
 
-                            <com.google.android.material.chip.ChipGroup
-                                android:id="@+id/chip_group_payment_method"
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rv_payment_methods"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                app:chipSpacing="8dp"
-                                app:singleLine="true"
-                                app:singleSelection="true" />
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                android:orientation="horizontal"
+                                tools:listitem="@layout/item_chip"
+                                />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 

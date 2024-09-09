@@ -1,7 +1,7 @@
 package com.judahben149.fourthwall.domain.models.enums
 
 enum class PayOutMethods {
-    CARD,
+    WALLET_ADDRESS,
     BANK_TRANSFER,
-    STORED_BALANCE
+    BANK_TRANSFER_USD,
 }

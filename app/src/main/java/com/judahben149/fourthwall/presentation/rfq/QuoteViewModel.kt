@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import org.web3j.abi.datatypes.Bool
 import tbdex.sdk.protocol.models.Offering
 import tbdex.sdk.protocol.models.PaymentMethod
 import javax.inject.Inject
@@ -50,7 +51,7 @@ class QuoteViewModel @Inject constructor(
             it.copy(
                 selectedOffering = offering,
                 possiblePaymentKinds = offering.data.payin.methods.map {
-                    PossiblePaymentKind(it.kind, it.kind.formatKind())
+                    PossiblePaymentKind(it.kind, it.kind.formatKind(), false)
                 }
             )
         }
@@ -134,7 +135,8 @@ data class PayFields(
 
 data class PossiblePaymentKind(
     val kind: String,
-    val formattedKind: String
+    val formattedKind: String,
+    val isSelected: Boolean
 )
 
 data class Details(
