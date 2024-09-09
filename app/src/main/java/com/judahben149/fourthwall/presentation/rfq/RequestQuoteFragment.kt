@@ -63,14 +63,14 @@ class RequestQuoteFragment : Fragment() {
 
         availablePaymentKinds.forEach { possiblePaymentKind ->
             chipPaymentKindList.add(
-                Pair(possiblePaymentKind.formattedKind, possiblePaymentKind.isSelected)
+                Pair(possiblePaymentKind.formattedKindName, possiblePaymentKind.isSelected)
             )
         }
 
 
         chipAdapter = PaymentMethodChipAdapter { chipClickedText ->
             val previouslySelectedKind = viewModel.state.value.selectedPaymentKind
-            val paymentTypeClicked = availablePaymentKinds.find { it.formattedKind == chipClickedText }
+            val paymentTypeClicked = availablePaymentKinds.find { it.formattedKindName == chipClickedText }
 
             paymentTypeClicked?.let {
                 val bottomSheet = PaymentMethodBottomSheet.newInstance(
@@ -94,7 +94,7 @@ class RequestQuoteFragment : Fragment() {
                 viewModel.state.collect { state ->
 
                     state.paymentKinds.let {
-                        val paymentKinds = viewModel.state.value.paymentKinds.map { Pair(it.formattedKind, it.isSelected) }
+                        val paymentKinds = viewModel.state.value.paymentKinds.map { Pair(it.formattedKindName, it.isSelected) }
                         chipAdapter.updatePaymentKinds(paymentKinds)
                     }
                 }

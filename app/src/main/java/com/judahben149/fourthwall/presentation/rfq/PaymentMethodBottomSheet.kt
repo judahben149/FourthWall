@@ -61,6 +61,23 @@ class PaymentMethodBottomSheet : BottomSheetDialogFragment() {
 
     private fun prefillData() {
         previouslySelectedKind?.let {
+            when(paymentKind.payInMethod) {
+                PaymentMethods.WALLET_ADDRESS ->  {
+                    binding.etWalletAddress.setText(paymentKind.walletAddress)
+                }
+
+                PaymentMethods.BANK_TRANSFER -> {
+                    binding.etBankAccountPayIn.setText(paymentKind.bankAccountPayIn)
+                    binding.etBankAccountPayOut.setText(paymentKind.bankAccountPayOut)
+                }
+
+                PaymentMethods.BANK_TRANSFER_USD -> {
+                    binding.etBankAccountPayInUsd.setText(paymentKind.bankAccountPayInUsd)
+                    binding.etBankAccountPayOutUsd.setText(paymentKind.bankAccountPayOutUsd)
+                    binding.etRoutingNumberUsd.setText(paymentKind.routingNumber)
+                }
+            }
+
             when(paymentKind.kind) {
                 PaymentMethods.WALLET_ADDRESS ->  {
                     binding.etWalletAddress.setText(paymentKind.walletAddress)
@@ -77,6 +94,8 @@ class PaymentMethodBottomSheet : BottomSheetDialogFragment() {
                     binding.etRoutingNumberUsd.setText(paymentKind.routingNumber)
                 }
             }
+
+
         }
     }
 

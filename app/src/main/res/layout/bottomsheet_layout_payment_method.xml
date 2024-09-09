@@ -7,214 +7,80 @@
     android:padding="24dp">
 
 
-    <LinearLayout
-        android:id="@+id/layout_wallet_address"
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp"
+        android:alpha="0.5"
+        android:src="@drawable/ic_line"
+        android:contentDescription="@string/bottom_sheet_drag_handle" />
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:alpha="0.8"
+        android:fontFamily="@font/cera_pro_light"
+        android:gravity="center_horizontal"
+        android:text="@string/enter_payment_details"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="6dp"
-            android:alpha="0.5"
-            android:src="@drawable/ic_line" />
+<!--    Pay in section - fields-->
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:alpha="0.8"
-            android:fontFamily="@font/cera_pro_light"
-            android:gravity="center_horizontal"
-            android:text="Enter Wallet details"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/wallet_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/wallet_address"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_wallet_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/cera_pro_light"
-                android:textStyle="bold" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_bank_account"
+    <ViewStub
+        android:id="@+id/stub_pay_in_wallet_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout="@layout/stub_layout_pay_in_wallet_address"
+        />
 
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="6dp"
-            android:alpha="0.5"
-            android:src="@drawable/ic_line" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:alpha="0.8"
-            android:fontFamily="@font/cera_pro_light"
-            android:gravity="center_horizontal"
-            android:text="Enter Transfer details"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/bank_account_pay_in"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/bank_account_pay_in"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_bank_account_pay_in"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/cera_pro_light"
-                android:inputType="number"
-                android:textStyle="bold" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/bank_account_pay_out"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="@string/bank_account_pay_out"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_bank_account_pay_out"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/cera_pro_light"
-                android:inputType="number"
-                android:textStyle="bold" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_bank_account_usd"
+    <ViewStub
+        android:id="@+id/stub_pay_in_bank_transfer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout="@layout/stub_layout_pay_in_bank_transfer"
+        />
 
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="6dp"
-            android:alpha="0.5"
-            android:src="@drawable/ic_line" />
+    <ViewStub
+        android:id="@+id/stub_pay_in_usd_bank_transfer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/stub_layout_pay_in_usd_bank_transfer"
+        />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:alpha="0.8"
-            android:fontFamily="@font/cera_pro_light"
-            android:gravity="center_horizontal"
-            android:text="Enter Transfer details"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+<!--    Pay out section - fields-->
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/bank_account_pay_in_usd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/bank_account_pay_in"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp">
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_bank_account_pay_in_usd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/cera_pro_light"
-                android:inputType="number"
-                android:textStyle="bold" />
+    <ViewStub
+        android:id="@+id/stub_pay_out_wallet_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/stub_layout_pay_out_wallet_address"
+        />
 
-        </com.google.android.material.textfield.TextInputLayout>
+    <ViewStub
+        android:id="@+id/stub_pay_out_bank_transfer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/stub_layout_pay_out_bank_transfer"
+        />
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/bank_account_pay_out_usd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:hint="@string/bank_account_pay_out"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_bank_account_pay_out_usd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/cera_pro_light"
-                android:inputType="number"
-                android:textStyle="bold" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/routing_number_usd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="@string/routing_number"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_routing_number_usd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/cera_pro_light"
-                android:inputType="number"
-                android:textStyle="bold" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
+    <ViewStub
+        android:id="@+id/stub_pay_out_usd_bank_transfer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/stub_layout_pay_out_usd_bank_transfer"
+        />
 
 
     <com.google.android.material.button.MaterialButton

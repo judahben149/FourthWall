@@ -94,7 +94,7 @@ data class QuoteState(
 
 data class PaymentKind(
     val kind: PaymentMethods,
-    val formattedKind: String,
+    val formattedKindName: String,
     val isSelected: Boolean,
 
     val walletAddress: String = "",
@@ -103,4 +103,14 @@ data class PaymentKind(
     val bankAccountPayInUsd: String = "",
     val bankAccountPayOutUsd: String = "",
     val routingNumber: String = "",
+
+    var payInMethod: String = "",
+    var payInAmount: String = "",
+    var payInBankAccount: String = "",
+    var payInRoutingNumber: String = "",
+    var payInWalletAddress: String = "",
+    var payOutMethod: String = "",
+    var payOutBankAccount: String = "",
+    var payOutRoutingNumber: String = "",
+    var payOutWalletAddress: String = ""
 )
