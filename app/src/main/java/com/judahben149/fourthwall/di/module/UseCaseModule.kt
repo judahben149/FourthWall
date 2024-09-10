@@ -10,7 +10,9 @@ import com.judahben149.fourthwall.domain.usecase.orders.InsertOrderListUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
 import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
 import com.judahben149.fourthwall.domain.usecase.pfi.GetPfiOfferingsUseCase
+import com.judahben149.fourthwall.domain.usecase.user.GetCurrencyAccountUseCase
 import com.judahben149.fourthwall.domain.usecase.user.InsertUserWithCurrencyAccountsUseCase
+import com.judahben149.fourthwall.domain.usecase.user.TopUpBalanceUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -67,5 +69,21 @@ object UseCaseModule {
         userAccountRepository: UserAccountRepository
     ): GetUserWithCurrencyAccountsUseCase {
         return GetUserWithCurrencyAccountsUseCase(userAccountRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesTopUpBalanceUseCase(
+        userAccountRepository: UserAccountRepository
+    ): TopUpBalanceUseCase {
+        return TopUpBalanceUseCase(userAccountRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetCurrencyAccountUseCase(
+        userAccountRepository: UserAccountRepository
+    ): GetCurrencyAccountUseCase {
+        return GetCurrencyAccountUseCase(userAccountRepository)
     }
 }

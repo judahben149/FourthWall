@@ -25,4 +25,10 @@ interface UserAccountDao {
     @Transaction
     @Query("SELECT * FROM user_accounts WHERE userId = :userId")
     fun getUserWithCurrencyAccounts(userId: Int): Flow<UserWithCurrencyAccounts?>
+
+    @Query("UPDATE currency_accounts SET balance = balance + :amount WHERE id = :accountId")
+    suspend fun topUpAccountBalance(accountId: Int, amount: Double)
+
+    @Query("SELECT * FROM currency_accounts WHERE id = :accountId LIMIT 1")
+    suspend fun getCurrencyAccountById(accountId: Int): CurrencyAccountEntity?
 }

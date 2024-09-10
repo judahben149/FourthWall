@@ -33,4 +33,12 @@ class UserAccountRepository (
     suspend fun getPfiData(): List<PfiData> {
         return pfiDataParser.parseJsonFromAssets()
     }
+
+    suspend fun topUpAccountBalance(accountId: Int, amount: Double) {
+        userAccountDao.topUpAccountBalance(accountId, amount)
+    }
+
+    suspend fun getCurrencyAccount(accountId: Int): CurrencyAccountEntity? {
+        return userAccountDao.getCurrencyAccountById(accountId)
+    }
 }

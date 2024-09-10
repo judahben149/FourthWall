@@ -42,4 +42,22 @@
 
 <!--    Shimmer-->
     <color name="shimmer_color">#DDDDDD</color>
+
+<!--    User account card-->
+    <color name="card_1_bg">#70A259FF</color>
+    <color name="card_1_chip">#90DBA3E4</color>
+    <color name="card_1_send_btn">#4DA259FF</color>
+    <color name="card_1_add_btn">#DBA3E4</color>
+
+    <color name="card_2_bg">#3322D6E0</color>
+    <color name="card_2_chip">#00D6DE</color>
+    <color name="card_2_send_btn">#35C2CB</color>
+    <color name="card_2_add_btn">#3DE2E9</color>
+
+    <color name="card_3_bg">#33FFA552</color>
+    <color name="card_3_chip">#FFD39C75</color>
+    <color name="card_3_send_btn">#FFBF804A</color>
+    <color name="card_3_add_btn">#60CE9163</color>
+
+
 </resources>
