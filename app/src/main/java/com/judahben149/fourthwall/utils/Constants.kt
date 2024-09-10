@@ -17,6 +17,7 @@ object Constants {
     //Pref Keys
     const val HAS_COMPLETED_ONBOARDING = "HAS_COMPLETED_ONBOARDING"
     const val KCC_VC_JWT = "KCC_VC_JWT"
+    const val USER_DID = "USER_DID"
 
     // Network
     const val VC_BASE_URL = "https://mock-idv.tbddev.org"
