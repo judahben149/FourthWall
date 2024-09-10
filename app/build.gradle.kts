@@ -96,6 +96,12 @@ dependencies {
     // Biometrics
     implementation(libs.biometrics)
 
+    // Dot View
+    implementation(libs.dot.view)
+
+    // Alerter
+    implementation(libs.alerter)
+
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
 
