@@ -12,6 +12,7 @@ import tbdex.sdk.protocol.models.CreateSelectedPayinMethod
 import tbdex.sdk.protocol.models.CreateSelectedPayoutMethod
 import tbdex.sdk.protocol.models.Offering
 import tbdex.sdk.protocol.models.Rfq
+import web5.sdk.dids.did.BearerDid
 import javax.inject.Inject
 
 @HiltViewModel

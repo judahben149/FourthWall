@@ -13,6 +13,15 @@
         <action
             android:id="@+id/action_homeFragment_to_order_flow_nav"
             app:destination="@id/order_flow_nav" />
+        <action
+            android:id="@+id/action_homeFragment_to_fundWalletFragment"
+            app:destination="@id/fundWalletFragment" >
+
+            <argument
+                android:name="currencyAccountId"
+                app:argType="integer"
+                app:nullable="true" />
+        </action>
     </fragment>
 
     <fragment
@@ -27,4 +36,9 @@
         tools:layout="@layout/fragment_orders" />
 
     <include app:graph="@navigation/order_flow_nav" />
+    <fragment
+        android:id="@+id/fundWalletFragment"
+        android:name="com.judahben149.fourthwall.presentation.account.FundWalletFragment"
+        android:label="fragment_fund_wallet"
+        tools:layout="@layout/fragment_fund_wallet" />
 </navigation>
