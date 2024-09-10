@@ -21,7 +21,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.judahben149.fourthwall.R
 import android.animation.ArgbEvaluator
 import android.animation.PropertyValuesHolder
+import android.app.Activity
 import android.graphics.drawable.GradientDrawable
+import com.tapadoo.alerter.Alerter
 
 fun ImageView.animateBounce() {
     this.animate()
@@ -217,4 +219,17 @@ fun TextView.setErrorFont(context: Context) {
 
 fun showSnack(message: String, rootView: View, duration: Int = Snackbar.LENGTH_SHORT) {
     Snackbar.make(rootView, message, duration).show()
+}
+
+fun Activity.showInfoAlerter(message: String, durationInSecs: Long = 3) {
+    Alerter.create(this)
+        .setText(message)
+        .setDuration(durationInSecs * 1000)
+        .setBackgroundColorRes(R.color.light_purple_tint)
+        .setTextAppearance(R.style.AlerterInfoTextAppearance)
+        .setIcon(R.drawable.ic_dollar)
+        .setIconColorFilter(0)
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
+        .enableSwipeToDismiss()
+        .show()
 }

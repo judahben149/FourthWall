@@ -32,6 +32,7 @@ import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
 import com.judahben149.fourthwall.utils.views.isLoading
 import com.judahben149.fourthwall.utils.views.setAmountFont
+import com.judahben149.fourthwall.utils.views.showInfoAlerter
 import com.judahben149.fourthwall.utils.views.showSnack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -347,6 +348,7 @@ class OfferingsFragment : Fragment() {
                         }
 
                         is PayOutAmountState.Error -> {
+                            requireActivity().showInfoAlerter(payoutState.message)
                             binding.layoutPayIn.animateBorderColorForError()
                         }
 

@@ -61,4 +61,10 @@
         <item name="chipIconSize">24dp</item>
         <item name="chipIconTint">@color/black</item>
     </style>
+
+    <style name="AlerterInfoTextAppearance">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/cera_pro_medium</item>
+        <item name="android:textColor">@color/textOnBackground</item>
+    </style>
 </resources>
