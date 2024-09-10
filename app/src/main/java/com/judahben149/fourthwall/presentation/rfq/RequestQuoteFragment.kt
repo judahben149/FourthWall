@@ -51,9 +51,11 @@ class RequestQuoteFragment : Fragment() {
     }
 
     private fun setData() {
-        offeringsViewModel.state.value.selectedOffering?.let { off ->
-            viewModel.updateSelectedOffering(off)
+        offeringsViewModel.state.value.let { state ->
+            state.selectedOffering?.let { viewModel.updateSelectedOffering(it) }
+            state.payInAmount?.let { viewModel.updateAmount(it) }
         }
+
 
         confirmCredentialsAvailability()
 
@@ -96,6 +98,14 @@ class RequestQuoteFragment : Fragment() {
                     state.paymentKinds.let {
                         val paymentKinds = viewModel.state.value.paymentKinds.map { Pair(it.formattedKindName, it.isSelected) }
                         chipAdapter.updatePaymentKinds(paymentKinds)
+                    }
+
+                    state.isQuoteReceived.let {
+                        if (it) {
+                            binding.btnQuote.text = "Order"
+                        } else {
+                            binding.btnQuote.text = "Get Quote"
+                        }
                     }
                 }
             }
@@ -140,7 +150,9 @@ class RequestQuoteFragment : Fragment() {
 
             it.forEach { off ->
                 off.data.payin.methods.forEach { meth ->
+                    meth.kind
                     ("Pay in Method (${off.data.payin.currencyCode} -> ${off.data.payout.currencyCode})- " + meth.kind).log()
+
                 }
             }
         }

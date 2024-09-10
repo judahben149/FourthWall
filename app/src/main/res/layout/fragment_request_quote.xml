@@ -54,7 +54,8 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_quote"
             app:layout_constraintTop_toTopOf="parent">
 
             <ScrollView
@@ -145,7 +146,8 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="4dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -157,220 +159,88 @@
                                 android:id="@+id/rv_payment_methods"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                 android:orientation="horizontal"
-                                tools:listitem="@layout/item_chip"
-                                />
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                tools:listitem="@layout/item_chip" />
                         </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_fees_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:layout_marginTop="24dp"
+                                android:fontFamily="@font/cera_pro_light"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                app:layout_constraintEnd_toStartOf="@+id/tv_fees"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="Financial institution fee" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_fees"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:layout_marginTop="24dp"
+                                android:layout_marginEnd="24dp"
+                                android:fontFamily="@font/cera_pro_light"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/tv_fees_label"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="1.5%" />
+
+                            <com.neo.dottedview.DottedView
+                                android:layout_width="5dp"
+                                android:layout_height="64dp"
+                                android:layout_marginStart="12dp"
+                                android:layout_marginTop="8dp"
+                                android:alpha="0.5"
+                                android:orientation="vertical"
+                                app:dv_dotColor="@color/textColorGreyed"
+                                app:dv_dotSize="2.5dp"
+                                app:dv_dotStrokeWidth="0dp"
+                                app:dv_dotVSpace="5dp"
+                                app:layout_constraintStart_toStartOf="@id/tv_fees_label"
+                                app:layout_constraintTop_toBottomOf="@id/tv_fees_label" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
                     </com.google.android.material.card.MaterialCardView>
 
                 </LinearLayout>
             </ScrollView>
         </androidx.core.widget.NestedScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:id="@+id/scrim"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000000"
-        android:visibility="gone" />
-
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottomSheet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="0dp"
-        android:background="@drawable/bottom_sheet_background"
-        android:fitsSystemWindows="true"
-        app:behavior_fitToContents="true"
-        android:windowSoftInputMode="adjustResize"
-        android:windowIsFloating="false"
-        app:behavior_hideable="true"
-        app:behavior_peekHeight="0dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-
-        <LinearLayout
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_quote"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="6dp"
-            android:alpha="0.5"
-            android:contentDescription="@string/bottom_sheet_drag_handle"
-            android:src="@drawable/ic_line" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/cera_pro_light"
-            android:gravity="center_horizontal"
-            android:padding="8sp"
-            android:text="@string/enter_payment_details"
+            android:layout_height="64dp"
+            android:layout_marginHorizontal="48dp"
+            android:fontFamily="@font/cera_pro_medium"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/primaryBtnBackgroundTint"
+            android:minHeight="56dp"
+            android:textColor="@color/primaryBtnTextOnBackground"
             android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <LinearLayout
-                    android:id="@+id/layout_usd_bank_transfer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:fontFamily="@font/cera_pro_medium"
-                        android:text="Pay-in"
-                        android:textColor="@color/textOnBackground"
-                        android:textSize="13sp" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layout_bank_account_pay_in"
-                        style="@style/CustomTextInputLayoutStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:layout_marginBottom="8dp"
-                        android:hint="Bank Account Number"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tool_bar">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tv_bank_account_no_pay_in"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:fontFamily="@font/cera_pro_light"
-                            android:textStyle="bold" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layout_routing_number_pay_in"
-                        style="@style/CustomTextInputLayoutStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:hint="Routing Number"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tool_bar">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tv_routing_number"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:fontFamily="@font/cera_pro_light"
-                            android:textStyle="bold" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_pay_out_credentials"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginBottom="4dp"
-                        android:fontFamily="@font/cera_pro_medium"
-                        android:text="Pay-out"
-                        android:textColor="@color/textOnBackground"
-                        android:textSize="13sp" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layout_bank_account_pay_out"
-                        style="@style/CustomTextInputLayoutStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:layout_marginBottom="8dp"
-                        android:hint="Bank Account Number"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tool_bar">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tv_bank_account_no_pay_out"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:fontFamily="@font/cera_pro_light"
-                            android:textStyle="bold" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/layout_wallet_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:orientation="vertical"
-                    android:visibility="visible">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:fontFamily="@font/cera_pro_medium"
-                        android:text="Pay-out"
-                        android:textColor="@color/textOnBackground"
-                        android:textSize="13sp" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layout_wallet_address_pay_out"
-                        style="@style/CustomTextInputLayoutStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:layout_marginBottom="8dp"
-                        android:hint="Wallet address"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tool_bar">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tv_wallet_address_pay_out"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:fontFamily="@font/cera_pro_light"
-                            android:textStyle="bold" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
-            </LinearLayout>
-        </ScrollView>
-
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
