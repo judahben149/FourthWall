@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.utils.Constants.ENCRYPTED_SHARED_PREFERENCES
 import com.judahben149.fourthwall.utils.Constants.SHARED_PREFERENCES
-import com.judahben149.fourthwall.utils.text.PfiDataParser
+import com.judahben149.fourthwall.utils.text.FourthWallParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,7 +38,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesPfiDataParser(context: Context): PfiDataParser {
-        return PfiDataParser(context)
+    fun providesPfiDataParser(context: Context): FourthWallParser {
+        return FourthWallParser(context)
     }
 }

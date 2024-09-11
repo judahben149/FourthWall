@@ -1,22 +1,20 @@
 package com.judahben149.fourthwall.utils.text
 
 import android.content.Context
-import android.util.Log
-import com.google.gson.Gson
+import com.fasterxml.jackson.databind.JsonNode
+import com.google.gson.JsonParser
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
+import com.judahben149.fourthwall.domain.models.PaymentField
 import com.judahben149.fourthwall.domain.models.PfiData
 import com.judahben149.fourthwall.domain.models.PfiDataResponse
-import com.judahben149.fourthwall.presentation.rfq.RequestQuoteFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import tbdex.sdk.protocol.models.PaymentMethod
 import java.io.InputStreamReader
 import javax.inject.Inject
 
 
-class PfiDataParser @Inject constructor(private val context: Context) {
+class FourthWallParser @Inject constructor(private val context: Context) {
 
     suspend fun parseJsonFromAssets(fileName: String = "pfi_data.json"): List<PfiData> = withContext(
         Dispatchers.IO) {
@@ -45,38 +43,29 @@ private fun getStatusText(status: Int): String {
     }
 }
 
-//fun PaymentMethod.parseRequiredPaymentDetails(): RequestQuoteFragment.RequiredPaymentDetails? {
-//    val gson = Gson()
-//
-//    return try {
-//        val jsonObject = gson.fromJson(requiredPaymentDetails.toString(), JsonObject::class.java)
-//
-//        val title = jsonObject.get("title").asString
-//        val type = jsonObject.get("type").asString
-//        val required = gson.fromJson<List<String>>(jsonObject.get("required"), object : TypeToken<List<String>>() {}.type)
-//
-//        val propertiesObject = jsonObject.getAsJsonObject("properties")
-//        val properties = mutableMapOf<String, RequestQuoteFragment.SchemaField>()
-//
-//        propertiesObject.keySet().forEach { key ->
-//            val fieldObject = propertiesObject.getAsJsonObject(key)
-//            properties[key] = RequestQuoteFragment.SchemaField(
-//                title = fieldObject.get("title").asString,
-//                description = fieldObject.get("description").asString,
-//                type = fieldObject.get("type").asString
-//            )
-//        }
-//
-//        val schema = RequestQuoteFragment.RequiredPaymentDetailsSchema(
-//            title = title,
-//            type = type,
-//            required = required,
-//            properties = properties
-//        )
-//
-//        RequestQuoteFragment.RequiredPaymentDetails(kind, schema)
-//    } catch (e: Exception) {
-//        e.printStackTrace()
-//        null
-//    }
-//}
+
+fun extractPaymentFields(jsonNode: JsonNode): List<PaymentField> {
+    val requiredFields = jsonNode["required"]?.map { it.asText() }?.toSet() ?: emptySet()
+    val propertiesNode = jsonNode["properties"]
+
+    val paymentFields = mutableListOf<PaymentField>()
+
+    propertiesNode?.fieldNames()?.forEach { fieldName ->
+        val isRequired = requiredFields.contains(fieldName)
+        paymentFields.add(PaymentField(fieldName, isRequired))
+    }
+
+    return paymentFields
+}
+
+fun camelCaseToWords(input: String): String {
+    return input.replace(Regex("([a-z])([A-Z])"), "$1 $2")
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+}fun String.formatKind(): String {
+    val sanitizedString = this.trim().lowercase()
+
+    return when {
+        sanitizedString.contains("transfer") -> "Bank Transfer"
+        else -> this
+    }
+}

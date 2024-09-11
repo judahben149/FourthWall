@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingStart="24dp"
-    android:paddingEnd="24dp"
-    android:paddingBottom="24dp"
     android:paddingTop="4dp"
-    >
+    android:paddingEnd="24dp"
+    android:paddingBottom="24dp">
 
 
     <ImageView
@@ -17,8 +15,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="6dp"
         android:alpha="0.5"
-        android:src="@drawable/ic_line"
-        android:contentDescription="@string/bottom_sheet_drag_handle" />
+        android:contentDescription="@string/bottom_sheet_drag_handle"
+        android:src="@drawable/ic_line" />
 
     <TextView
         android:layout_width="match_parent"
@@ -30,61 +28,35 @@
         android:textSize="14sp"
         android:textStyle="bold" />
 
-<!--    Pay in section - fields-->
+    <!--    Pay in section - fields-->
+
+    <LinearLayout
+        android:id="@+id/layout_pay_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:orientation="vertical">
+
+
+    </LinearLayout>
+
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="24dp"
-        />
+        android:layout_height="24dp" />
 
-    <ViewStub
-        android:id="@+id/stub_pay_in_wallet_address"
+
+    <!--    Pay out section - fields-->
+
+    <LinearLayout
+        android:id="@+id/layout_pay_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout="@layout/stub_layout_pay_in_wallet_address"
-        />
+        android:layout_marginVertical="8dp"
+        android:orientation="vertical">
 
-    <ViewStub
-        android:id="@+id/stub_pay_in_bank_transfer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout="@layout/stub_layout_pay_in_bank_transfer"
-        />
 
-    <ViewStub
-        android:id="@+id/stub_pay_in_usd_bank_transfer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout="@layout/stub_layout_pay_in_usd_bank_transfer"
-        />
-
-<!--    Pay out section - fields-->
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        />
-
-    <ViewStub
-        android:id="@+id/stub_pay_out_wallet_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout="@layout/stub_layout_pay_out_wallet_address"
-        />
-
-    <ViewStub
-        android:id="@+id/stub_pay_out_bank_transfer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout="@layout/stub_layout_pay_out_bank_transfer"
-        />
-
-    <ViewStub
-        android:id="@+id/stub_pay_out_usd_bank_transfer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout="@layout/stub_layout_pay_out_usd_bank_transfer"
-        />
+    </LinearLayout>
 
 
     <com.google.android.material.button.MaterialButton

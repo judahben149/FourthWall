@@ -3,7 +3,8 @@ package com.judahben149.fourthwall.presentation.rfq
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.judahben149.fourthwall.domain.SessionManager
-import com.judahben149.fourthwall.domain.models.enums.PaymentMethods
+import com.judahben149.fourthwall.domain.mappers.toFwOffering
+import com.judahben149.fourthwall.domain.models.FWOffering
 import com.judahben149.fourthwall.utils.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -35,57 +36,30 @@ class QuoteViewModel @Inject constructor(
     }
 
     fun updateSelectedOffering(offering: Offering) {
-        _state.update { state ->
-            val availablePaymentKindsList = mutableListOf<PaymentKind>()
 
-            offering.data.payin.methods.forEachIndexed { methodIndex, payInMethod ->
-                val payOutMethodCorresponding = offering.data.payout.methods[methodIndex]
-
-                val newPaymentKind = PaymentKind(
-                    kind = payInMethod.kind.formatKindEnum(),
-                    formattedKindName = payInMethod.kind.formatKind(),
-                    actualPayInKindName = payInMethod.kind,
-                    actualPayOutKindName = payOutMethodCorresponding.kind,
-                    payInMethod = payInMethod.kind.formatKindEnum().name,
-                    payOutMethod = payOutMethodCorresponding.kind.formatKindEnum().name,
-                    isSelected = false
-                )
-
-                availablePaymentKindsList.add(newPaymentKind)
-            }
-
-            state.copy(
-                selectedOffering = offering,
-                paymentKinds = availablePaymentKindsList
-            )
-        }
-        btnDisabled()
-    }
-
-
-    fun updateSelectedPaymentKind(paymentKind: PaymentKind) {
         _state.update {
             it.copy(
-                selectedPaymentKind = paymentKind
+                tbDexOffering = offering,
+                fwOffering = offering.toFwOffering(),
+                exchangeProgress = ExchangeProgress.YetToRequestQuote
             )
         }
-        btnEnabled()
     }
 
     fun requestForQuote() {
-        btnLoading()
+        _state.update { it.copy(exchangeProgress = ExchangeProgress.HasRequestedQuote) }
 
         viewModelScope.launch(Dispatchers.IO) {
 
             val rfqData = createRfq()
             val rfq: Rfq
 
-            state.value.selectedOffering?.let { off ->
-                rfqData?.let { data ->
+            state.value.fwOffering?.let { off ->
+
                     rfq = Rfq.create(
-                        to = off.metadata.from,
+                        to = off.pfiDid,
                         from = sessionManager.getDid() ?: "",
-                        rfqData = data
+                        rfqData = rfqData
                     )
 
                     val rfqVerification = verifyRfq(rfq)
@@ -97,14 +71,9 @@ class QuoteViewModel @Inject constructor(
                             rfq.sign(bearerDid)
                             TbdexHttpClient.createExchange(rfq)
 
-                            _state.update {
-                                it.copy(
-                                    exchangeProgress = ExchangeProgress.HasRequestedQuote
-                                )
-                            }
 
                             // Start polling for results
-//                            beginPollingForQuoteResponse(rfq, bearerDid)
+            //                            beginPollingForQuoteResponse(rfq, bearerDid)
                         } catch (ex: Exception) {
                             _state.update {
                                 it.copy(
@@ -115,7 +84,6 @@ class QuoteViewModel @Inject constructor(
                             }
                             btnDisabled()
                         }
-                    }
                 }
             }
         }
@@ -155,185 +123,35 @@ class QuoteViewModel @Inject constructor(
 
     private fun verifyRfq(rfq: Rfq): Boolean {
         return try {
-            rfq.verifyOfferingRequirements(state.value.selectedOffering!!)
+            rfq.verifyOfferingRequirements(state.value.tbDexOffering!!)
             true
         } catch (e: Exception) {
             false
         }
     }
 
-    private fun createRfq(): CreateRfqData? {
-        return state.value.selectedPaymentKind?.let { paymentKind ->
+    private fun createRfq(): CreateRfqData {
 
-            val payInData = CreateSelectedPayinMethod(
-                kind = paymentKind.actualPayInKindName,
-                paymentDetails = parseRequiredPayInDetails(paymentKind.actualPayInKindName.formatKindEnum()),
-                amount = state.value.amount ?: ""
-            )
-
-
-            val payOutData = CreateSelectedPayoutMethod(
-                kind = paymentKind.actualPayOutKindName,
-                paymentDetails = parseRequiredPayOutDetails(paymentKind.actualPayOutKindName.formatKindEnum())
-            )
-
-            val rfqData = CreateRfqData(
-                offeringId = state.value.selectedOffering?.metadata?.id ?: "",
-                payin = payInData,
-                payout = payOutData,
-                claims = listOf(sessionManager.getKCC("")!!)
-            )
-
-            rfqData
-        }
-    }
-
-    // Remove
-    private fun parseRequiredPayDetails(isPayIn: Boolean): Map<String, Any> {
-
-        val detailsMap = mutableMapOf<String, Any>()
-
-        state.value.selectedPaymentKind?.let { kind ->
-            if (isPayIn) {
-                when (kind.kind) {
-                    PaymentMethods.WALLET_ADDRESS -> {
-                        detailsMap.put("address", kind.payInWalletAddress)
-                    }
-
-                    PaymentMethods.BANK_TRANSFER -> {
-                        detailsMap.put("accountNumber", kind.payInBankAccount)
-                    }
-
-                    PaymentMethods.BANK_TRANSFER_USD -> {
-                        detailsMap.put("accountNumber", kind.payInBankAccount)
-                        detailsMap.put("routingNumber", kind.payInRoutingNumber)
-                    }
-                }
-            } else {
-                when (kind.kind) {
-                    PaymentMethods.WALLET_ADDRESS -> {
-                        detailsMap.put("address", kind.payOutWalletAddress)
-                    }
-
-                    PaymentMethods.BANK_TRANSFER -> {
-                        detailsMap.put("accountNumber", kind.payOutBankAccount)
-                    }
-
-                    PaymentMethods.BANK_TRANSFER_USD -> {
-                        detailsMap.put("accountNumber", kind.payOutBankAccount)
-                        detailsMap.put("routingNumber", kind.payOutRoutingNumber)
-                    }
-                }
-            }
-        }
-
-        return detailsMap
-    }
-
-    // Remove
-    private fun parseRequiredPayDetails2(isPayIn: Boolean): Map<String, Any> {
-        return state.value.selectedPaymentKind?.let { kind ->
-
-            buildMap {
-                when (kind.kind) {
-                    PaymentMethods.WALLET_ADDRESS -> {
-                        put(
-                            "address",
-                            if (isPayIn) kind.payInWalletAddress else kind.payOutWalletAddress
-                        )
-                    }
-
-                    PaymentMethods.BANK_TRANSFER -> {
-                        put(
-                            "accountNumber",
-                            if (isPayIn) kind.payInBankAccount else kind.payOutBankAccount
-                        )
-                    }
-
-                    PaymentMethods.BANK_TRANSFER_USD -> {
-                        put(
-                            "accountNumber",
-                            if (isPayIn) kind.payInBankAccount else kind.payOutBankAccount
-                        )
-                        put(
-                            "routingNumber",
-                            if (isPayIn) kind.payInRoutingNumber else kind.payOutRoutingNumber
-                        )
-                    }
-
-                    else -> {
-                        // Handle unexpected payment methods
-                        // You might want to log a warning or throw an exception here
-                    }
-                }
-            }
-        } ?: emptyMap()
-    }
+        val payInData = CreateSelectedPayinMethod(
+            kind = state.value.payInKind,
+            paymentDetails = state.value.payInRfqRequestFields,
+            amount = state.value.amount ?: ""
+        )
 
 
-    private fun parseRequiredPayInDetails(method: PaymentMethods): Map<String, Any> {
-        val detailsMap = mutableMapOf<String, Any>()
+        val payOutData = CreateSelectedPayoutMethod(
+            kind = state.value.payOutKind,
+            paymentDetails = state.value.payOutRfqRequestFields
+        )
 
-        state.value.selectedPaymentKind?.let { kind ->
-            when (method) {
-                PaymentMethods.WALLET_ADDRESS -> {
-                    detailsMap.put("address", kind.payInWalletAddress)
-                }
+        val rfqData = CreateRfqData(
+            offeringId = state.value.tbDexOffering?.metadata?.id ?: "",
+            payin = payInData,
+            payout = payOutData,
+            claims = listOf(sessionManager.getKCC("")!!)
+        )
 
-                PaymentMethods.BANK_TRANSFER -> {
-                    detailsMap.put("accountNumber", kind.payInBankAccount)
-                }
-
-                PaymentMethods.BANK_TRANSFER_USD -> {
-                    detailsMap.put("accountNumber", kind.payInBankAccount)
-                    detailsMap.put("routingNumber", kind.payInRoutingNumber)
-                }
-            }
-        }
-
-        return detailsMap
-    }
-
-    private fun parseRequiredPayOutDetails(method: PaymentMethods): Map<String, Any> {
-        val detailsMap = mutableMapOf<String, Any>()
-
-        state.value.selectedPaymentKind?.let { kind ->
-            when (method) {
-                PaymentMethods.WALLET_ADDRESS -> {
-                    detailsMap.put("address", kind.payOutWalletAddress)
-                }
-
-                PaymentMethods.BANK_TRANSFER -> {
-                    detailsMap.put("accountNumber", kind.payOutBankAccount)
-                }
-
-                PaymentMethods.BANK_TRANSFER_USD -> {
-                    detailsMap.put("accountNumber", kind.payOutBankAccount)
-                    detailsMap.put("routingNumber", kind.payOutRoutingNumber)
-                }
-            }
-        }
-
-        return detailsMap
-    }
-
-    private fun String.formatKind(): String {
-        val sanitizedString = this.trim().lowercase()
-
-        return when {
-            sanitizedString.contains("wallet") -> "Wallet Address"
-            sanitizedString.contains("transfer") -> "Bank Transfer"
-            else -> this
-        }
-    }
-
-
-    private fun String.formatKindEnum(): PaymentMethods {
-        return when {
-            this.contains("usd_bank", true) -> PaymentMethods.BANK_TRANSFER_USD
-            this.contains("wallet", true) -> PaymentMethods.WALLET_ADDRESS
-            else -> PaymentMethods.BANK_TRANSFER
-        }
+        return rfqData
     }
 
     fun confirmCredentials(): Boolean {
@@ -361,33 +179,22 @@ class QuoteViewModel @Inject constructor(
 
 data class QuoteState(
     val amount: String? = null,
-    val selectedOffering: Offering? = null,
-    val paymentKinds: List<PaymentKind> = emptyList(),
-    val selectedPaymentKind: PaymentKind? = null,
-    val isQuoteReceived: Boolean = false,
+    val fwOffering: FWOffering? = null,
+    val tbDexOffering: Offering? = null,
     val btnState: QuoteButtonState = QuoteButtonState.Disabled,
-    val exchangeProgress: ExchangeProgress = ExchangeProgress.YetToRequestQuote
-)
-
-data class PaymentKind(
-    val kind: PaymentMethods,
-    val formattedKindName: String,
-    val actualPayInKindName: String,
-    val actualPayOutKindName: String,
-    val isSelected: Boolean,
-    var payInMethod: String = "",
-    var payInBankAccount: String = "",
-    var payInRoutingNumber: String = "",
-    var payInWalletAddress: String = "",
-    var payOutMethod: String = "",
-    var payOutBankAccount: String = "",
-    var payOutRoutingNumber: String = "",
-    var payOutWalletAddress: String = ""
+    val exchangeProgress: ExchangeProgress = ExchangeProgress.JustStarted,
+    val payInKind: String = "",
+    val payOutKind: String = "",
+    val payInRfqRequestFields: Map<String, Any> = emptyMap(),
+    val payOutRfqRequestFields: Map<String, Any> = emptyMap(),
 )
 
 sealed class ExchangeProgress {
+    data object JustStarted : ExchangeProgress()
     data object YetToRequestQuote : ExchangeProgress()
+    data object IsReadyToRequestQuote : ExchangeProgress()
     data object HasRequestedQuote : ExchangeProgress()
+    data object IsPollingForQuoteResponse : ExchangeProgress()
     data object HasGottenQuoteResponse : ExchangeProgress()
     data class ErrorRequestingQuote(val message: String) : ExchangeProgress()
     data object HasMadeOrder : ExchangeProgress()

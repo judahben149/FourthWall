@@ -13,8 +13,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentRequestQuoteBinding
+import com.judahben149.fourthwall.domain.models.PaymentMethod
 import com.judahben149.fourthwall.presentation.exchange.OfferingsViewModel
 import com.judahben149.fourthwall.utils.log
+import com.judahben149.fourthwall.utils.text.extractPaymentFields
 import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
 import com.judahben149.fourthwall.utils.views.isLoading
@@ -33,7 +35,8 @@ class RequestQuoteFragment : Fragment() {
     private val navController by lazy { findNavController() }
     private val offeringsViewModel: OfferingsViewModel by hiltNavGraphViewModels(R.id.order_flow_nav)
     private val viewModel: QuoteViewModel by viewModels()
-    private lateinit var chipAdapter: PaymentMethodChipAdapter
+    private lateinit var payInChipAdapter: PayInMethodChipAdapter
+    private lateinit var payOutChipAdapter: PayOutMethodChipAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,34 +67,19 @@ class RequestQuoteFragment : Fragment() {
 
         confirmCredentialsAvailability()
 
-        // Set available payment methods
-        val availablePaymentKinds = viewModel.state.value.paymentKinds
-        val chipPaymentKindList = mutableListOf<Pair<String, Boolean>>()
 
-        availablePaymentKinds.forEach { possiblePaymentKind ->
-            chipPaymentKindList.add(
-                Pair(possiblePaymentKind.formattedKindName, possiblePaymentKind.isSelected)
-            )
+        payInChipAdapter = PayInMethodChipAdapter { chipClickedText ->
+            val bottomSheet = PaymentMethodBottomSheet.newInstance(viewModel, true)
+            bottomSheet.show(childFragmentManager, "BOTTOM_SHEET_PAYMENT_METHOD")
         }
 
-
-        chipAdapter = PaymentMethodChipAdapter { chipClickedText ->
-            val previouslySelectedKind = viewModel.state.value.selectedPaymentKind
-            val paymentTypeClicked = availablePaymentKinds.find { it.formattedKindName == chipClickedText }
-
-            paymentTypeClicked?.let {
-                val bottomSheet = PaymentMethodBottomSheet.newInstance(
-                    viewModel,
-                    previouslySelectedKind ?: it,
-                    previouslySelectedKind
-                )
-
-                bottomSheet.show(childFragmentManager, "BOTTOM_SHEET_PAYMENT_METHOD")
-            }
+        payOutChipAdapter = PayOutMethodChipAdapter { chipClickedText ->
+            val bottomSheet = PaymentMethodBottomSheet.newInstance(viewModel, false)
+            bottomSheet.show(childFragmentManager, "BOTTOM_SHEET_PAYMENT_METHOD")
         }
 
-        binding.rvPaymentMethods.adapter = chipAdapter
-
+        binding.rvPaymentInMethods.adapter = payInChipAdapter
+        binding.rvPaymentOutMethods.adapter = payInChipAdapter
     }
 
     private fun observeState() {
@@ -100,45 +88,54 @@ class RequestQuoteFragment : Fragment() {
 
                 viewModel.state.collect { state ->
 
-                    state.paymentKinds.let {
-                        val paymentKinds = viewModel.state.value.paymentKinds.map { Pair(it.formattedKindName, it.isSelected) }
-                        chipAdapter.updatePaymentKinds(paymentKinds)
+                    when (state.btnState) {
+                        QuoteButtonState.Disabled -> binding.btnQuote.disable(
+                            resources,
+                            binding.progressBar
+                        )
+
+                        QuoteButtonState.Enabled -> binding.btnQuote.enable(
+                            resources,
+                            binding.progressBar
+                        )
+
+                        QuoteButtonState.Loading -> binding.btnQuote.isLoading(
+                            resources,
+                            binding.progressBar
+                        )
                     }
 
-                    state.isQuoteReceived.let {
-                        if (it) {
-                            binding.btnQuote.text = "Order"
-                        } else {
+                    when (val prg = state.exchangeProgress) {
+                        is ExchangeProgress.JustStarted -> {
+                            binding.btnQuote.disable(resources)
                             binding.btnQuote.text = "Get Quote"
                         }
-                    }
 
-                    if (state.selectedPaymentKind == null) {
-                        binding.btnQuote.disable(resources)
-                    } else {
-                        binding.btnQuote.enable(resources)
-                    }
-
-                    when(state.btnState) {
-                        QuoteButtonState.Disabled -> binding.btnQuote.disable(resources, binding.progressBar)
-                        QuoteButtonState.Enabled -> binding.btnQuote.enable(resources, binding.progressBar)
-                        QuoteButtonState.Loading -> binding.btnQuote.isLoading(resources, binding.progressBar)
-                    }
-
-                    when(val prg = state.exchangeProgress) {
                         is ExchangeProgress.YetToRequestQuote -> {
+                            getAndSetPaymentMethods()
+                        }
 
+                        is ExchangeProgress.IsReadyToRequestQuote -> {
+                            binding.btnQuote.enable(resources)
                         }
 
                         is ExchangeProgress.HasRequestedQuote -> {
+                            binding.btnQuote.isLoading(resources, binding.progressBar)
                             requireActivity().showInfoAlerter("Has requested quote")
+                        }
+
+                        is ExchangeProgress.IsPollingForQuoteResponse -> {
+
                         }
 
                         is ExchangeProgress.HasGottenQuoteResponse -> {
                             requireActivity().showSuccessAlerter("Has gotten quote response") {}
+                            binding.btnQuote.text = "Order"
+                            binding.btnQuote.enable(resources)
                         }
 
                         is ExchangeProgress.ErrorRequestingQuote -> {
+                            binding.btnQuote.text = "Get Quote"
                             requireActivity().showErrorAlerter(prg.message) {}
                         }
 
@@ -149,10 +146,19 @@ class RequestQuoteFragment : Fragment() {
                         is ExchangeProgress.HasGottenOrderResponse -> {
 
                         }
-
                     }
                 }
             }
+        }
+    }
+
+    private fun getAndSetPaymentMethods() {
+        viewModel.state.value.fwOffering?.let { off ->
+            val payInMethods = off.payInMethods.map { it.kind }
+            val payOutMethods = off.payOutMethods.map { it.kind }
+
+            payInChipAdapter.updatePaymentKinds(payInMethods)
+            payOutChipAdapter.updatePaymentKinds(payOutMethods)
         }
     }
 
@@ -175,11 +181,19 @@ class RequestQuoteFragment : Fragment() {
     private fun seeSelectedOffering() {
         offeringsViewModel.state.value.selectedOffering?.let { offering ->
             offering.data.payin.methods.forEach {
-                it.requiredPaymentDetails?.log("PAY IN ----> ")
+                it.requiredPaymentDetails?.fields()?.log("FIELDS ----> ")
             }
 
-            offering.data.payout.methods.forEach {
-                it.requiredPaymentDetails?.log("PAY OUT ----> ")
+            offering.data.payout.methods.forEach { method ->
+                method.requiredPaymentDetails?.log("PAY OUT ----> ")
+
+                val kind = method.kind
+                val fields =
+                    method.requiredPaymentDetails?.let { extractPaymentFields(it) } ?: emptyList()
+
+                val paymentMethod = PaymentMethod(kind, fields)
+
+                paymentMethod.log("PAYMENT METHOD ---> ")
             }
         }
     }
@@ -188,7 +202,10 @@ class RequestQuoteFragment : Fragment() {
         binding.run {
             toolBar.setOnClickListener { navController.navigateUp() }
 
-            btnQuote.setOnClickListener { viewModel.requestForQuote() }
+            btnQuote.setOnClickListener {
+                // Decide if to request for quote here or make order
+                viewModel.requestForQuote()
+            }
         }
     }
 

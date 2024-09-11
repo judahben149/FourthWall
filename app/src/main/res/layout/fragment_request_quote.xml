@@ -134,13 +134,13 @@
 
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_layout_pay_methods"
+                        android:id="@+id/tv_layout_pay_in_methods"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="4dp"
                         android:fontFamily="@font/cera_pro_medium"
-                        android:text="@string/payment_method"
+                        android:text="Choose pay in method"
                         android:textColor="@color/textOnBackground"
                         android:textSize="13sp" />
 
@@ -156,7 +156,40 @@
                             android:orientation="horizontal">
 
                             <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/rv_payment_methods"
+                                android:id="@+id/rv_payment_in_methods"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                tools:listitem="@layout/item_chip" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_layout_pay_out_methods"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/cera_pro_medium"
+                        android:text="Choose pay out method"
+                        android:textColor="@color/textOnBackground"
+                        android:textSize="13sp" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="4dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:orientation="horizontal">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rv_payment_out_methods"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"

@@ -7,6 +7,7 @@ import com.judahben149.fourthwall.domain.models.Currency
 import com.judahben149.fourthwall.domain.models.PfiData
 import com.judahben149.fourthwall.domain.usecase.pfi.GetPfiDataUseCase
 import com.judahben149.fourthwall.domain.usecase.pfi.GetPfiOfferingsUseCase
+import com.judahben149.fourthwall.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -41,6 +42,9 @@ class OfferingsViewModel @Inject constructor(
                 }
 
                 val pfiData = getPfiDataUseCase()
+
+                // Store PFI Info in memory
+                Constants.pfiData = pfiData.associate { it.pfiDid to it.pfiName }
 
                 val offeringsList = pfiData.map { pfi ->
                     async {

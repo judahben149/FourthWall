@@ -106,6 +106,9 @@ dependencies {
     // Splash Screen
     implementation(libs.splash.screen)
 
+    // Jackson
+    implementation(libs.jackson)
+
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
 

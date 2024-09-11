@@ -30,6 +30,7 @@ dot-view = "-SNAPSHOT"
 alerter = "7.2.4"
 navigation-safe-args = "2.7.7"
 splash-screen = "1.0.0-beta01"
+jackson = "2.14.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +72,8 @@ dot-view = { group = "com.github.imaNNeoFighT", name = "DottedView", version.ref
 alerter = { group = "com.github.tapadoo", name = "alerter", version.ref = "alerter" }
 navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation-safe-args" }
 splash-screen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash-screen" }
+
+jackson = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

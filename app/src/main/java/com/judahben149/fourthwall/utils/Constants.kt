@@ -25,4 +25,6 @@ object Constants {
 
     // Run time constants
     var currencyAccountId = -1
+
+    lateinit var pfiData: Map<String, String> //PFI DID <<<>>> PFI Name
 }
