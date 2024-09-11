@@ -23,7 +23,9 @@ import com.judahben149.fourthwall.presentation.MainActivity
 import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
 import com.judahben149.fourthwall.utils.views.isLoading
+import com.judahben149.fourthwall.utils.views.showErrorAlerter
 import com.judahben149.fourthwall.utils.views.showSnack
+import com.judahben149.fourthwall.utils.views.showSuccessAlerter
 import com.mukesh.countrypicker.Country
 import com.mukesh.countrypicker.CountryPicker
 import com.mukesh.countrypicker.OnCountryPickerListener
@@ -82,15 +84,15 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
                         is CredentialsProgressState.Default ->{}
                         is CredentialsProgressState.Error ->{
                             bottomSheetDialog.dismiss()
-                            showSnack(status.message, binding.root)
+                            showErrorAlerter(status.message) {
+
+                            }
                         }
                         is CredentialsProgressState.Success ->{
                             bottomSheetDialog.dismiss()
-                            showSnack(status.message, binding.root)
-
-                            Handler(Looper.getMainLooper()).postDelayed({
+                            showSuccessAlerter(status.message) {
                                 navigateToHomeScreen()
-                            }, 2000)
+                            }
                         }
                     }
 

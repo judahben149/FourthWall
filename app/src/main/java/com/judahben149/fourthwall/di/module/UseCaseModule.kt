@@ -11,6 +11,7 @@ import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
 import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
 import com.judahben149.fourthwall.domain.usecase.pfi.GetPfiOfferingsUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetCurrencyAccountUseCase
+import com.judahben149.fourthwall.domain.usecase.user.InsertCurrencyAccountUseCase
 import com.judahben149.fourthwall.domain.usecase.user.InsertUserWithCurrencyAccountsUseCase
 import com.judahben149.fourthwall.domain.usecase.user.TopUpBalanceUseCase
 import dagger.Module
@@ -85,5 +86,13 @@ object UseCaseModule {
         userAccountRepository: UserAccountRepository
     ): GetCurrencyAccountUseCase {
         return GetCurrencyAccountUseCase(userAccountRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesInserCurrencyAccountUseCase(
+        userAccountRepository: UserAccountRepository
+    ): InsertCurrencyAccountUseCase {
+        return InsertCurrencyAccountUseCase(userAccountRepository)
     }
 }

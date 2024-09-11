@@ -22,4 +22,7 @@ object Constants {
     // Network
     const val VC_BASE_URL = "https://mock-idv.tbddev.org"
     const val KCC_ENDPOINT = "/kcc"
+
+    // Run time constants
+    var currencyAccountId = -1
 }

@@ -52,4 +52,5 @@
     <string name="bank_account_pay_out">Bank account (Pay Out)</string>
     <string name="routing_number">Routing number</string>
     <string name="update">Update</string>
+    <string name="top_up">Top Up</string>
 </resources>

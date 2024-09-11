@@ -15,6 +15,12 @@ import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentRequestQuoteBinding
 import com.judahben149.fourthwall.presentation.exchange.OfferingsViewModel
 import com.judahben149.fourthwall.utils.log
+import com.judahben149.fourthwall.utils.views.disable
+import com.judahben149.fourthwall.utils.views.enable
+import com.judahben149.fourthwall.utils.views.isLoading
+import com.judahben149.fourthwall.utils.views.showErrorAlerter
+import com.judahben149.fourthwall.utils.views.showInfoAlerter
+import com.judahben149.fourthwall.utils.views.showSuccessAlerter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -43,7 +49,6 @@ class RequestQuoteFragment : Fragment() {
         setListeners()
         setData()
         observeState()
-        collectPayInPayoutDetails()
 
         //
 //        createRfq()
@@ -107,6 +112,45 @@ class RequestQuoteFragment : Fragment() {
                             binding.btnQuote.text = "Get Quote"
                         }
                     }
+
+                    if (state.selectedPaymentKind == null) {
+                        binding.btnQuote.disable(resources)
+                    } else {
+                        binding.btnQuote.enable(resources)
+                    }
+
+                    when(state.btnState) {
+                        QuoteButtonState.Disabled -> binding.btnQuote.disable(resources, binding.progressBar)
+                        QuoteButtonState.Enabled -> binding.btnQuote.enable(resources, binding.progressBar)
+                        QuoteButtonState.Loading -> binding.btnQuote.isLoading(resources, binding.progressBar)
+                    }
+
+                    when(val prg = state.exchangeProgress) {
+                        is ExchangeProgress.YetToRequestQuote -> {
+
+                        }
+
+                        is ExchangeProgress.HasRequestedQuote -> {
+                            requireActivity().showInfoAlerter("Has requested quote")
+                        }
+
+                        is ExchangeProgress.HasGottenQuoteResponse -> {
+                            requireActivity().showSuccessAlerter("Has gotten quote response") {}
+                        }
+
+                        is ExchangeProgress.ErrorRequestingQuote -> {
+                            requireActivity().showErrorAlerter(prg.message) {}
+                        }
+
+                        is ExchangeProgress.HasMadeOrder -> {
+
+                        }
+
+                        is ExchangeProgress.HasGottenOrderResponse -> {
+
+                        }
+
+                    }
                 }
             }
         }
@@ -129,14 +173,22 @@ class RequestQuoteFragment : Fragment() {
     }
 
     private fun seeSelectedOffering() {
-//        offeringsViewModel.state.value.selectedOffering?.let { offering ->
-//            offering.data.requiredClaims.toString().log("Required Claims --->")
-//        }
+        offeringsViewModel.state.value.selectedOffering?.let { offering ->
+            offering.data.payin.methods.forEach {
+                it.requiredPaymentDetails?.log("PAY IN ----> ")
+            }
+
+            offering.data.payout.methods.forEach {
+                it.requiredPaymentDetails?.log("PAY OUT ----> ")
+            }
+        }
     }
 
     private fun setListeners() {
         binding.run {
             toolBar.setOnClickListener { navController.navigateUp() }
+
+            btnQuote.setOnClickListener { viewModel.requestForQuote() }
         }
     }
 
@@ -158,9 +210,6 @@ class RequestQuoteFragment : Fragment() {
         }
     }
 
-    private fun collectPayInPayoutDetails() {
-
-    }
 
     override fun onDestroy() {
         super.onDestroy()

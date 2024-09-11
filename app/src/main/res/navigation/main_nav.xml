@@ -15,13 +15,10 @@
             app:destination="@id/order_flow_nav" />
         <action
             android:id="@+id/action_homeFragment_to_fundWalletFragment"
-            app:destination="@id/fundWalletFragment" >
-
-            <argument
-                android:name="currencyAccountId"
-                app:argType="integer"
-                app:nullable="true" />
-        </action>
+            app:destination="@id/fundWalletFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_createCurrencyAccountFragment"
+            app:destination="@id/createCurrencyAccountFragment" />
     </fragment>
 
     <fragment
@@ -41,4 +38,9 @@
         android:name="com.judahben149.fourthwall.presentation.account.FundWalletFragment"
         android:label="fragment_fund_wallet"
         tools:layout="@layout/fragment_fund_wallet" />
+    <fragment
+        android:id="@+id/createCurrencyAccountFragment"
+        android:name="com.judahben149.fourthwall.presentation.account.CreateCurrencyAccountFragment"
+        android:label="CreateCurrencyAccountFragment"
+        tools:layout="@layout/fragment_create_currency_account"/>
 </navigation>

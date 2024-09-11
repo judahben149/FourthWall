@@ -7,8 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.judahben149.fourthwall.R
+import com.bumptech.glide.Glide
 import com.judahben149.fourthwall.databinding.FragmentFundWalletBinding
+import com.judahben149.fourthwall.utils.Constants
+import com.judahben149.fourthwall.utils.CurrencyUtils.getCountryFlag
+import com.judahben149.fourthwall.utils.views.showInfoAlerter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,18 +34,30 @@ class FundWalletFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.run {
-            toolBar.setOnClickListener { navController.popBackStack(
-                destinationId = R.id.order_flow_nav,
-                inclusive = true,
-                saveState = false
-            ) }
+            toolBar.setOnClickListener { navController.navigateUp() }
 
             btnFund.setOnClickListener {
-                if ()
+                try {
+                    val amount = binding.etFundAccount.text.toString().toDouble()
+                    viewModel.fundAccount(Constants.currencyAccountId, amount)
+
+                } catch (ex: Exception) {
+                    requireActivity().showInfoAlerter("Error funding account. Please retry")
+                }
             }
         }
 
-        viewModel.getCurrencyCode()
+        viewModel.getCurrencyCode(Constants.currencyAccountId) { currencyCode ->
+            getCountryFlag(requireContext(), currencyCode)?.let {
+                binding.run {
+                    tvCurrencyPayIn.text = currencyCode
+
+                    Glide.with(binding.ivFlagPayIn)
+                        .load(it)
+                        .into(binding.ivFlagPayIn)
+                }
+            }
+        }
     }
 
     override fun onDestroy() {

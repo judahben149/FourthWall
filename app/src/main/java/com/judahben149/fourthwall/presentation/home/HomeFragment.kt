@@ -22,6 +22,7 @@ import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.domain.mappers.toCurrencyAccount
 import com.judahben149.fourthwall.domain.models.CurrencyAccount
 import com.judahben149.fourthwall.presentation.onboarding.OnboardingActivity
+import com.judahben149.fourthwall.utils.Constants
 import com.judahben149.fourthwall.utils.CurrencyUtils.formatCurrency
 import dagger.hilt.android.AndroidEntryPoint
 import eightbitlab.com.blurview.BlurAlgorithm
@@ -47,16 +48,17 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: UserAccountAdapter
 
 
-    val handleSendMoneyClick: (Int) -> Unit = { position ->
+    private val handleSendMoneyClick: (Int) -> Unit = {
         navController.navigate(R.id.action_homeFragment_to_order_flow_nav)
     }
 
-    val handleAddAccountClick: (Int) -> Unit = { position ->
-        // Handle add account click
+    private val handleAddAccountClick: (Int) -> Unit = {
+        navController.navigate(R.id.action_homeFragment_to_createCurrencyAccountFragment)
     }
 
-    val handleFundAccountClick: (Int) -> Unit = { position ->
-        // Handle fund account click
+    private val handleFundAccountClick: (Int) -> Unit = { itemId ->
+        Constants.currencyAccountId = itemId
+        navController.navigate(R.id.action_homeFragment_to_fundWalletFragment)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

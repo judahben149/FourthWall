@@ -48,15 +48,15 @@ class UserAccountAdapter(
 
             // Set colours
             getColours(position).let {
-                binding.layoutBlur.setCardBackgroundColor(ColorStateList.valueOf(it.cardBg))
+                binding.layoutBlur.backgroundTintList = ColorStateList.valueOf(it.cardBg)
                 binding.btnSendMoney.backgroundTintList = ColorStateList.valueOf(it.btnSendMoney)
                 binding.btnAddAccount.backgroundTintList = ColorStateList.valueOf(it.btnAddAccount)
-                binding.btnFundWallet.backgroundTintList = ColorStateList.valueOf(it.btnFund)
+                binding.btnFundWallet.setChipBackgroundColorResource(it.btnFund)
             }
 
-            binding.btnSendMoney.setOnClickListener { onSendMoneyClick(position) }
-            binding.btnAddAccount.setOnClickListener { onAddAccountClick(position) }
-            binding.btnFundWallet.setOnClickListener { onFundAccountClick(position) }
+            binding.btnSendMoney.setOnClickListener { onSendMoneyClick(item.id) }
+            binding.btnAddAccount.setOnClickListener { onAddAccountClick(item.id) }
+            binding.btnFundWallet.setOnClickListener { onFundAccountClick(item.id) }
         }
     }
 
@@ -88,7 +88,7 @@ class UserAccountAdapter(
             0 -> {
                 CardColours(
                     cardBg = context.getColor(R.color.card_1_bg),
-                    btnFund = context.getColor(R.color.card_1_chip),
+                    btnFund = R.color.card_1_chip,
                     btnSendMoney = context.getColor(R.color.card_1_send_btn),
                     btnAddAccount = context.getColor(R.color.card_1_add_btn),
                 )
@@ -97,7 +97,7 @@ class UserAccountAdapter(
             1 -> {
                 CardColours(
                     cardBg = context.getColor(R.color.card_2_bg),
-                    btnFund = context.getColor(R.color.card_2_chip),
+                    btnFund = R.color.card_2_chip,
                     btnSendMoney = context.getColor(R.color.card_2_send_btn),
                     btnAddAccount = context.getColor(R.color.card_2_add_btn),
                 )
@@ -106,7 +106,7 @@ class UserAccountAdapter(
             2 -> {
                 CardColours(
                     cardBg = context.getColor(R.color.card_3_bg),
-                    btnFund = context.getColor(R.color.card_3_chip),
+                    btnFund = R.color.card_3_chip,
                     btnSendMoney = context.getColor(R.color.card_3_send_btn),
                     btnAddAccount = context.getColor(R.color.card_3_add_btn),
                 )
@@ -116,7 +116,7 @@ class UserAccountAdapter(
             else -> {
                 CardColours(
                     cardBg = context.getColor(R.color.card_1_bg),
-                    btnFund = context.getColor(R.color.card_1_chip),
+                    btnFund = R.color.card_1_chip,
                     btnSendMoney = context.getColor(R.color.card_1_send_btn),
                     btnAddAccount = context.getColor(R.color.card_1_add_btn),
                 )
@@ -127,7 +127,7 @@ class UserAccountAdapter(
 
 data class CardColours(
     @ColorInt val cardBg: Int,
-    @ColorInt val btnFund: Int,
+    val btnFund: Int,
     @ColorInt val btnSendMoney: Int,
     @ColorInt val btnAddAccount: Int,
 )

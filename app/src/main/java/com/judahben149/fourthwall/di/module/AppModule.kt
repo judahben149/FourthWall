@@ -31,8 +31,9 @@ object AppModule {
         sharedPreferences: SharedPreferences,
         @Named(ENCRYPTED_SHARED_PREFERENCES)
         encryptedSharedPreferences: SharedPreferences,
+        @ApplicationContext context: Context
     ): SessionManager {
-        return SessionManager(sharedPreferences, encryptedSharedPreferences)
+        return SessionManager(sharedPreferences, encryptedSharedPreferences, context)
     }
 
     @Provides

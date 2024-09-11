@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/layoutBackground"
-    tools:context=".presentation.account.FundWalletFragment">
+    android:layout_height="match_parent">
+
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/layout_toolBar"
@@ -44,100 +43,110 @@
     </com.google.android.material.appbar.MaterialToolbar>
 
 
-    <LinearLayout
-        android:id="@+id/layout_pay_in"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/outlined_box_background"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/layout_toolBar">
-
-        <EditText
-            android:id="@+id/et_fund_account"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center"
-            android:layout_marginStart="-6dp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:fontFamily="@font/cera_pro_medium"
-            android:hint="@string/amount"
-            android:importantForAutofill="no"
-            android:inputType="numberDecimal"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="12dp"
-            android:textColor="@color/textOnBackground"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:background="@color/layoutBackground"
+        android:layout_marginTop="?attr/actionBarSize"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".presentation.account.FundWalletFragment">
 
 
-        <ImageView
-            android:id="@+id/iv_flag_pay_in"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="12dp"
-            android:contentDescription="@string/country_flag" />
+        <LinearLayout
+            android:id="@+id/layout_pay_in"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/outlined_box_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_currency_pay_in"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="6dp"
-            android:fontFamily="@font/cera_pro_bold"
-            android:textSize="20sp"
-            android:layout_marginEnd="16dp"
-            tools:text="USD" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_bottom_btn_bg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:baselineAligned="false"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="64dp"
-            android:layout_marginHorizontal="48dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_fund"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="@color/primaryBtnBackgroundTint"
+            <EditText
+                android:id="@+id/et_fund_account"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center"
+                android:layout_marginStart="-6dp"
+                android:layout_weight="1"
+                android:background="@null"
                 android:fontFamily="@font/cera_pro_medium"
-                android:text="Proceed"
-                android:textColor="@color/primaryBtnTextOnBackground"
-                android:textSize="18sp" />
+                android:hint="@string/amount"
+                android:importantForAutofill="no"
+                android:inputType="numberDecimal"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp"
+                android:textColor="@color/textOnBackground"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/progress_bar"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_centerInParent="true"
-                android:indeterminate="true"
-                android:visibility="invisible"
-                app:indicatorColor="@color/white"
-                app:indicatorSize="24dp" />
-        </RelativeLayout>
-    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/iv_flag_pay_in"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:contentDescription="@string/country_flag" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_currency_pay_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="6dp"
+                android:fontFamily="@font/cera_pro_bold"
+                android:textSize="20sp"
+                android:layout_marginEnd="16dp"
+                tools:text="USD" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_bottom_btn_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:baselineAligned="false"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_marginHorizontal="48dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_fund"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/primaryBtnBackgroundTint"
+                    android:fontFamily="@font/cera_pro_medium"
+                    android:text="@string/top_up"
+                    android:textColor="@color/primaryBtnTextOnBackground"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progress_bar"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_centerInParent="true"
+                    android:indeterminate="true"
+                    android:visibility="invisible"
+                    app:indicatorColor="@color/white"
+                    app:indicatorSize="24dp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="12dp"
-            app:layout_constraintBottom_toTopOf="@id/btn_quote"
+            app:layout_constraintBottom_toTopOf="@id/layout_bottom_btn_bg"
             app:layout_constraintTop_toTopOf="parent">
 
             <ScrollView
@@ -226,20 +226,54 @@
             </ScrollView>
         </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_quote"
+
+        <LinearLayout
+            android:id="@+id/layout_bottom_btn_bg"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginHorizontal="48dp"
-            android:fontFamily="@font/cera_pro_medium"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/primaryBtnBackgroundTint"
-            android:minHeight="56dp"
-            android:textColor="@color/primaryBtnTextOnBackground"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:baselineAligned="false"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_marginHorizontal="48dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_quote"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:fontFamily="@font/cera_pro_medium"
+                    android:backgroundTint="@color/primaryBtnBackgroundTint"
+                    android:minHeight="56dp"
+                    android:textColor="@color/primaryBtnTextOnBackground"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progress_bar"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_centerInParent="true"
+                    android:indeterminate="true"
+                    android:visibility="invisible"
+                    app:indicatorColor="@color/white"
+                    app:indicatorSize="24dp" />
+            </RelativeLayout>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

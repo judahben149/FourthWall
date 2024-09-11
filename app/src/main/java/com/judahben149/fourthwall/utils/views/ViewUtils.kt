@@ -24,6 +24,7 @@ import android.animation.PropertyValuesHolder
 import android.app.Activity
 import android.graphics.drawable.GradientDrawable
 import com.tapadoo.alerter.Alerter
+import com.tapadoo.alerter.OnHideAlertListener
 
 fun ImageView.animateBounce() {
     this.animate()
@@ -231,5 +232,45 @@ fun Activity.showInfoAlerter(message: String, durationInSecs: Long = 3) {
         .setIconColorFilter(0)
         .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
         .enableSwipeToDismiss()
+        .show()
+}
+
+fun Activity.showSuccessAlerter(
+    message: String,
+    durationInSecs: Long = 3,
+    onHideCallBack: () -> Unit
+) {
+    Alerter.create(this)
+        .setText(message)
+        .setDuration(durationInSecs * 1000)
+        .setBackgroundColorRes(R.color.green_success_bg)
+        .setTextAppearance(R.style.AlerterInfoTextAppearance)
+        .setIcon(R.drawable.ic_dollar)
+        .setIconColorFilter(0)
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
+        .enableSwipeToDismiss()
+        .setOnHideListener(OnHideAlertListener {
+            onHideCallBack()
+        })
+        .show()
+}
+
+fun Activity.showErrorAlerter(
+    message: String,
+    durationInSecs: Long = 3,
+    onHideCallBack: () -> Unit
+) {
+    Alerter.create(this)
+        .setText(message)
+        .setDuration(durationInSecs * 1000)
+        .setBackgroundColorRes(R.color.red_error)
+        .setTextAppearance(R.style.AlerterInfoTextAppearance)
+        .setIcon(R.drawable.ic_dollar)
+        .setIconColorFilter(0)
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
+        .enableSwipeToDismiss()
+        .setOnHideListener(OnHideAlertListener {
+            onHideCallBack()
+        })
         .show()
 }
