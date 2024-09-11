@@ -10,6 +10,13 @@
         <item name="android:windowLightNavigationBar">true</item>
     </style>
 
+    <style name="Theme.App.FourthWall.Splash" parent="Theme.SplashScreen">
+        <item name="android:windowSplashScreenBackground">#FFFFFF</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/avd_ic_fourthwall_bounce</item>
+        <item name="android:windowSplashScreenAnimationDuration">1000</item>
+    </style>
+
+
     <style name="Theme.FourthWall" parent="Base.Theme.FourthWall" />
 
     <style name="CustomBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">

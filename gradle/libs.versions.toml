@@ -1,6 +1,6 @@
 [versions]
 agp = "8.3.1"
-kotlin = "1.9.22"
+kotlin = "1.9.10"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -28,7 +28,8 @@ lottie = "5.2.0"
 biometrics = "1.1.0"
 dot-view = "-SNAPSHOT"
 alerter = "7.2.4"
-navigation-safe-args = "2.5.1"
+navigation-safe-args = "2.7.7"
+splash-screen = "1.0.0-beta01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -69,11 +70,12 @@ biometrics = { group = "androidx.biometric", name = "biometric", version.ref = "
 dot-view = { group = "com.github.imaNNeoFighT", name = "DottedView", version.ref = "dot-view" }
 alerter = { group = "com.github.tapadoo", name = "alerter", version.ref = "alerter" }
 navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation-safe-args" }
+splash-screen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash-screen" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-navigationSafeArgs = { id = "androidx.navigation.safeargs", version.ref = "navigation-safe-args" }
+navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation-safe-args" }
 

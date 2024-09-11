@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.navigationSafeArgs)
+    alias(libs.plugins.navigation.safeargs.kotlin)
 }
 
 android {
@@ -39,9 +39,9 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    packagingOptions {
+    packaging {
         resources {
-            excludes += setOf("META-INF/DEPENDENCIES")
+            excludes.add("META-INF/DEPENDENCIES")
         }
     }
 }
@@ -54,7 +54,6 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment)
-    implementation(libs.navigation.safe.args)
 
     // Hilt
     ksp(libs.hilt.android.compiler)
@@ -103,6 +102,9 @@ dependencies {
 
     // Alerter
     implementation(libs.alerter)
+
+    // Splash Screen
+    implementation(libs.splash.screen)
 
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
