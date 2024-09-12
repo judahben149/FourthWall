@@ -87,7 +87,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
+                            android:layout_margin="12dp"
                             android:orientation="horizontal">
 
                             <com.google.android.material.textview.MaterialTextView
@@ -140,7 +140,7 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="4dp"
                         android:fontFamily="@font/cera_pro_medium"
-                        android:text="Choose pay in method"
+                        android:text="Enter pay in details"
                         android:textColor="@color/textOnBackground"
                         android:textSize="13sp" />
 
@@ -173,7 +173,7 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="4dp"
                         android:fontFamily="@font/cera_pro_medium"
-                        android:text="Choose pay out method"
+                        android:text="Enter pay out details"
                         android:textColor="@color/textOnBackground"
                         android:textSize="13sp" />
 
@@ -200,8 +200,10 @@
 
 
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_fee_breakdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:visibility="visible"
                         android:layout_marginTop="24dp">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -209,17 +211,34 @@
                             android:layout_height="match_parent">
 
                             <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_fees_label"
+                                android:id="@+id/tv_fee_breakdown_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="24dp"
-                                android:fontFamily="@font/cera_pro_light"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                app:layout_constraintEnd_toStartOf="@+id/tv_fees"
+                                android:layout_marginTop="8dp"
+                                android:fontFamily="@font/cera_pro_medium"
+                                android:text="Fee Breakdown"
+                                android:textColor="@color/textOnBackground"
+                                app:layout_constraintTop_toBottomOf="@id/tv_fees_label"
+                                android:layout_marginBottom="12dp"
+                                android:textSize="14sp"
+                                app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_fees_label"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="48dp"
+                                android:layout_marginTop="12dp"
+                                android:fontFamily="@font/cera_pro_light"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:visibility="gone"
+                                app:layout_constraintEnd_toStartOf="@+id/tv_fees"
+                                app:layout_constraintHorizontal_bias="0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tv_fee_breakdown_label"
                                 tools:text="Financial institution fee" />
 
                             <com.google.android.material.textview.MaterialTextView
@@ -227,22 +246,24 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="24dp"
-                                android:layout_marginTop="24dp"
-                                android:layout_marginEnd="24dp"
+                                android:layout_marginEnd="48dp"
+                                android:visibility="gone"
                                 android:fontFamily="@font/cera_pro_light"
-                                android:textSize="12sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toEndOf="@id/tv_fees_label"
-                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/tv_fees_label"
                                 tools:text="1.5%" />
 
                             <com.neo.dottedview.DottedView
+                                android:id="@+id/dotted1"
                                 android:layout_width="5dp"
-                                android:layout_height="64dp"
+                                android:layout_height="12dp"
                                 android:layout_marginStart="12dp"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="4dp"
                                 android:alpha="0.5"
+                                android:visibility="gone"
                                 android:orientation="vertical"
                                 app:dv_dotColor="@color/textColorGreyed"
                                 app:dv_dotSize="2.5dp"
@@ -250,6 +271,124 @@
                                 app:dv_dotVSpace="5dp"
                                 app:layout_constraintStart_toStartOf="@id/tv_fees_label"
                                 app:layout_constraintTop_toBottomOf="@id/tv_fees_label" />
+
+                            <com.neo.dottedview.DottedView
+                                android:id="@+id/dotted2"
+                                android:layout_width="5dp"
+                                android:layout_height="12dp"
+                                android:layout_marginStart="12dp"
+                                android:alpha="0.5"
+                                android:visibility="gone"
+                                android:orientation="vertical"
+                                app:dv_dotColor="@color/textColorGreyed"
+                                app:dv_dotSize="2.5dp"
+                                app:dv_dotStrokeWidth="0dp"
+                                app:dv_dotVSpace="5dp"
+                                app:layout_constraintStart_toStartOf="@id/tv_fees"
+                                app:layout_constraintTop_toTopOf="@id/dotted1" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_wallet_fees_label"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="48dp"
+                                android:fontFamily="@font/cera_pro_light"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toTopOf="@id/tv_recipient_gets_label"
+                                app:layout_constraintEnd_toStartOf="@+id/tv_wallet_fees"
+                                app:layout_constraintHorizontal_bias="0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/dotted1"
+                                app:layout_constraintVertical_bias="0"
+                                android:text="FourthWall fee" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_wallet_fees"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:layout_marginEnd="48dp"
+                                android:fontFamily="@font/cera_pro_light"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="1.0"
+                                app:layout_constraintStart_toEndOf="@id/tv_wallet_fees_label"
+                                app:layout_constraintTop_toTopOf="@id/tv_wallet_fees_label"
+                                app:layout_constraintVertical_bias="0"
+                                android:text="0.5%" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_recipient_gets_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="24dp"
+                                android:layout_marginEnd="48dp"
+                                android:layout_marginBottom="12dp"
+                                android:fontFamily="@font/cera_pro_medium"
+                                android:textSize="14sp"
+                                app:layout_constraintBottom_toTopOf="@id/tv_order_expires_label"
+                                app:layout_constraintHorizontal_bias="1.0"
+                                app:layout_constraintStart_toStartOf="@id/tv_wallet_fees_label"
+                                app:layout_constraintTop_toBottomOf="@id/tv_wallet_fees_label"
+                                app:layout_constraintVertical_bias="0"
+                                android:text="Recipient gets" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_recipient_gets"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:layout_marginEnd="48dp"
+                                android:fontFamily="@font/cera_pro_medium"
+                                android:textSize="14sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="1.0"
+                                app:layout_constraintStart_toEndOf="@id/tv_recipient_gets_label"
+                                app:layout_constraintTop_toTopOf="@id/tv_recipient_gets_label"
+                                app:layout_constraintVertical_bias="0"
+                                android:text=""
+                                tools:text="$456.34"
+                                />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_order_expires_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="24dp"
+                                android:layout_marginEnd="48dp"
+                                android:layout_marginBottom="12dp"
+                                android:fontFamily="@font/cera_pro_medium"
+                                android:textSize="12sp"
+                                android:textColor="@color/shaded_base_purple"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintHorizontal_bias="1.0"
+                                app:layout_constraintStart_toStartOf="@id/tv_wallet_fees_label"
+                                app:layout_constraintTop_toBottomOf="@id/tv_wallet_fees_label"
+                                app:layout_constraintVertical_bias="0"
+                                android:text="Order expires: " />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_order_expires"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:layout_marginEnd="48dp"
+                                android:fontFamily="@font/cera_pro_medium"
+                                android:textSize="12sp"
+                                android:textColor="@color/shaded_base_purple"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="1.0"
+                                app:layout_constraintStart_toEndOf="@id/tv_recipient_gets_label"
+                                app:layout_constraintTop_toTopOf="@id/tv_order_expires_label"
+                                app:layout_constraintVertical_bias="0"
+                                android:text=""
+                                tools:text="Monday, 1st May, 2027"
+                                />
 
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -272,24 +411,38 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="0.7"
+                android:backgroundTint="@color/cancelSecondaryBtn"
+                android:fontFamily="@font/cera_pro_medium"
+                android:minHeight="56dp"
+                android:text="Cancel"
+                android:textColor="@color/primaryBtnTextOnBackground"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_marginHorizontal="48dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
-                android:layout_weight="1"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                android:layout_weight="1">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_quote"
                     android:layout_width="match_parent"
                     android:layout_height="64dp"
-                    android:fontFamily="@font/cera_pro_medium"
                     android:backgroundTint="@color/primaryBtnBackgroundTint"
+                    android:fontFamily="@font/cera_pro_medium"
                     android:minHeight="56dp"
+                    android:text="Get Quote"
                     android:textColor="@color/primaryBtnTextOnBackground"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"

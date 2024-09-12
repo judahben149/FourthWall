@@ -18,6 +18,8 @@ import tbdex.sdk.protocol.models.CreateRfqData
 import tbdex.sdk.protocol.models.CreateSelectedPayinMethod
 import tbdex.sdk.protocol.models.CreateSelectedPayoutMethod
 import tbdex.sdk.protocol.models.Offering
+import tbdex.sdk.protocol.models.Order
+import tbdex.sdk.protocol.models.OrderStatus
 import tbdex.sdk.protocol.models.Quote
 import tbdex.sdk.protocol.models.Rfq
 import web5.sdk.dids.did.BearerDid
@@ -37,12 +39,64 @@ class QuoteViewModel @Inject constructor(
 
     fun updateSelectedOffering(offering: Offering) {
 
+        val fwOffering = offering.toFwOffering()
+
         _state.update {
             it.copy(
                 tbDexOffering = offering,
-                fwOffering = offering.toFwOffering(),
+                fwOffering = fwOffering,
                 exchangeProgress = ExchangeProgress.YetToRequestQuote
             )
+        }
+
+    }
+
+    fun updatePayKindNameForFieldsNotRequired(kindName: String) {
+        _state.update {
+            it.copy(
+                payInKind = kindName,
+            )
+        }
+    }
+
+    fun updateRequestedDetailsFields(
+        isPayIn: Boolean,
+        kindName: String,
+        details: Map<String, String>) {
+        if (isPayIn) {
+            _state.update {
+                it.copy(
+                    payInKind = kindName,
+                    payInRfqRequestFields = details
+                )
+            }
+        } else {
+            _state.update {
+                it.copy(
+                    payOutKind = kindName,
+                    payOutRfqRequestFields = details
+                )
+            }
+        }
+
+        state.value.fwOffering?.let { offering ->
+            val payOutFields = state.value.payOutRfqRequestFields
+            val payInFields = state.value.payInRfqRequestFields
+            val payInMethods = offering.payInMethods
+
+            if (payOutFields.isNotEmpty()) {
+                // Check if pay-in details are required and if they are provided
+                val arePayInDetailsRequired = payInMethods.all { it.paymentFields.isNotEmpty() }
+                val arePayInDetailsProvided = payInFields.isNotEmpty()
+
+                if (!arePayInDetailsRequired || (arePayInDetailsRequired && arePayInDetailsProvided)) {
+                    _state.update {
+                        it.copy(
+                            exchangeProgress = ExchangeProgress.IsReadyToRequestQuote
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -56,34 +110,33 @@ class QuoteViewModel @Inject constructor(
 
             state.value.fwOffering?.let { off ->
 
-                    rfq = Rfq.create(
-                        to = off.pfiDid,
-                        from = sessionManager.getDid() ?: "",
-                        rfqData = rfqData
-                    )
+                rfq = Rfq.create(
+                    to = off.pfiDid,
+                    from = sessionManager.getDid() ?: "",
+                    rfqData = rfqData
+                )
 
-                    val rfqVerification = verifyRfq(rfq)
-                    rfq.log("RFQ HERE -----> ")
-                    rfqVerification.log("VERIFICATION ----> ")
+                val rfqVerification = verifyRfq(rfq)
+                rfq.log("RFQ HERE -----> ")
+                rfqVerification.log("VERIFICATION ----> ")
 
-                    sessionManager.getBearerDid()?.let { bearerDid ->
-                        try {
-                            rfq.sign(bearerDid)
-                            TbdexHttpClient.createExchange(rfq)
+                sessionManager.getBearerDid()?.let { bearerDid ->
+                    try {
+                        rfq.sign(bearerDid)
+                        TbdexHttpClient.createExchange(rfq)
 
 
-                            // Start polling for results
-            //                            beginPollingForQuoteResponse(rfq, bearerDid)
-                        } catch (ex: Exception) {
-                            _state.update {
-                                it.copy(
-                                    exchangeProgress = ExchangeProgress.ErrorRequestingQuote(
-                                        ex.message.toString()
-                                    )
+                        // Start polling for results
+                        beginPollingForQuoteResponse(rfq, bearerDid)
+                    } catch (ex: Exception) {
+                        _state.update {
+                            it.copy(
+                                exchangeProgress = ExchangeProgress.ErrorRequestingQuote(
+                                    ex.message.toString()
                                 )
-                            }
-                            btnDisabled()
+                            )
                         }
+                    }
                 }
             }
         }
@@ -93,7 +146,7 @@ class QuoteViewModel @Inject constructor(
         var quote: Quote? = null
         var close: Close? = null
 
-//Wait for Quote message to appear in the exchange
+        //Wait for Quote message to appear in the exchange
         while (quote == null) {
             val exchange = TbdexHttpClient.getExchange(
                 pfiDid = rfq.metadata.to,
@@ -116,8 +169,15 @@ class QuoteViewModel @Inject constructor(
             }
         }
 
-        quote?.let {
-            it.toString().log("QUOTE HERE ---->")
+        quote?.let { receivedQuote ->
+            receivedQuote.toString().log("QUOTE HERE ---->")
+
+            _state.update {
+                it.copy(
+                    tbDexQuote = receivedQuote,
+                    exchangeProgress = ExchangeProgress.HasGottenQuoteResponse
+                )
+            }
         }
     }
 
@@ -158,21 +218,62 @@ class QuoteViewModel @Inject constructor(
         return !sessionManager.getKCC("").isNullOrEmpty()
     }
 
-    fun btnLoading() {
-        changeBtnState(QuoteButtonState.Loading)
+    fun processCloseRequest() {
+
     }
 
-    fun btnEnabled() {
-        changeBtnState(QuoteButtonState.Enabled)
+    fun processOrderRequest() {
+        try {
+            state.value.tbDexQuote?.let {
+                val order = createOrderMessage(it)
+
+                sessionManager.getBearerDid()?.let { bearerDid -> order.sign(bearerDid) }
+                TbdexHttpClient.submitOrder(order)
+                beginPollingForOrderResponse(order)
+            }
+
+        } catch (ex: Exception) {
+            _state.update {
+                it.copy(
+                    exchangeProgress = ExchangeProgress.HasGottenQuoteResponse
+                )
+            }
+        }
     }
 
-    fun btnDisabled() {
-        changeBtnState(QuoteButtonState.Disabled)
+    private fun createOrderMessage(quote: Quote): Order {
+
+        return Order.create(
+            from = sessionManager.getDid()!!,
+            to = quote.metadata.from,
+            exchangeId = quote.metadata.exchangeId
+        )
     }
 
-    private fun changeBtnState(btnState: QuoteButtonState) {
-        _state.update {
-            it.copy(btnState = btnState)
+    private fun beginPollingForOrderResponse(order: Order) {
+        var orderStatusUpdate: String? = ""
+        var close: Close? = null
+
+        while (close == null) {
+            val exchange = TbdexHttpClient.getExchange(
+                pfiDid = order.metadata.to,
+                requesterDid = sessionManager.getBearerDid()!!,
+                exchangeId = order.metadata.exchangeId
+            )
+
+            for (message in exchange) {
+                when (message) {
+                    is OrderStatus -> {
+                        // a status update to display to your customer
+                        orderStatusUpdate = message.data.orderStatus
+                    }
+                    is Close -> {
+                        // final message of exchange has been written
+                        close = message
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 }
@@ -181,12 +282,13 @@ data class QuoteState(
     val amount: String? = null,
     val fwOffering: FWOffering? = null,
     val tbDexOffering: Offering? = null,
-    val btnState: QuoteButtonState = QuoteButtonState.Disabled,
     val exchangeProgress: ExchangeProgress = ExchangeProgress.JustStarted,
     val payInKind: String = "",
     val payOutKind: String = "",
     val payInRfqRequestFields: Map<String, Any> = emptyMap(),
     val payOutRfqRequestFields: Map<String, Any> = emptyMap(),
+    val tbDexQuote: Quote? = null,
+    val tbDexOrderStatus: OrderStatus? = null
 )
 
 sealed class ExchangeProgress {
@@ -197,12 +299,11 @@ sealed class ExchangeProgress {
     data object IsPollingForQuoteResponse : ExchangeProgress()
     data object HasGottenQuoteResponse : ExchangeProgress()
     data class ErrorRequestingQuote(val message: String) : ExchangeProgress()
-    data object HasMadeOrder : ExchangeProgress()
-    data object HasGottenOrderResponse : ExchangeProgress()
-}
-
-sealed class QuoteButtonState {
-    data object Enabled : QuoteButtonState()
-    data object Disabled : QuoteButtonState()
-    data object Loading : QuoteButtonState()
+    data object HasSentOrderMessage : ExchangeProgress()
+    data object HasSentCloseMessage : ExchangeProgress()
+    data object HasGottenNewOrderStatusMessage : ExchangeProgress()
+    data object HasGottenSuccessfulOrderResponse : ExchangeProgress()
+    data object HasGottenCloseResponse : ExchangeProgress()
+    data class ErrorProcessingOrderMessage(val message: String)  : ExchangeProgress()
+    data class ErrorProcessingCloseMessage(val message: String)  : ExchangeProgress()
 }

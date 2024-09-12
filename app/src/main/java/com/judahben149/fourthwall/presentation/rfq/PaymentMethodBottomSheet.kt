@@ -1,7 +1,6 @@
 package com.judahben149.fourthwall.presentation.rfq
 
 import android.os.Bundle
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,15 +24,19 @@ class PaymentMethodBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: QuoteViewModel
     private var isPayIn: Boolean = true
+    private var payKind: String = ""
+
 
     companion object {
         fun newInstance(
             viewModel: QuoteViewModel,
-            isPayIn: Boolean
+            isPayIn: Boolean,
+            payKind: String
         ): PaymentMethodBottomSheet {
             return PaymentMethodBottomSheet().apply {
                 this.viewModel = viewModel
                 this.isPayIn = isPayIn
+                this.payKind = payKind
             }
         }
     }
@@ -76,10 +79,17 @@ class PaymentMethodBottomSheet : BottomSheetDialogFragment() {
                 TextInputConfig(field.fieldName, camelCaseToWords(field.fieldName))
             }
 
+
             if (isPayIn) {
-                textManager.createTextInputs(container, payInConfigs, binding.btnUpdate)
+                textManager.createTextInputs(container, payInConfigs, binding.btnUpdate) { detailsMap ->
+                    viewModel.updateRequestedDetailsFields(isPayIn, payKind, detailsMap)
+                    dismiss()
+                }
             } else {
-                textManager.createTextInputs(container, payOutConfigs, binding.btnUpdate)
+                textManager.createTextInputs(container, payOutConfigs, binding.btnUpdate) { detailsMap ->
+                    viewModel.updateRequestedDetailsFields(isPayIn, payKind, detailsMap)
+                    dismiss()
+                }
             }
         }
     }
@@ -87,10 +97,13 @@ class PaymentMethodBottomSheet : BottomSheetDialogFragment() {
     private fun setupListeners() {
         setupTextFieldListeners()
 
-        binding.btnUpdate.setOnClickListener {
-//            viewModel.updateSelectedPaymentKind(updatedPaymentKind)
-            dismiss()
-        }
+//        binding.btnUpdate.setOnClickListener {
+////            viewModel.updateSelectedPaymentKind(updatedPaymentKind)
+//            dismiss()
+//        }
+
+        //
+//        Button listener has been set up in event input lambda
     }
 
     private fun setupTextFieldListeners() {

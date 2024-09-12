@@ -17,6 +17,7 @@ import com.judahben149.fourthwall.domain.models.PaymentMethod
 import com.judahben149.fourthwall.presentation.exchange.OfferingsViewModel
 import com.judahben149.fourthwall.utils.log
 import com.judahben149.fourthwall.utils.text.extractPaymentFields
+import com.judahben149.fourthwall.utils.toCasualFriendlyDate
 import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
 import com.judahben149.fourthwall.utils.views.isLoading
@@ -67,19 +68,29 @@ class RequestQuoteFragment : Fragment() {
 
         confirmCredentialsAvailability()
 
+        //if pay in methods are empty, simply add in the pay in kind name
+        // You should come back to make this selectable by the user, using the chip
+        viewModel.state.value.fwOffering?.let { off ->
+            val payInMethodsAreEmpty = off.payInMethods.all { it.paymentFields.isEmpty() }
 
-        payInChipAdapter = PayInMethodChipAdapter { chipClickedText ->
-            val bottomSheet = PaymentMethodBottomSheet.newInstance(viewModel, true)
+            if (payInMethodsAreEmpty) {
+                viewModel.updatePayKindNameForFieldsNotRequired(off.payInMethods[0].kind)
+            }
+        }
+
+
+        payInChipAdapter = PayInMethodChipAdapter { payInKind ->
+            val bottomSheet = PaymentMethodBottomSheet.newInstance(viewModel, true, payInKind)
             bottomSheet.show(childFragmentManager, "BOTTOM_SHEET_PAYMENT_METHOD")
         }
 
-        payOutChipAdapter = PayOutMethodChipAdapter { chipClickedText ->
-            val bottomSheet = PaymentMethodBottomSheet.newInstance(viewModel, false)
-            bottomSheet.show(childFragmentManager, "BOTTOM_SHEET_PAYMENT_METHOD")
+        payOutChipAdapter = PayOutMethodChipAdapter { payOutKind ->
+            val bottomSheet = PaymentMethodBottomSheet.newInstance(viewModel, false, payOutKind)
+            bottomSheet.show(childFragmentManager, "BOTTOM_SHEET_PAYMENT_METHOD_2")
         }
 
         binding.rvPaymentInMethods.adapter = payInChipAdapter
-        binding.rvPaymentOutMethods.adapter = payInChipAdapter
+        binding.rvPaymentOutMethods.adapter = payOutChipAdapter
     }
 
     private fun observeState() {
@@ -88,27 +99,10 @@ class RequestQuoteFragment : Fragment() {
 
                 viewModel.state.collect { state ->
 
-                    when (state.btnState) {
-                        QuoteButtonState.Disabled -> binding.btnQuote.disable(
-                            resources,
-                            binding.progressBar
-                        )
-
-                        QuoteButtonState.Enabled -> binding.btnQuote.enable(
-                            resources,
-                            binding.progressBar
-                        )
-
-                        QuoteButtonState.Loading -> binding.btnQuote.isLoading(
-                            resources,
-                            binding.progressBar
-                        )
-                    }
-
                     when (val prg = state.exchangeProgress) {
                         is ExchangeProgress.JustStarted -> {
-                            binding.btnQuote.disable(resources)
                             binding.btnQuote.text = "Get Quote"
+                            binding.btnQuote.disable(resources)
                         }
 
                         is ExchangeProgress.YetToRequestQuote -> {
@@ -116,7 +110,7 @@ class RequestQuoteFragment : Fragment() {
                         }
 
                         is ExchangeProgress.IsReadyToRequestQuote -> {
-                            binding.btnQuote.enable(resources)
+                            binding.btnQuote.enable(resources, binding.progressBar)
                         }
 
                         is ExchangeProgress.HasRequestedQuote -> {
@@ -129,9 +123,29 @@ class RequestQuoteFragment : Fragment() {
                         }
 
                         is ExchangeProgress.HasGottenQuoteResponse -> {
-                            requireActivity().showSuccessAlerter("Has gotten quote response") {}
-                            binding.btnQuote.text = "Order"
-                            binding.btnQuote.enable(resources)
+                            requireActivity().showSuccessAlerter("Quote received. See fee breakdown") {}
+                            binding.btnQuote.enable(resources, binding.progressBar)
+
+                            binding.run {
+                                btnQuote.text = "Order"
+                                btnQuote.enable(resources)
+
+                                btnCancel.visibility = View.VISIBLE
+                                cardFeeBreakdown.visibility = View.VISIBLE
+
+                                state.tbDexQuote?.let { quote ->
+                                    if (quote.data.payout.fee.isNullOrEmpty().not()) {
+                                        tvFees.text = quote.data.payout.fee
+
+                                        listOf(tvFeesLabel, tvFees, dotted1, dotted2).forEach {
+                                            it.visibility = View.VISIBLE
+                                        }
+                                    }
+
+                                    tvOrderExpires.text =
+                                        quote.data.expiresAt.toCasualFriendlyDate()
+                                }
+                            }
                         }
 
                         is ExchangeProgress.ErrorRequestingQuote -> {
@@ -139,12 +153,28 @@ class RequestQuoteFragment : Fragment() {
                             requireActivity().showErrorAlerter(prg.message) {}
                         }
 
-                        is ExchangeProgress.HasMadeOrder -> {
+                        is ExchangeProgress.HasSentOrderMessage -> {
+                            requireActivity().showInfoAlerter("FourthWall is processing your order")
+                        }
+
+                        is ExchangeProgress.HasGottenSuccessfulOrderResponse -> {
 
                         }
 
-                        is ExchangeProgress.HasGottenOrderResponse -> {
+                        is ExchangeProgress.ErrorProcessingOrderMessage -> {
+                            requireActivity().showErrorAlerter(prg.message) {}
+                        }
 
+                        is ExchangeProgress.HasSentCloseMessage -> {
+
+                        }
+
+                        is ExchangeProgress.HasGottenCloseResponse -> {
+
+                        }
+
+                        is ExchangeProgress.ErrorProcessingCloseMessage -> {
+                            requireActivity().showErrorAlerter(prg.message) {}
                         }
                     }
                 }
@@ -180,12 +210,10 @@ class RequestQuoteFragment : Fragment() {
 
     private fun seeSelectedOffering() {
         offeringsViewModel.state.value.selectedOffering?.let { offering ->
-            offering.data.payin.methods.forEach {
-                it.requiredPaymentDetails?.fields()?.log("FIELDS ----> ")
-            }
-
-            offering.data.payout.methods.forEach { method ->
-                method.requiredPaymentDetails?.log("PAY OUT ----> ")
+            offering.log("OFFERING -----> ")
+            offering.data.payin.methods.forEach { method ->
+//                it.requiredPaymentDetails?.fields()?.log("FIELDS ----> ")
+                method.requiredPaymentDetails?.log("PAY IN ----> ")
 
                 val kind = method.kind
                 val fields =
@@ -193,7 +221,19 @@ class RequestQuoteFragment : Fragment() {
 
                 val paymentMethod = PaymentMethod(kind, fields)
 
-                paymentMethod.log("PAYMENT METHOD ---> ")
+                paymentMethod.log("PAYMENT IN METHOD ---> ")
+            }
+
+            offering.data.payout.methods.forEach { method ->
+//                method.requiredPaymentDetails?.log("PAY OUT ----> ")
+
+                val kind = method.kind
+                val fields =
+                    method.requiredPaymentDetails?.let { extractPaymentFields(it) } ?: emptyList()
+
+                val paymentMethod = PaymentMethod(kind, fields)
+
+                paymentMethod.log("PAYMENT OUT METHOD ---> ")
             }
         }
     }
@@ -204,8 +244,14 @@ class RequestQuoteFragment : Fragment() {
 
             btnQuote.setOnClickListener {
                 // Decide if to request for quote here or make order
-                viewModel.requestForQuote()
+                if (viewModel.state.value.exchangeProgress is ExchangeProgress.HasGottenQuoteResponse) {
+                    viewModel.processOrderRequest()
+                } else {
+                    viewModel.requestForQuote()
+                }
             }
+
+            btnCancel.setOnClickListener { viewModel.processCloseRequest() }
         }
     }
 

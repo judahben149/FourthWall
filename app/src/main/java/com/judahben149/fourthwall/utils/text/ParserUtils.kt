@@ -62,10 +62,13 @@ fun camelCaseToWords(input: String): String {
     return input.replace(Regex("([a-z])([A-Z])"), "$1 $2")
         .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 }fun String.formatKind(): String {
-    val sanitizedString = this.trim().lowercase()
+    val sanitizedString = this.replace("_", " ")
 
-    return when {
-        sanitizedString.contains("transfer") -> "Bank Transfer"
-        else -> this
-    }
+//    return when {
+//        sanitizedString.contains("transfer") -> "Bank Transfer"
+//        sanitizedString.contains("wallet") -> "Bank Transfer"
+//        else -> this
+//    }
+
+    return sanitizedString
 }

@@ -27,6 +27,7 @@
     <color name="primaryBtnBackgroundTint">#A259FF</color>
     <color name="disabledPrimaryBtnBackgroundTint">#AAAAAA</color>
     <color name="primaryBtnTextOnBackground">#FFFFFFFF</color>
+    <color name="cancelSecondaryBtn">#FF7EB2</color>
 
 <!--    Chip Buttons-->
     <color name="chipButtonBackground">#90DBA3E4</color>

@@ -183,9 +183,8 @@ fun MaterialButton.enable(res: Resources, pgBar: CircularProgressIndicator? = nu
     // Disable clicking
     this.isClickable = true
     this.isEnabled = true
-
-    this.textScaleX = 1F
     this.alpha = 1F
+    this.textScaleX = 1F
 
     pgBar?.let {
         pgBar.visibility = View.INVISIBLE

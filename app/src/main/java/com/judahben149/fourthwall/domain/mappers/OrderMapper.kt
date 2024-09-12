@@ -1,12 +1,12 @@
 package com.judahben149.fourthwall.domain.mappers
 
 import com.judahben149.fourthwall.data.local.entities.OrderEntity
-import com.judahben149.fourthwall.domain.models.Order
+import com.judahben149.fourthwall.domain.models.FwOrder
 import com.judahben149.fourthwall.domain.models.enums.OrderStatus
 import com.judahben149.fourthwall.domain.models.enums.OrderType
 import com.judahben149.fourthwall.domain.models.enums.PaymentMethods
 
-fun Order.toOrderEntity(): OrderEntity {
+fun FwOrder.toOrderEntity(): OrderEntity {
     return OrderEntity(
         orderId = orderId,
         payInAmount = payInAmount,
@@ -23,8 +23,8 @@ fun Order.toOrderEntity(): OrderEntity {
     )
 }
 
-fun OrderEntity.toOrder(): Order {
-    return Order(
+fun OrderEntity.toOrder(): FwOrder {
+    return FwOrder(
         orderId = orderId,
         payInAmount = payInAmount,
         payOutAmount = payOutAmount,

@@ -20,21 +20,27 @@ class DynamicTextInputManager(private val context: Context, private val resource
     private val textInputLayouts = mutableListOf<Pair<String, TextInputLayout>>()
     private lateinit var submitButton: MaterialButton
 
-    fun createTextInputs(container: ViewGroup, configs: List<TextInputConfig>, submitButton: MaterialButton) {
+    fun createTextInputs(
+        container: ViewGroup,
+        configs: List<TextInputConfig>,
+        submitButton: MaterialButton,
+        onSubmitClicked: (Map<String, String>) -> Unit
+    ) {
         this.submitButton = submitButton
 
         configs.forEach { config ->
-//            val textInputLayout = createTextInputLayout(config)
-//            val textInputEditText = createTextInputEditText(config)
-            
-//            textInputLayout.addView(textInputEditText)
 
             val textComponent = addTextInputLayout(config)
             container.addView(textComponent.first)
-            
+
             textInputLayouts.add(Pair(config.id, textComponent.first))
-            
+
             setupTextChangeListener(textComponent.second)
+        }
+
+        // Setup submit button click listener
+        submitButton.setOnClickListener {
+            onSubmitClicked(collectInputTexts())
         }
     }
 
@@ -54,6 +60,7 @@ class DynamicTextInputManager(private val context: Context, private val resource
             this.layoutParams = layoutParams
             boxBackgroundMode = TextInputLayout.BOX_BACKGROUND_OUTLINE
             setBoxCornerRadii(dpToPx(12f), dpToPx(12f), dpToPx(12f), dpToPx(12f))
+            tag = config.id // Use tag to store the string ID
         }
 
         val params = LinearLayout.LayoutParams(
@@ -67,10 +74,10 @@ class DynamicTextInputManager(private val context: Context, private val resource
 
         textInputLayout.addView(textInputEditText)
         return Pair(textInputLayout, textInputEditText)
-}
+    }
 
 
-private fun createTextInputLayout(config: TextInputConfig): TextInputLayout {
+    private fun createTextInputLayout(config: TextInputConfig): TextInputLayout {
         return TextInputLayout(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -78,7 +85,7 @@ private fun createTextInputLayout(config: TextInputConfig): TextInputLayout {
             ).apply {
                 topMargin = dpToPx(8)
             }
-            
+
             hint = config.hint
             setBoxCornerRadii(dpToPx(12f), dpToPx(12f), dpToPx(12f), dpToPx(12f))
             tag = config.id  // Use tag to store the string ID
@@ -91,7 +98,7 @@ private fun createTextInputLayout(config: TextInputConfig): TextInputLayout {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            
+
             inputType = config.inputType
             typeface = ResourcesCompat.getFont(context, R.font.cera_pro_light)
             setTypeface(typeface, Typeface.BOLD)
@@ -105,8 +112,8 @@ private fun createTextInputLayout(config: TextInputConfig): TextInputLayout {
     }
 
     private fun updateSubmitButtonState() {
-        val allFieldsFilled = textInputLayouts.all { 
-            !it.second.editText?.text.isNullOrEmpty() 
+        val allFieldsFilled = textInputLayouts.all {
+            !it.second.editText?.text.isNullOrEmpty()
         }
 
         if (allFieldsFilled) {
@@ -116,8 +123,8 @@ private fun createTextInputLayout(config: TextInputConfig): TextInputLayout {
         }
     }
 
-    fun collectInputTexts(): Map<String, String> {
-        return textInputLayouts.associate { (id, layout) -> 
+    private fun collectInputTexts(): Map<String, String> {
+        return textInputLayouts.associate { (id, layout) ->
             id to (layout.editText?.text?.toString() ?: "")
         }
     }

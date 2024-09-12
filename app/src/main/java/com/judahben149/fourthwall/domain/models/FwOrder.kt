@@ -4,7 +4,7 @@ import com.judahben149.fourthwall.domain.models.enums.OrderStatus
 import com.judahben149.fourthwall.domain.models.enums.OrderType
 import com.judahben149.fourthwall.domain.models.enums.PaymentMethods
 
-data class Order(
+data class FwOrder(
     val orderId: Int = 0,
     val payInAmount: Double = 0.0,
     val payOutAmount: Double = 0.0,
