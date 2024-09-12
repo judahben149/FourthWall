@@ -37,8 +37,6 @@ class OrdersFragment : Fragment() {
 
         setupRecyclerView()
         observeState()
-        viewModel.insertOrderList(DummyDataUtils.generateDummyOrders(20))
-
     }
 
     private fun observeState() {

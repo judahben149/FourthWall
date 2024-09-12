@@ -49,3 +49,7 @@ fun OffsetDateTime.toCasualFriendlyDate(): String {
 
     return this.format(formatter)
 }
+
+fun getCurrentTimeInMillis(): Long {
+    return System.currentTimeMillis()
+}

@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.ItemOrdersBinding
 import com.judahben149.fourthwall.domain.models.FwOrder
-import com.judahben149.fourthwall.domain.models.enums.OrderStatus
+import com.judahben149.fourthwall.domain.models.enums.FwOrderStatus
 import com.judahben149.fourthwall.domain.models.enums.OrderType
 import com.judahben149.fourthwall.utils.CurrencyUtils
 import com.judahben149.fourthwall.utils.CurrencyUtils.formatCurrency
@@ -50,10 +50,11 @@ class OrderAdapter(
                 tvFailure.visibility = View.INVISIBLE
 
                 if (fwOrder.orderType == OrderType.SENT) {
-                    when (fwOrder.orderStatus) {
-                        OrderStatus.IN_TRANSIT -> tvInTransit.visibility = View.VISIBLE
-                        OrderStatus.SUCCESSFUL -> tvSuccess.visibility = View.VISIBLE
-                        OrderStatus.FAILED -> tvFailure.visibility = View.VISIBLE
+                    when (fwOrder.fwOrderStatus) {
+                        FwOrderStatus.IN_TRANSIT -> tvInTransit.visibility = View.VISIBLE
+                        FwOrderStatus.SUCCESSFUL -> tvSuccess.visibility = View.VISIBLE
+                        FwOrderStatus.FAILED -> tvFailure.visibility = View.VISIBLE
+                        FwOrderStatus.PENDING -> tvPending.visibility = View.VISIBLE
                     }
                 }
 

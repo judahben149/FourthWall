@@ -7,5 +7,5 @@ this hackathon
 enum class PaymentMethods {
     WALLET_ADDRESS,
     BANK_TRANSFER,
-    BANK_TRANSFER_USD,
+    STORED_BALANCE
 }

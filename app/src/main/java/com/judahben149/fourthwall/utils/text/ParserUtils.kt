@@ -2,12 +2,12 @@ package com.judahben149.fourthwall.utils.text
 
 import android.content.Context
 import com.fasterxml.jackson.databind.JsonNode
-import com.google.gson.JsonParser
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.judahben149.fourthwall.domain.models.PaymentField
 import com.judahben149.fourthwall.domain.models.PfiData
 import com.judahben149.fourthwall.domain.models.PfiDataResponse
+import com.judahben149.fourthwall.domain.models.enums.PaymentMethods
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.InputStreamReader
@@ -39,7 +39,8 @@ private fun getStatusText(status: Int): String {
     return when (status) {
         0 -> "In-Transit"
         1 -> "Success"
-        else -> "Failed"
+        2 -> "Failed"
+        else -> "Pending"
     }
 }
 
@@ -61,14 +62,18 @@ fun extractPaymentFields(jsonNode: JsonNode): List<PaymentField> {
 fun camelCaseToWords(input: String): String {
     return input.replace(Regex("([a-z])([A-Z])"), "$1 $2")
         .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-}fun String.formatKind(): String {
-    val sanitizedString = this.replace("_", " ")
+}
 
-//    return when {
-//        sanitizedString.contains("transfer") -> "Bank Transfer"
-//        sanitizedString.contains("wallet") -> "Bank Transfer"
-//        else -> this
-//    }
+fun String.formatAddSpace(): String {
+    return replace("_", " ")
+}
 
-    return sanitizedString
+fun String.toFwPaymentMethods(): PaymentMethods {
+    return when {
+        this.contains("transfer", true) -> PaymentMethods.BANK_TRANSFER
+        this.contains("address", true) -> PaymentMethods.WALLET_ADDRESS
+        this.contains("wallet", true) -> PaymentMethods.WALLET_ADDRESS
+        this.contains("balance", true) -> PaymentMethods.STORED_BALANCE
+        else -> PaymentMethods.BANK_TRANSFER
+    }
 }

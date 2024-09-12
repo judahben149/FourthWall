@@ -153,12 +153,17 @@ class RequestQuoteFragment : Fragment() {
                             requireActivity().showErrorAlerter(prg.message) {}
                         }
 
-                        is ExchangeProgress.HasSentOrderMessage -> {
+                        is ExchangeProgress.IsProcessingOrderRequest -> {
                             requireActivity().showInfoAlerter("FourthWall is processing your order")
                         }
 
-                        is ExchangeProgress.HasGottenSuccessfulOrderResponse -> {
+                        is ExchangeProgress.HasGottenNewOrderStatusMessage -> {
+                            requireActivity().showErrorAlerter("Status - ".plus(prg.message)) {}
 
+                        }
+
+                        is ExchangeProgress.HasGottenSuccessfulOrderResponse -> {
+                            requireActivity().showSuccessAlerter("Order Fulfilled") {}
                         }
 
                         is ExchangeProgress.ErrorProcessingOrderMessage -> {

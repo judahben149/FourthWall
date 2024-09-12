@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.judahben149.fourthwall.databinding.ItemChipBinding
-import com.judahben149.fourthwall.utils.text.formatKind
+import com.judahben149.fourthwall.utils.text.formatAddSpace
 
 class PayInMethodChipAdapter(
     private val onChipClicked: (String) -> Unit
@@ -35,7 +35,7 @@ class PayInMethodChipAdapter(
 
         fun bind(paymentMethod: String) {
             binding.root.run {
-                text = paymentMethod.formatKind()
+                text = paymentMethod.formatAddSpace()
 
                 setOnClickListener {
                     onChipClicked(paymentMethod)

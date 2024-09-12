@@ -4,8 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.domain.mappers.toFwOffering
+import com.judahben149.fourthwall.domain.mappers.toFwOrderEntity
+import com.judahben149.fourthwall.domain.mappers.toFwPaymentMethod
 import com.judahben149.fourthwall.domain.models.FWOffering
+import com.judahben149.fourthwall.domain.models.enums.FwOrderStatus
+import com.judahben149.fourthwall.domain.models.enums.OrderType
+import com.judahben149.fourthwall.domain.models.enums.PaymentMethods
+import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
 import com.judahben149.fourthwall.utils.log
+import com.judahben149.fourthwall.utils.text.formatAddSpace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +34,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuoteViewModel @Inject constructor(
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val insertOrdersUseCase: InsertOrdersUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(QuoteState())
@@ -62,7 +70,8 @@ class QuoteViewModel @Inject constructor(
     fun updateRequestedDetailsFields(
         isPayIn: Boolean,
         kindName: String,
-        details: Map<String, String>) {
+        details: Map<String, String>
+    ) {
         if (isPayIn) {
             _state.update {
                 it.copy(
@@ -175,6 +184,7 @@ class QuoteViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     tbDexQuote = receivedQuote,
+                    fee = receivedQuote.data.payout.fee?.toDoubleOrNull() ?: 0.0,
                     exchangeProgress = ExchangeProgress.HasGottenQuoteResponse
                 )
             }
@@ -223,20 +233,26 @@ class QuoteViewModel @Inject constructor(
     }
 
     fun processOrderRequest() {
-        try {
-            state.value.tbDexQuote?.let {
-                val order = createOrderMessage(it)
+        _state.update { state ->
+            state.copy(exchangeProgress = ExchangeProgress.IsProcessingOrderRequest)
+        }
 
-                sessionManager.getBearerDid()?.let { bearerDid -> order.sign(bearerDid) }
-                TbdexHttpClient.submitOrder(order)
-                beginPollingForOrderResponse(order)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                state.value.tbDexQuote?.let {
+                    val order = createOrderMessage(it)
 
-        } catch (ex: Exception) {
-            _state.update {
-                it.copy(
-                    exchangeProgress = ExchangeProgress.HasGottenQuoteResponse
-                )
+                    sessionManager.getBearerDid()?.let { bearerDid -> order.sign(bearerDid) }
+                    TbdexHttpClient.submitOrder(order)
+                    beginPollingForOrderResponse(order)
+                }
+
+            } catch (ex: Exception) {
+                _state.update {
+                    it.copy(
+                        exchangeProgress = ExchangeProgress.HasGottenQuoteResponse
+                    )
+                }
             }
         }
     }
@@ -266,14 +282,91 @@ class QuoteViewModel @Inject constructor(
                     is OrderStatus -> {
                         // a status update to display to your customer
                         orderStatusUpdate = message.data.orderStatus
+                        orderStatusUpdate.log("ORDER STATUS HERE ----> ")
+
+                        _state.update {
+                            it.copy(
+                                exchangeProgress = ExchangeProgress.HasGottenNewOrderStatusMessage(
+                                    message.data.orderStatus
+                                )
+                            )
+                        }
                     }
+
                     is Close -> {
                         // final message of exchange has been written
                         close = message
+                        close.data.reason?.log("ORDER FINAL MESSAGE HERE ----> ")
+
+                        if (close.data.success == true) {
+                            _state.update {
+                                it.copy(
+                                    exchangeProgress = ExchangeProgress.HasGottenSuccessfulOrderResponse
+                                )
+                            }
+
+                            saveOrderToLocalDatabase(order, FwOrderStatus.SUCCESSFUL)
+                        } else {
+                            _state.update {
+                                it.copy(
+                                    exchangeProgress = ExchangeProgress.ErrorProcessingOrderMessage(
+                                        close.data.reason.toString()
+                                    )
+                                )
+                            }
+                        }
                     }
-                    else -> {}
+
+                    else -> {
+                        _state.update {
+                            it.copy(
+                                exchangeProgress = ExchangeProgress.ErrorProcessingOrderMessage(
+                                    "Order was not processed"
+                                )
+                            )
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    private fun saveOrderToLocalDatabase(order: Order, fwOrderStatus: FwOrderStatus) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val walletAddress =
+                if (state.value.payOutKind.toFwPaymentMethod() == PaymentMethods.WALLET_ADDRESS) {
+                    try {
+                        state.value.payOutRfqRequestFields.getValue("address") as String
+                    } catch (ex: Exception) {
+                        ""
+                    }
+                } else {
+                    ""
+                }
+
+            val recipientAccount =
+                if (state.value.payOutKind.toFwPaymentMethod() == PaymentMethods.BANK_TRANSFER) {
+                    try {
+                        state.value.payOutRfqRequestFields.getValue("accountNumber") as String
+                    } catch (ex: Exception) {
+                        ""
+                    }
+                } else {
+                    ""
+                }
+
+
+            val orderEntity = order.toFwOrderEntity(
+                quote = state.value.tbDexQuote!!,
+                payoutMethod = state.value.payOutKind.formatAddSpace(),
+                fwOrderStatus = fwOrderStatus,
+                orderType = OrderType.SENT,
+                walletAddress = walletAddress,
+                recipientAccount = recipientAccount,
+                fee = state.value.fee
+            )
+
+            insertOrdersUseCase(orderEntity)
         }
     }
 }
@@ -285,6 +378,7 @@ data class QuoteState(
     val exchangeProgress: ExchangeProgress = ExchangeProgress.JustStarted,
     val payInKind: String = "",
     val payOutKind: String = "",
+    val fee: Double = 0.0,
     val payInRfqRequestFields: Map<String, Any> = emptyMap(),
     val payOutRfqRequestFields: Map<String, Any> = emptyMap(),
     val tbDexQuote: Quote? = null,
@@ -299,11 +393,11 @@ sealed class ExchangeProgress {
     data object IsPollingForQuoteResponse : ExchangeProgress()
     data object HasGottenQuoteResponse : ExchangeProgress()
     data class ErrorRequestingQuote(val message: String) : ExchangeProgress()
-    data object HasSentOrderMessage : ExchangeProgress()
+    data object IsProcessingOrderRequest : ExchangeProgress()
     data object HasSentCloseMessage : ExchangeProgress()
-    data object HasGottenNewOrderStatusMessage : ExchangeProgress()
+    data class HasGottenNewOrderStatusMessage(val message: String) : ExchangeProgress()
     data object HasGottenSuccessfulOrderResponse : ExchangeProgress()
     data object HasGottenCloseResponse : ExchangeProgress()
-    data class ErrorProcessingOrderMessage(val message: String)  : ExchangeProgress()
-    data class ErrorProcessingCloseMessage(val message: String)  : ExchangeProgress()
+    data class ErrorProcessingOrderMessage(val message: String) : ExchangeProgress()
+    data class ErrorProcessingCloseMessage(val message: String) : ExchangeProgress()
 }

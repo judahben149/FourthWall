@@ -53,4 +53,5 @@
     <string name="routing_number">Routing number</string>
     <string name="update">Update</string>
     <string name="top_up">Top Up</string>
+    <string name="pending">Pending</string>
 </resources>
