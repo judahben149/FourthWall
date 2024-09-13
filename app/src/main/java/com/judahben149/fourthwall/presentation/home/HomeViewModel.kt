@@ -3,7 +3,7 @@ package com.judahben149.fourthwall.presentation.home
 import androidx.lifecycle.ViewModel
 import com.judahben149.fourthwall.data.local.relations.UserWithCurrencyAccounts
 import com.judahben149.fourthwall.domain.SessionManager
-import com.judahben149.fourthwall.domain.usecase.orders.GetUserWithCurrencyAccountsUseCase
+import com.judahben149.fourthwall.domain.usecase.user.GetUserWithCurrencyAccountsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

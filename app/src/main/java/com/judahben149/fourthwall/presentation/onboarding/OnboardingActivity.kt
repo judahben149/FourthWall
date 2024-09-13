@@ -54,7 +54,7 @@ class OnboardingActivity : AppCompatActivity() {
                 if (viewPager.currentItem < 2) {
                     viewPager.currentItem += 1
                 } else {
-                    navigateToRegistrationScreen()
+                    navigateToFinalOnboardingScreen()
                 }
             }
         }
@@ -75,7 +75,7 @@ class OnboardingActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToRegistrationScreen() {
+    private fun navigateToFinalOnboardingScreen() {
         val intent = Intent(this, UserRegistrationActivity::class.java)
         startActivity(intent)
         finish()

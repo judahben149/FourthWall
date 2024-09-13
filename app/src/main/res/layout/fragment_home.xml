@@ -33,11 +33,84 @@
         app:shapeAppearance="@style/CircularShapeAppearance" />
 
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/layout_card_no_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:backgroundTint="@color/card_1_bg"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintTop_toBottomOf="@id/rv_user_account"
+        app:strokeWidth="0dp">
+
+        <eightbitlab.com.blurview.BlurView
+            android:id="@+id/blurView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:outlineProvider="background">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_send_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="64dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:layout_weight="0.8"
+                    android:backgroundTint="@color/card_1_send_btn"
+                    android:drawableEnd="@drawable/ic_forward"
+                    android:fontFamily="@font/cera_pro_medium"
+                    android:text="@string/send"
+                    android:textColor="@color/textOnBackground"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btn_add_account"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_amount_balance" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_add_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="64dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="24dp"
+                    android:layout_weight="2"
+                    android:backgroundTint="@color/card_1_add_btn"
+                    android:drawableEnd="@drawable/ic_plus"
+                    android:fontFamily="@font/cera_pro_medium"
+                    android:paddingStart="8dp"
+                    android:text="Add account"
+                    android:textColor="@color/textOnBackground"
+                    android:textSize="18sp"
+                    app:iconTint="@color/textOnBackground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@id/btn_send_money"
+                    app:layout_constraintTop_toBottomOf="@id/layout_amount_balance" />
+
+            </LinearLayout>
+
+        </eightbitlab.com.blurview.BlurView>
+    </com.google.android.material.card.MaterialCardView>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_user_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvHomeTitle"
@@ -58,7 +131,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv_user_account"
+        app:layout_constraintTop_toBottomOf="@id/layout_card_no_account"
         app:strokeWidth="0dp">
 
         <LinearLayout

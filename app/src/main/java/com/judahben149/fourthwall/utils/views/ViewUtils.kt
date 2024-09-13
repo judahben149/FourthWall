@@ -1,5 +1,6 @@
 package com.judahben149.fourthwall.utils.views
 
+import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
@@ -23,6 +24,8 @@ import android.animation.ArgbEvaluator
 import android.animation.PropertyValuesHolder
 import android.app.Activity
 import android.graphics.drawable.GradientDrawable
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.OvershootInterpolator
 import com.tapadoo.alerter.Alerter
 import com.tapadoo.alerter.OnHideAlertListener
 
@@ -134,6 +137,80 @@ fun ImageView.animateCheckmark() {
     post(runAnimation)
 }
 
+fun ImageView.startWarmupAnimation() {
+    val bounce = ObjectAnimator.ofFloat(this, "translationY", 0f, -20f, 0f).apply {
+        duration = 1000
+        repeatCount = ValueAnimator.INFINITE
+        repeatMode = ValueAnimator.REVERSE
+        interpolator = AccelerateDecelerateInterpolator()
+    }
+
+    val shake = ObjectAnimator.ofFloat(this, "rotation", -2f, 2f).apply {
+        duration = 100
+        repeatCount = ValueAnimator.INFINITE
+        repeatMode = ValueAnimator.REVERSE
+    }
+
+    AnimatorSet().apply {
+        playTogether(bounce, shake)
+        start()
+    }
+}
+
+fun ImageView.startTakeoffAnimation(onAnimationEnd: () -> Unit) {
+    val screenHeight = resources.displayMetrics.heightPixels.toFloat()
+
+    val shake = PropertyValuesHolder.ofFloat(View.ROTATION, -5f, 5f)
+    val moveUp = PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, 0f, -screenHeight)
+    val shrink = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0.5f)
+    val shrinkY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0.5f)
+
+    ObjectAnimator.ofPropertyValuesHolder(this, shake, moveUp, shrink, shrinkY).apply {
+        duration = 2000
+        interpolator = AccelerateInterpolator()
+        addListener(onEnd = {
+            onAnimationEnd()
+        })
+        start()
+    }
+}
+
+fun ImageView.startIrregularHeartbeatAnimation() {
+    val scaleX = ObjectAnimator.ofFloat(this, "scaleX", 1f, 1.2f, 1f)
+    val scaleY = ObjectAnimator.ofFloat(this, "scaleY", 1f, 1.2f, 1f)
+
+    val firstBeat = AnimatorSet().apply {
+        playTogether(scaleX, scaleY)
+        duration = 200
+        interpolator = OvershootInterpolator()
+    }
+
+    val secondBeat = AnimatorSet().apply {
+        playTogether(
+            ObjectAnimator.ofFloat(this@startIrregularHeartbeatAnimation, "scaleX", 1f, 1.1f, 1f),
+            ObjectAnimator.ofFloat(this@startIrregularHeartbeatAnimation, "scaleY", 1f, 1.1f, 1f)
+        )
+        duration = 200
+        interpolator = AccelerateDecelerateInterpolator()
+    }
+
+    val pause = ValueAnimator.ofFloat(0f, 1f).apply {
+        duration = 1000
+    }
+
+    AnimatorSet().apply {
+        playSequentially(firstBeat, secondBeat, pause)
+        addListener(object : Animator.AnimatorListener {
+            override fun onAnimationEnd(animation: Animator) {
+                start()
+            }
+            override fun onAnimationStart(animation: Animator) {}
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationRepeat(animation: Animator) {}
+        })
+        start()
+    }
+}
 
 fun View.animateBorderColorForError(durationMs: Long = 2000) {
     val drawable = background as? GradientDrawable ?: return

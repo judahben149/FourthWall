@@ -9,14 +9,19 @@ import com.judahben149.fourthwall.data.local.relations.UserWithCurrencyAccounts
 import com.judahben149.fourthwall.data.remote.result.NetworkResult
 import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
+import com.judahben149.fourthwall.domain.usecase.user.GetUserWithCurrencyAccountsUseCase
+import com.judahben149.fourthwall.domain.usecase.user.InsertUserAccountUseCase
 import com.judahben149.fourthwall.domain.usecase.user.InsertUserWithCurrencyAccountsUseCase
 import com.judahben149.fourthwall.utils.AndroidKeyManager
 import com.judahben149.fourthwall.utils.Constants.BASE_USER_ID
+import com.judahben149.fourthwall.utils.PasswordEncryptionUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import web5.sdk.dids.did.BearerDid
@@ -28,11 +33,17 @@ class UserRegistrationViewModel @Inject constructor(
     private val applicationContext: Context,
     private val getKccUseCase: GetKccUseCase,
     private val sessionManager: SessionManager,
+    private val insertUserAccountUseCase: InsertUserAccountUseCase,
     private val insertUserCurrencyUseCase: InsertUserWithCurrencyAccountsUseCase,
-): ViewModel() {
+    private val getUserWithCurrencyAccountsUseCase: GetUserWithCurrencyAccountsUseCase,
+) : ViewModel() {
 
     private val _state = MutableStateFlow(UserRegistrationState())
     val state: StateFlow<UserRegistrationState> = _state.asStateFlow()
+
+    init {
+        getSignUpState()
+    }
 
     fun getCredentials() {
         val name = state.value.name
@@ -41,7 +52,7 @@ class UserRegistrationViewModel @Inject constructor(
         if (name.isEmpty()) {
             _state.update {
                 it.copy(
-                    credProgressState = CredentialsProgressState.Error(
+                    userLoginProgress = UserLoginProgress.ErrorSigningUp(
                         "\"Name\" field cannot be empty"
                     )
                 )
@@ -52,7 +63,7 @@ class UserRegistrationViewModel @Inject constructor(
         if (countryCode.isEmpty()) {
             _state.update {
                 it.copy(
-                    credProgressState = CredentialsProgressState.Error(
+                    userLoginProgress = UserLoginProgress.ErrorSigningUp(
                         "Please select your country"
                     )
                 )
@@ -60,47 +71,117 @@ class UserRegistrationViewModel @Inject constructor(
             return
         }
 
-        setGetCredBtnLoading()
 
         viewModelScope.launch(Dispatchers.IO) {
             val did = createUserDid()
 
-            when(val result = getKccUseCase(name, countryCode, did.uri)) {
+            when (val result = getKccUseCase(name, countryCode, did.uri)) {
                 is NetworkResult.Error -> {
                     _state.update {
                         it.copy(
-                            credProgressState = CredentialsProgressState.Error(
+                            userLoginProgress = UserLoginProgress.ErrorSigningUp(
                                 result.message ?: "Credentials were not setup. Please retry"
                             )
                         )
                     }
-
-                    setContinueBtnEnabled()
                 }
 
                 is NetworkResult.Exception -> {
                     _state.update {
                         it.copy(
-                            credProgressState = CredentialsProgressState.Error(
+                            userLoginProgress = UserLoginProgress.ErrorSigningUp(
                                 result.e.message ?: "Credentials were not setup. Please retry"
                             )
                         )
                     }
-
-                    setContinueBtnEnabled()
                 }
 
                 is NetworkResult.Success -> {
-                    registerUserInDatabase()
+                    registerUserAccountInDatabase()
                     sessionManager.storeKCC(result.data)
                     // Store Did here
 
                     _state.update {
                         it.copy(
-                            credProgressState = CredentialsProgressState.Success(
+                            userLoginProgress = UserLoginProgress.SuccessSigningUp(
                                 "Credential setup successful"
                             )
                         )
+                    }
+                }
+            }
+        }
+    }
+
+
+    fun signUp() {
+        // Validate/verify email here
+        // Mock it with delay
+
+        viewModelScope.launch (Dispatchers.IO) {
+            runningOperation()
+            delay(3000)
+
+            registerUserAccountInDatabase()
+
+            _state.update {
+                it.copy(
+                    userLoginProgress = UserLoginProgress.SuccessSigningUp("Signed up successfully")
+                )
+            }
+        }
+    }
+
+    private fun getSignUpState() {
+        viewModelScope.launch {
+            val userAccount = getUserWithCurrencyAccountsUseCase(BASE_USER_ID).first()
+
+            userAccount?.let {
+                _state.update {
+                    it.copy(
+                        userLoginProgress = UserLoginProgress.HasSignedUpButIsNotSignedIn
+                    )
+                }
+            }
+        }
+    }
+
+    fun signIn() {
+        viewModelScope.launch {
+            runningOperation()
+            val userAccount = getUserWithCurrencyAccountsUseCase(BASE_USER_ID).first()
+
+            userAccount?.let { userCurrency ->
+                val userEntity = userCurrency.userAccountEntity
+
+                userEntity.let { it ->
+                    val storedEmail = it.userEmail
+                    val storedEncryptedPassword = it.userEncryptedPassword
+
+                    val currentEmail = state.value.email
+                    val currentEncryptedPassword =
+                        PasswordEncryptionUtil.decrypt(state.value.clearTextPassword, "secretKey")
+
+                    if (storedEmail == currentEmail) {
+                        if (storedEncryptedPassword == currentEncryptedPassword) {
+                            _state.update {
+                                it.copy(
+                                    userLoginProgress = UserLoginProgress.SuccessSigningIn("Sign in successful")
+                                )
+                            }
+                        } else {
+                            _state.update {
+                                it.copy(
+                                    userLoginProgress = UserLoginProgress.ErrorSigningIn("Incorrect password")
+                                )
+                            }
+                        }
+                    } else {
+                        _state.update {
+                            it.copy(
+                                userLoginProgress = UserLoginProgress.ErrorSigningIn("Incorrect Email")
+                            )
+                        }
                     }
                 }
             }
@@ -115,10 +196,12 @@ class UserRegistrationViewModel @Inject constructor(
         return DidDht.create(keyManager)
     }
 
-    private fun registerUserInDatabase() {
+    fun registerUserAccountInDatabase() {
         val userAccountEntity = UserAccountEntity(
             userId = BASE_USER_ID,
             userName = state.value.name,
+            userEmail = state.value.email,
+            userEncryptedPassword = PasswordEncryptionUtil.encrypt(state.value.clearTextPassword, "secretKey"),
             userCountryCode = state.value.countryCode
         )
 
@@ -141,21 +224,22 @@ class UserRegistrationViewModel @Inject constructor(
         }
     }
 
-    private fun setGetCredBtnLoading() {
-        _state.update {
-            it.copy(getCredBtnState = GetCredentialsButtonState.Loading)
-        }
-    }
+    fun registerUserInDatabase() {
 
-    private fun setContinueBtnEnabled(message: String = "") {
-        _state.update {
-            it.copy(continueBtnState = ContinueButtonState.Enabled(message))
-        }
-    }
+        try {
+            val userAccountEntity = UserAccountEntity(
+                userId = BASE_USER_ID,
+                userName = "",
+                userCountryCode = "",
+                userEmail = "",
+                userEncryptedPassword = "",
+            )
 
-    private fun setContinueBtnDisabled(error: String = "") {
-        _state.update {
-            it.copy(continueBtnState = ContinueButtonState.Disabled(error))
+            viewModelScope.launch(Dispatchers.IO) {
+                insertUserAccountUseCase(userAccountEntity)
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
         }
     }
 
@@ -163,89 +247,59 @@ class UserRegistrationViewModel @Inject constructor(
         _state.update {
             it.copy(name = name)
         }
+    }
 
-        evaluateContinueBtnStatus()
+    fun updateEmail(email: String) {
+        _state.update {
+            it.copy(email = email)
+        }
+    }
+
+    fun updatePassword(password: String) {
+        _state.update {
+            it.copy(clearTextPassword = password)
+        }
     }
 
     fun updateCountryCode(countryCode: String) {
         _state.update {
             it.copy(countryCode = countryCode)
         }
-
-        evaluateContinueBtnStatus()
     }
 
     fun updateCurrencyCode(currencyCode: String) {
         _state.update {
             it.copy(currencyCode = currencyCode)
         }
-
-        evaluateContinueBtnStatus()
     }
 
-    fun toggleUserAgree(hasAgreed: Boolean) {
+    fun runningOperation() {
         _state.update {
-            it.copy(hasUserAgreed = hasAgreed)
-        }
-
-        evaluateGetCredBtnStatus()
-    }
-
-    private fun evaluateContinueBtnStatus() {
-        if (state.value.name.isEmpty() || state.value.countryCode.isEmpty()) {
-            setContinueBtnDisabled()
-        } else {
-            setContinueBtnEnabled()
-        }
-    }
-
-    private fun evaluateGetCredBtnStatus() {
-        if (state.value.hasUserAgreed) {
-            setGetCredButtonEnabled()
-        } else {
-            setGetCredButtonDisabled()
-        }
-    }
-
-    private fun setGetCredButtonEnabled(message: String = "") {
-        _state.update {
-            it.copy(getCredBtnState = GetCredentialsButtonState.Enabled(message))
-        }
-    }
-
-    private fun setGetCredButtonDisabled(error: String = "") {
-        _state.update {
-            it.copy(getCredBtnState = GetCredentialsButtonState.Disabled(error))
+            it.copy(userLoginProgress = UserLoginProgress.RunningOperation)
         }
     }
 }
 
 data class UserRegistrationState(
     val name: String = "",
+    val email: String = "",
+    val clearTextPassword: String = "",
     val countryCode: String = "",
     val currencyCode: String = "",
     val userDid: String = "",
     val hasUserAgreed: Boolean = false,
-    val continueBtnState: ContinueButtonState = ContinueButtonState.Disabled(),
-    val getCredBtnState: GetCredentialsButtonState = GetCredentialsButtonState.Disabled(),
-    val credProgressState: CredentialsProgressState = CredentialsProgressState.Default
+    val userLoginProgress: UserLoginProgress = UserLoginProgress.HasNotSignedUp
 )
 
-sealed class ContinueButtonState {
-    data class Enabled(val message: String = ""): ContinueButtonState()
-    data class Disabled(val error: String = ""): ContinueButtonState()
-}
-
-sealed class GetCredentialsButtonState {
-    data object Loading: GetCredentialsButtonState()
-    data class Enabled(val message: String = ""): GetCredentialsButtonState()
-    data class Disabled(val error: String = ""): GetCredentialsButtonState()
-}
-
-sealed class CredentialsProgressState {
-    data object InProgress : CredentialsProgressState()
-    data object Default : CredentialsProgressState()
-    data class Error(val message: String = "") : CredentialsProgressState()
-    data class Success(val message: String = "") : CredentialsProgressState()
+sealed class UserLoginProgress {
+    data object HasNotSignedUp : UserLoginProgress()
+    data object HasSignedUpButIsNotSignedIn : UserLoginProgress()
+    data object IsReadyToSignUp : UserLoginProgress()
+    data object IsReadyToSignIn : UserLoginProgress()
+    data object RunningOperation : UserLoginProgress()
+    data class ErrorSigningUp(val message: String = "") : UserLoginProgress()
+    data class ErrorSigningIn(val message: String = "") : UserLoginProgress()
+    data class SuccessSigningUp(val message: String = "") : UserLoginProgress()
+    data class SuccessSigningIn(val message: String = "") : UserLoginProgress()
 }
 

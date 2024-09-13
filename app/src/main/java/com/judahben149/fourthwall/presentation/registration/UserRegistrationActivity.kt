@@ -2,8 +2,6 @@ package com.judahben149.fourthwall.presentation.registration
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -19,12 +17,11 @@ import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.ActivityUserRegistrationBinding
 import com.judahben149.fourthwall.databinding.BottomsheetLayoutRegistrationBinding
 import com.judahben149.fourthwall.domain.SessionManager
-import com.judahben149.fourthwall.presentation.MainActivity
+import com.judahben149.fourthwall.presentation.onboarding.FinalOnboardingActivity
 import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
 import com.judahben149.fourthwall.utils.views.isLoading
 import com.judahben149.fourthwall.utils.views.showErrorAlerter
-import com.judahben149.fourthwall.utils.views.showSnack
 import com.judahben149.fourthwall.utils.views.showSuccessAlerter
 import com.mukesh.countrypicker.Country
 import com.mukesh.countrypicker.CountryPicker
@@ -42,8 +39,6 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
     @Inject
     lateinit var sessionManager: SessionManager
     private val viewModel: UserRegistrationViewModel by viewModels()
-    private lateinit var bottomSheetDialog: BottomSheetDialog
-    private lateinit var bottomSheetBinding: BottomsheetLayoutRegistrationBinding
 
     private lateinit var country: Country
 
@@ -60,7 +55,6 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
             insets
         }
 
-        setupBottomSheet()
         observeState()
         setListeners()
     }
@@ -70,41 +64,60 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
 
-                    when (state.continueBtnState) {
-                        is ContinueButtonState.Enabled -> {
-                            binding.btnContinue.enable(resources)
-                        }
-                        is ContinueButtonState.Disabled -> {
-                            binding.btnContinue.disable(resources)
-                        }
-                    }
+                    when(val status = state.userLoginProgress) {
+                        is UserLoginProgress.HasNotSignedUp ->{
+                            binding.run {
+                                listOf(layoutName, layoutCountry, layoutEmail, layoutPassword, toolbarTitleSignUp).forEach {
+                                    it.visibility = View.VISIBLE
+                                }
 
-                    when(val status = state.credProgressState) {
-                        is CredentialsProgressState.InProgress ->{}
-                        is CredentialsProgressState.Default ->{}
-                        is CredentialsProgressState.Error ->{
-                            bottomSheetDialog.dismiss()
-                            showErrorAlerter(status.message) {
-
+                                toolbarTitleSignIn.visibility = View.GONE
+                                btnSignUp.text = "Sign up"
+                                btnSignUp.disable(resources, binding.progressBar)
                             }
                         }
-                        is CredentialsProgressState.Success ->{
-                            bottomSheetDialog.dismiss()
+                        is UserLoginProgress.HasSignedUpButIsNotSignedIn ->{
+                            binding.run {
+                                listOf(layoutName, layoutCountry, toolbarTitleSignUp).forEach {
+                                    it.visibility = View.GONE
+                                }
+
+                                toolbarTitleSignIn.visibility = View.VISIBLE
+                                btnSignUp.text = "Sign in"
+                                btnSignUp.disable(resources, binding.progressBar)
+                            }
+                        }
+
+                        is UserLoginProgress.ErrorSigningUp ->{
+                            showErrorAlerter(status.message) {}
+                            binding.btnSignUp.enable(resources, binding.progressBar)
+                        }
+
+                        is UserLoginProgress.SuccessSigningUp ->{
                             showSuccessAlerter(status.message) {
-                                navigateToHomeScreen()
+                                navigateToFinalOnboardingScreen()
                             }
                         }
-                    }
 
-                    when (state.getCredBtnState) {
-                        is GetCredentialsButtonState.Enabled -> {
-                            bottomSheetBinding.btnGetCredentials.enable(resources, bottomSheetBinding.progressBar)
+                        is UserLoginProgress.ErrorSigningIn -> {
+                            showErrorAlerter(status.message) {}
+                            binding.btnSignUp.enable(resources, binding.progressBar)
                         }
-                        is GetCredentialsButtonState.Disabled -> {
-                            bottomSheetBinding.btnGetCredentials.disable(resources)
+
+                        is UserLoginProgress.IsReadyToSignIn -> {
+
                         }
-                        GetCredentialsButtonState.Loading -> {
-                            bottomSheetBinding.btnGetCredentials.isLoading(resources, bottomSheetBinding.progressBar)
+
+                        is UserLoginProgress.IsReadyToSignUp -> {
+
+                        }
+
+                        is UserLoginProgress.SuccessSigningIn -> {
+
+                        }
+
+                        is UserLoginProgress.RunningOperation -> {
+                            binding.btnSignUp.isLoading(resources, binding.progressBar)
                         }
                     }
                 }
@@ -120,6 +133,17 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
 
             tvName.doAfterTextChanged {
                 viewModel.updateName(it.toString())
+                evaluateButtonStatus()
+            }
+
+            tvEmail.doAfterTextChanged {
+                viewModel.updateEmail(it.toString())
+                evaluateButtonStatus()
+            }
+
+            tvPassword.doAfterTextChanged {
+                viewModel.updatePassword(it.toString())
+                evaluateButtonStatus()
             }
 
             layoutCountry.setOnClickListener {
@@ -136,27 +160,7 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
                 val picker = builder.build()
                 picker.showBottomSheet(this@UserRegistrationActivity)
             }
-
-            btnContinue.setOnClickListener {
-                bottomSheetDialog.show()
-            }
         }
-
-        bottomSheetBinding.run {
-            cbUserAgree.setOnCheckedChangeListener { _, isChecked ->
-                viewModel.toggleUserAgree(isChecked)
-            }
-
-            btnGetCredentials.setOnClickListener {
-                viewModel.getCredentials()
-            }
-        }
-    }
-
-    private fun setupBottomSheet() {
-        bottomSheetDialog = BottomSheetDialog(this)
-        bottomSheetBinding = BottomsheetLayoutRegistrationBinding.inflate(layoutInflater)
-        bottomSheetDialog.setContentView(bottomSheetBinding.root)
     }
 
     override fun onSelectCountry(country: Country?) {
@@ -170,13 +174,48 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
             this.country = it
             viewModel.updateCountryCode(country.code)
             viewModel.updateCurrencyCode(country.currency)
+            evaluateButtonStatus()
         }
     }
 
-    private fun navigateToHomeScreen() {
+    private fun evaluateButtonStatus() {
+        when(viewModel.state.value.userLoginProgress) {
+            UserLoginProgress.HasSignedUpButIsNotSignedIn -> {
+                binding.run {
+                    if (tvEmail.text.isNullOrEmpty().not() && tvPassword.text.isNullOrEmpty().not()) {
+                        btnSignUp.enable(resources, progressBar)
+                    } else {
+                        btnSignUp.disable(resources, progressBar)
+                    }
+                }
+            }
+
+            UserLoginProgress.HasNotSignedUp -> {
+                binding.run {
+                    if (
+                        tvEmail.text.isNullOrEmpty().not() &&
+                        tvPassword.text.isNullOrEmpty().not() &&
+                        tvName.text.isNullOrEmpty().not() &&
+                        viewModel.state.value.countryCode.isNotEmpty()
+                        ) {
+                        btnSignUp.enable(resources, progressBar)
+                    } else {
+                        btnSignUp.disable(resources, progressBar)
+                    }
+                }
+
+            }
+
+            else -> {
+
+            }
+        }
+    }
+
+    private fun navigateToFinalOnboardingScreen() {
         sessionManager.updateHasCompletedOnboarding(true)
 
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, FinalOnboardingActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()

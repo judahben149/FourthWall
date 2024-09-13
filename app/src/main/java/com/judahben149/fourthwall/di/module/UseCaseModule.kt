@@ -6,7 +6,7 @@ import com.judahben149.fourthwall.data.repository.OrderRepository
 import com.judahben149.fourthwall.data.repository.PfiRatingRepository
 import com.judahben149.fourthwall.data.repository.UserAccountRepository
 import com.judahben149.fourthwall.domain.usecase.orders.GetAllOrdersUseCase
-import com.judahben149.fourthwall.domain.usecase.orders.GetUserWithCurrencyAccountsUseCase
+import com.judahben149.fourthwall.domain.usecase.user.GetUserWithCurrencyAccountsUseCase
 import com.judahben149.fourthwall.domain.usecase.orders.InsertOrderListUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
 import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
@@ -17,6 +17,7 @@ import com.judahben149.fourthwall.domain.usecase.pfiRating.GetAveragePfiRatingUs
 import com.judahben149.fourthwall.domain.usecase.pfiRating.InsertPfiRatingUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetCurrencyAccountUseCase
 import com.judahben149.fourthwall.domain.usecase.user.InsertCurrencyAccountUseCase
+import com.judahben149.fourthwall.domain.usecase.user.InsertUserAccountUseCase
 import com.judahben149.fourthwall.domain.usecase.user.InsertUserWithCurrencyAccountsUseCase
 import com.judahben149.fourthwall.domain.usecase.user.TopUpBalanceUseCase
 import dagger.Module
@@ -123,5 +124,11 @@ object UseCaseModule {
     @Singleton
     fun provideGetAllAveragePfiRatingsUseCase(repository: PfiRatingRepository): GetAllAveragePfiRatingsUseCase {
         return GetAllAveragePfiRatingsUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideInsertUserAccountUseCase(repository: UserAccountRepository): InsertUserAccountUseCase {
+        return InsertUserAccountUseCase(repository)
     }
 }

@@ -7,6 +7,8 @@ import com.judahben149.fourthwall.domain.models.Currency
 import com.judahben149.fourthwall.domain.models.PfiData
 import com.judahben149.fourthwall.domain.usecase.pfi.GetPfiDataUseCase
 import com.judahben149.fourthwall.domain.usecase.pfi.GetPfiOfferingsUseCase
+import com.judahben149.fourthwall.domain.usecase.pfiRating.GetAllAveragePfiRatingsUseCase
+import com.judahben149.fourthwall.domain.usecase.pfiRating.GetAveragePfiRatingUseCase
 import com.judahben149.fourthwall.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class OfferingsViewModel @Inject constructor(
     private val getPfiDataUseCase: GetPfiDataUseCase,
-    private val getPfiOfferingsUseCase: GetPfiOfferingsUseCase
+    private val getPfiOfferingsUseCase: GetPfiOfferingsUseCase,
+    private val getAllAveragePfiRatingsUseCase: GetAllAveragePfiRatingsUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(OfferingsFlowState())
@@ -299,7 +302,7 @@ class OfferingsViewModel @Inject constructor(
         }
     }
 
-    fun getPfiNameFromOfferingId(offeringId: String): String {
+    private fun getPfiNameFromOfferingId(offeringId: String): String {
         val offering = state.value.offeringsList.find { it.metadata.id == offeringId }
 
         return offering?.let { off ->
@@ -328,6 +331,8 @@ class OfferingsViewModel @Inject constructor(
 
         return pairsList
     }
+
+    suspend fun getAveragePfiRating(): Map<String, Double> = getAllAveragePfiRatingsUseCase()
 }
 
 data class OfferingsFlowState(

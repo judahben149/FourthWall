@@ -12,7 +12,7 @@
     <string name="country_flag_image">Country flag image</string>
     <string name="select_country">Select Country</string>
     <string name="drop_down_arrow_icon">Drop-down arrow icon</string>
-    <string name="full_name">Full Name</string>
+    <string name="full_name">Full name</string>
     <string name="text_continue">Continue</string>
     <string name="user_agreement_clause">FourthWall will securely store your DID (Decentralized Identifier) and VC (Verifiable Credentials) for use in transaction orders. \n\nYou can revoke them in settings at a later time.</string>
     <string name="i_understand_and_accept">I understand, and accept</string>
@@ -60,4 +60,5 @@
     <string name="order">Order</string>
     <string name="transaction_success_message">You have successfully paid %1$s</string>
     <string name="rate_your_experience_with">Rate your experience with %1$s</string>
+    <string name="terms_conditions">FourthWall will securely store your Decentralized Identifier and Verifiable Credentials for use in subsequent transactions. \n\nYou can revoke this in settings</string>
 </resources>

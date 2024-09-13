@@ -19,14 +19,25 @@
         app:navigationIconTint="@color/textOnBackground">
 
         <TextView
-            android:id="@+id/toolbar_title"
+            android:id="@+id/toolbar_title_sign_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/cera_pro_medium"
-            android:text="Setup credentials"
+            android:text="Enter sign-up details"
             android:textColor="@color/textOnBackground"
             android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/toolbar_title_sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/cera_pro_medium"
+            android:text="Enter sign-in details"
+            android:textColor="@color/textOnBackground"
+            android:textSize="20sp"
+            android:visibility="gone" />
     </com.google.android.material.appbar.MaterialToolbar>
 
 
@@ -50,6 +61,58 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/cera_pro_light"
+            android:textStyle="bold" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_email"
+        style="@style/CustomTextInputLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:hint="Email address"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_country">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tv_email"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/cera_pro_light"
+            android:inputType="textEmailAddress"
+            android:textStyle="bold" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_password"
+        style="@style/CustomTextInputLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:hint="Password"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_email">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tv_password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/cera_pro_light"
+            android:inputType="textPassword"
             android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -111,14 +174,24 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_continue"
+            android:id="@+id/btn_sign_up"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:backgroundTint="@color/primaryBtnBackgroundTint"
             android:fontFamily="@font/cera_pro_medium"
-            android:text="@string/text_continue"
+            android:text="Sign up"
             android:textColor="@color/primaryBtnTextOnBackground"
             android:textSize="18sp" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_bar"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            app:indicatorColor="@color/white"
+            app:indicatorSize="24dp" />
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

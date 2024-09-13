@@ -32,6 +32,9 @@
         <activity
             android:name=".presentation.onboarding.OnboardingActivity"
             android:exported="true" />
+        <activity
+            android:name=".presentation.onboarding.FinalOnboardingActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

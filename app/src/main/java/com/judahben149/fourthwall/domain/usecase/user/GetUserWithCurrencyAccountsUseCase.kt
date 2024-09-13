@@ -1,4 +1,4 @@
-package com.judahben149.fourthwall.domain.usecase.orders
+package com.judahben149.fourthwall.domain.usecase.user
 
 import com.judahben149.fourthwall.data.local.relations.UserWithCurrencyAccounts
 import com.judahben149.fourthwall.data.repository.UserAccountRepository

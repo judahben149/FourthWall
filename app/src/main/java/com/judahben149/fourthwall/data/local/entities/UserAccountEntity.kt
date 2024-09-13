@@ -8,5 +8,7 @@ data class UserAccountEntity(
     @PrimaryKey
     val userId: Int,
     val userName: String,
+    val userEmail: String,
+    val userEncryptedPassword: String,
     val userCountryCode: String
 )

@@ -203,7 +203,7 @@
                         android:id="@+id/card_fee_breakdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:layout_marginTop="24dp">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -256,34 +256,32 @@
                                 app:layout_constraintTop_toTopOf="@id/tv_fees_label"
                                 tools:text="1.5%" />
 
-                            <com.neo.dottedview.DottedView
+                            <com.ghedeon.dottedlineview.DottedLineView
                                 android:id="@+id/dotted1"
                                 android:layout_width="5dp"
-                                android:layout_height="12dp"
+                                android:layout_height="16dp"
                                 android:layout_marginStart="12dp"
                                 android:layout_marginTop="4dp"
                                 android:alpha="0.5"
                                 android:visibility="gone"
                                 android:orientation="vertical"
-                                app:dv_dotColor="@color/textColorGreyed"
-                                app:dv_dotSize="2.5dp"
-                                app:dv_dotStrokeWidth="0dp"
-                                app:dv_dotVSpace="5dp"
+                                app:color="@color/textColorGreyed"
+                                app:radius="2dp"
+                                app:minGap="2dp"
                                 app:layout_constraintStart_toStartOf="@id/tv_fees_label"
                                 app:layout_constraintTop_toBottomOf="@id/tv_fees_label" />
 
-                            <com.neo.dottedview.DottedView
+                            <com.ghedeon.dottedlineview.DottedLineView
                                 android:id="@+id/dotted2"
                                 android:layout_width="5dp"
-                                android:layout_height="12dp"
+                                android:layout_height="16dp"
                                 android:layout_marginStart="12dp"
                                 android:alpha="0.5"
                                 android:visibility="gone"
                                 android:orientation="vertical"
-                                app:dv_dotColor="@color/textColorGreyed"
-                                app:dv_dotSize="2.5dp"
-                                app:dv_dotStrokeWidth="0dp"
-                                app:dv_dotVSpace="5dp"
+                                app:color="@color/textColorGreyed"
+                                app:radius="2dp"
+                                app:minGap="2dp"
                                 app:layout_constraintStart_toStartOf="@id/tv_fees"
                                 app:layout_constraintTop_toTopOf="@id/dotted1" />
 

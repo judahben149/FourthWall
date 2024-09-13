@@ -420,8 +420,11 @@ class OfferingsFragment : Fragment() {
 
         startAnimatingScrim()
 
-        val pfiAndOfferingsPair = viewModel.pairOfferingsWithPfiNames()
-        otherOfferingsAdapter.updateOfferings(pfiAndOfferingsPair)
+        viewLifecycleOwner.lifecycleScope.launch {
+            val pfiAndOfferingsPair = viewModel.pairOfferingsWithPfiNames()
+            val pfiRatings = viewModel.getAveragePfiRating()
+            otherOfferingsAdapter.updateOfferings(pfiAndOfferingsPair, pfiRatings)
+        }
 
         bottomSheetBehavior.apply {
             skipCollapsed = true

@@ -1,6 +1,7 @@
 package com.judahben149.fourthwall.presentation.home
 
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +25,7 @@ import com.judahben149.fourthwall.domain.models.CurrencyAccount
 import com.judahben149.fourthwall.presentation.onboarding.OnboardingActivity
 import com.judahben149.fourthwall.utils.Constants
 import com.judahben149.fourthwall.utils.CurrencyUtils.formatCurrency
+import com.judahben149.fourthwall.utils.log
 import dagger.hilt.android.AndroidEntryPoint
 import eightbitlab.com.blurview.BlurAlgorithm
 import eightbitlab.com.blurview.BlurView
@@ -87,12 +89,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun setClickListeners() {
-        binding.ivProfile.setOnClickListener {
-            navController.navigate(R.id.dashboardFragment)
+        binding.run {
+            ivProfile.setOnClickListener { navController.navigate(R.id.dashboardFragment) }
+
+            btnAddAccount.setOnClickListener {
+                navController.navigate(R.id.action_homeFragment_to_createCurrencyAccountFragment)
+            }
+            btnSendMoney.setOnClickListener {
+                navController.navigate(R.id.action_homeFragment_to_order_flow_nav)
+            }
         }
     }
 
     private fun setupUserAccountRecyclerView() {
+        binding.layoutCardNoAccount.visibility = View.GONE
+
         val decorView = requireActivity().window.decorView
         val rootView = decorView.findViewById<ViewGroup>(android.R.id.content)
         val windowBackground = decorView.background
@@ -124,12 +135,16 @@ class HomeFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.value.userAccount.collect { userAccount ->
 
-                    userAccount?.let { it ->
-                        val currencyAccounts = it.currencyAccountEntities
-                            .map { it.toCurrencyAccount() }
-                            .sortedByDescending { it.isPrimaryAccount }
+                    if (userAccount != null) {
+                        val currencyAccounts = userAccount.currencyAccountEntities
+                            .map { entity -> entity.toCurrencyAccount() }
+                            .sortedByDescending { account -> account.isPrimaryAccount }
 
+                        userAccount.log("USER ACCOUNTS ---> ")
+                        currencyAccounts.log("CURRENCY ACCOUNTS ---> ")
                         adapter.updateItems(currencyAccounts)
+                    } else {
+                        binding.layoutCardNoAccount.visibility = View.VISIBLE
                     }
                 }
             }
