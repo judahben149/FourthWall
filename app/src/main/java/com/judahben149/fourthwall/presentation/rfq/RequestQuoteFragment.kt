@@ -10,7 +10,9 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentRequestQuoteBinding
 import com.judahben149.fourthwall.domain.models.PaymentMethod
@@ -24,6 +26,7 @@ import com.judahben149.fourthwall.utils.views.isLoading
 import com.judahben149.fourthwall.utils.views.showErrorAlerter
 import com.judahben149.fourthwall.utils.views.showInfoAlerter
 import com.judahben149.fourthwall.utils.views.showSuccessAlerter
+import com.judahben149.fourthwall.utils.views.showWarningAlerter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -101,7 +104,7 @@ class RequestQuoteFragment : Fragment() {
 
                     when (val prg = state.exchangeProgress) {
                         is ExchangeProgress.JustStarted -> {
-                            binding.btnQuote.text = "Get Quote"
+                            binding.btnQuote.text = getString(R.string.get_quote)
                             binding.btnQuote.disable(resources)
                         }
 
@@ -127,7 +130,7 @@ class RequestQuoteFragment : Fragment() {
                             binding.btnQuote.enable(resources, binding.progressBar)
 
                             binding.run {
-                                btnQuote.text = "Order"
+                                btnQuote.text = getString(R.string.order)
                                 btnQuote.enable(resources)
 
                                 btnCancel.visibility = View.VISIBLE
@@ -149,21 +152,23 @@ class RequestQuoteFragment : Fragment() {
                         }
 
                         is ExchangeProgress.ErrorRequestingQuote -> {
-                            binding.btnQuote.text = "Get Quote"
-                            requireActivity().showErrorAlerter(prg.message) {}
+                            binding.btnQuote.text = getString(R.string.get_quote)
+                            requireActivity().showWarningAlerter(prg.message) {}
                         }
 
                         is ExchangeProgress.IsProcessingOrderRequest -> {
-                            requireActivity().showInfoAlerter("FourthWall is processing your order")
+                            requireActivity().showInfoAlerter("FourthWall is processing your order", 1600)
                         }
 
                         is ExchangeProgress.HasGottenNewOrderStatusMessage -> {
-                            requireActivity().showErrorAlerter("Status - ".plus(prg.message)) {}
+                            requireActivity().showErrorAlerter("Status - ".plus(prg.message), 1000) {}
 
                         }
 
                         is ExchangeProgress.HasGottenSuccessfulOrderResponse -> {
-                            requireActivity().showSuccessAlerter("Order Fulfilled") {}
+                            requireActivity().showSuccessAlerter("Order Fulfilled") {
+                                viewModel.canSafelyNavigateAway()
+                            }
                         }
 
                         is ExchangeProgress.ErrorProcessingOrderMessage -> {
@@ -180,6 +185,16 @@ class RequestQuoteFragment : Fragment() {
 
                         is ExchangeProgress.ErrorProcessingCloseMessage -> {
                             requireActivity().showErrorAlerter(prg.message) {}
+                        }
+
+                        is ExchangeProgress.CanSafeNavigateAway -> {
+                            val orderResultSerialized = Gson().toJson(prg.orderResult)
+                            val bundle = Bundle().apply { putString("orderResult", orderResultSerialized) }
+
+                            navController.navigate(
+                                R.id.orderResultFragment, bundle, NavOptions.Builder()
+                                .setPopUpTo(R.id.homeFragment, false)
+                                .build())
                         }
                     }
                 }

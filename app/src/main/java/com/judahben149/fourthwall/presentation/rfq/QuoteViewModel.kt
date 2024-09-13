@@ -7,6 +7,7 @@ import com.judahben149.fourthwall.domain.mappers.toFwOffering
 import com.judahben149.fourthwall.domain.mappers.toFwOrderEntity
 import com.judahben149.fourthwall.domain.mappers.toFwPaymentMethod
 import com.judahben149.fourthwall.domain.models.FWOffering
+import com.judahben149.fourthwall.domain.models.FwOrderResult
 import com.judahben149.fourthwall.domain.models.enums.FwOrderStatus
 import com.judahben149.fourthwall.domain.models.enums.OrderType
 import com.judahben149.fourthwall.domain.models.enums.PaymentMethods
@@ -42,7 +43,7 @@ class QuoteViewModel @Inject constructor(
     val state: StateFlow<QuoteState> = _state
 
     fun updateAmount(amount: String) {
-        _state.update { it.copy(amount = amount) }
+        _state.update { it.copy(payInAmount = amount) }
     }
 
     fun updateSelectedOffering(offering: Offering) {
@@ -205,7 +206,7 @@ class QuoteViewModel @Inject constructor(
         val payInData = CreateSelectedPayinMethod(
             kind = state.value.payInKind,
             paymentDetails = state.value.payInRfqRequestFields,
-            amount = state.value.amount ?: ""
+            amount = state.value.payInAmount ?: ""
         )
 
 
@@ -298,14 +299,14 @@ class QuoteViewModel @Inject constructor(
                         close = message
                         close.data.reason?.log("ORDER FINAL MESSAGE HERE ----> ")
 
+                        saveOrderToLocalDatabase(order, FwOrderStatus.SUCCESSFUL)
+
                         if (close.data.success == true) {
                             _state.update {
                                 it.copy(
                                     exchangeProgress = ExchangeProgress.HasGottenSuccessfulOrderResponse
                                 )
                             }
-
-                            saveOrderToLocalDatabase(order, FwOrderStatus.SUCCESSFUL)
                         } else {
                             _state.update {
                                 it.copy(
@@ -369,10 +370,27 @@ class QuoteViewModel @Inject constructor(
             insertOrdersUseCase(orderEntity)
         }
     }
+
+    fun canSafelyNavigateAway() {
+        state.value.run {
+            val orderResult = FwOrderResult(
+                payInAmount = tbDexQuote!!.data.payin.amount,
+                payOutAmount = tbDexQuote.data.payout.amount + tbDexQuote.data.payout.fee + fee,
+                payInCurrency = tbDexQuote.data.payin.currencyCode,
+                payOutCurrency = tbDexQuote.data.payout.currencyCode,
+                pfiDid = tbDexQuote.metadata.from
+            )
+
+
+            _state.update {
+                it.copy(exchangeProgress = ExchangeProgress.CanSafeNavigateAway(orderResult))
+            }
+        }
+    }
 }
 
 data class QuoteState(
-    val amount: String? = null,
+    val payInAmount: String? = null,
     val fwOffering: FWOffering? = null,
     val tbDexOffering: Offering? = null,
     val exchangeProgress: ExchangeProgress = ExchangeProgress.JustStarted,
@@ -400,4 +418,5 @@ sealed class ExchangeProgress {
     data object HasGottenCloseResponse : ExchangeProgress()
     data class ErrorProcessingOrderMessage(val message: String) : ExchangeProgress()
     data class ErrorProcessingCloseMessage(val message: String) : ExchangeProgress()
+    data class CanSafeNavigateAway(val orderResult: FwOrderResult) : ExchangeProgress()
 }
