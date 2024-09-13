@@ -12,13 +12,25 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_order_flow_nav"
-            app:destination="@id/order_flow_nav" />
+            app:destination="@id/order_flow_nav"
+            app:enterAnim="@anim/enter_anim_slide_in_right"
+            app:exitAnim="@anim/exit_anim_slide_out_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_fundWalletFragment"
-            app:destination="@id/fundWalletFragment" />
+            app:destination="@id/fundWalletFragment"
+            app:enterAnim="@anim/enter_anim_slide_in_right"
+            app:exitAnim="@anim/exit_anim_slide_out_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_createCurrencyAccountFragment"
-            app:destination="@id/createCurrencyAccountFragment" />
+            app:destination="@id/createCurrencyAccountFragment"
+            app:enterAnim="@anim/enter_anim_slide_in_right"
+            app:exitAnim="@anim/exit_anim_slide_out_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_right" />
     </fragment>
 
     <fragment
