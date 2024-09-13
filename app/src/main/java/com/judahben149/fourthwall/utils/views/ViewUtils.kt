@@ -111,6 +111,29 @@ fun View.dpToPx(dp: Float): Int {
     return (dp * resources.displayMetrics.density).toInt()
 }
 
+fun ImageView.animateCheckmark() {
+    val rotationAnimator = ValueAnimator.ofFloat(-3f, 3f).apply {
+        duration = 100
+        repeatCount = 3
+        repeatMode = ValueAnimator.REVERSE
+        interpolator = AccelerateDecelerateInterpolator()
+        addUpdateListener { animator ->
+            rotation = animator.animatedValue as Float
+        }
+    }
+
+    val delayBetweenAnimations = 1500L
+
+    val runAnimation = object : Runnable {
+        override fun run() {
+            rotationAnimator.start()
+            postDelayed(this, rotationAnimator.duration * (rotationAnimator.repeatCount + 1) + delayBetweenAnimations)
+        }
+    }
+
+    post(runAnimation)
+}
+
 
 fun View.animateBorderColorForError(durationMs: Long = 2000) {
     val drawable = background as? GradientDrawable ?: return
@@ -221,10 +244,10 @@ fun showSnack(message: String, rootView: View, duration: Int = Snackbar.LENGTH_S
     Snackbar.make(rootView, message, duration).show()
 }
 
-fun Activity.showInfoAlerter(message: String, durationInSecs: Long = 3) {
+fun Activity.showInfoAlerter(message: String, durationInMillis: Long = 3000) {
     Alerter.create(this)
         .setText(message)
-        .setDuration(durationInSecs * 1000)
+        .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.light_purple_tint)
         .setTextAppearance(R.style.AlerterInfoTextAppearance)
         .setIcon(R.drawable.ic_dollar)
@@ -236,12 +259,12 @@ fun Activity.showInfoAlerter(message: String, durationInSecs: Long = 3) {
 
 fun Activity.showSuccessAlerter(
     message: String,
-    durationInSecs: Long = 3,
+    durationInMillis: Long = 3000,
     onHideCallBack: () -> Unit
 ) {
     Alerter.create(this)
         .setText(message)
-        .setDuration(durationInSecs * 1000)
+        .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.green_success_bg)
         .setTextAppearance(R.style.AlerterInfoTextAppearance)
         .setIcon(R.drawable.ic_dollar)
@@ -256,13 +279,33 @@ fun Activity.showSuccessAlerter(
 
 fun Activity.showErrorAlerter(
     message: String,
-    durationInSecs: Long = 3,
+    durationInMillis: Long = 3000,
     onHideCallBack: () -> Unit
 ) {
     Alerter.create(this)
         .setText(message)
-        .setDuration(durationInSecs * 1000)
+        .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.red_error)
+        .setTextAppearance(R.style.AlerterInfoTextAppearance)
+        .setIcon(R.drawable.ic_dollar)
+        .setIconColorFilter(0)
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
+        .enableSwipeToDismiss()
+        .setOnHideListener(OnHideAlertListener {
+            onHideCallBack()
+        })
+        .show()
+}
+
+fun Activity.showWarningAlerter(
+    message: String,
+    durationInMillis: Long = 3000,
+    onHideCallBack: () -> Unit
+) {
+    Alerter.create(this)
+        .setText(message)
+        .setDuration(durationInMillis)
+        .setBackgroundColorRes(R.color.orange_warning)
         .setTextAppearance(R.style.AlerterInfoTextAppearance)
         .setIcon(R.drawable.ic_dollar)
         .setIconColorFilter(0)
