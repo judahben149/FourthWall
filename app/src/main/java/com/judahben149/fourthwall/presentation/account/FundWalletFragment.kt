@@ -15,6 +15,7 @@ import com.judahben149.fourthwall.databinding.FragmentFundWalletBinding
 import com.judahben149.fourthwall.utils.Constants
 import com.judahben149.fourthwall.utils.CurrencyUtils.getCountryFlag
 import com.judahben149.fourthwall.utils.views.showErrorAlerter
+import com.judahben149.fourthwall.utils.views.showSuccessAlerter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -71,7 +72,7 @@ class FundWalletFragment : Fragment() {
                         }
 
                         is FundAccountProgress.FundedSuccessfully -> {
-                            requireActivity().showErrorAlerter(prg.amount, 1300) {
+                            requireActivity().showSuccessAlerter(prg.amount, 1300) {
                                 navController.navigateUp()
                             }
                         }
