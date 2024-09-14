@@ -112,6 +112,9 @@ dependencies {
     // Dot Indicator - View Pager
     implementation(libs.dot.indicator)
 
+    // Balloon - tool tip
+    implementation(libs.balloon)
+
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
 

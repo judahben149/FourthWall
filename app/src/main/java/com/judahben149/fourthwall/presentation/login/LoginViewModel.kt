@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.judahben149.fourthwall.data.local.entities.CurrencyAccountEntity
 import com.judahben149.fourthwall.data.local.entities.UserAccountEntity
 import com.judahben149.fourthwall.data.local.relations.UserWithCurrencyAccounts
-import com.judahben149.fourthwall.data.remote.result.NetworkResult
 import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetUserWithCurrencyAccountsUseCase
@@ -42,82 +41,13 @@ class UserRegistrationViewModel @Inject constructor(
     val state: StateFlow<UserRegistrationState> = _state.asStateFlow()
 
 
-    fun getCredentials() {
-        val name = state.value.name
-        val countryCode = state.value.countryCode
-
-        if (name.isEmpty()) {
-            _state.update {
-                it.copy(
-                    userLoginProgress = UserLoginProgress.ErrorSigningUp(
-                        "\"Name\" field cannot be empty"
-                    )
-                )
-            }
-            return
-        }
-
-        if (countryCode.isEmpty()) {
-            _state.update {
-                it.copy(
-                    userLoginProgress = UserLoginProgress.ErrorSigningUp(
-                        "Please select your country"
-                    )
-                )
-            }
-            return
-        }
-
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val did = createUserDid()
-
-            when (val result = getKccUseCase(name, countryCode, did.uri)) {
-                is NetworkResult.Error -> {
-                    _state.update {
-                        it.copy(
-                            userLoginProgress = UserLoginProgress.ErrorSigningUp(
-                                result.message ?: "Credentials were not setup. Please retry"
-                            )
-                        )
-                    }
-                }
-
-                is NetworkResult.Exception -> {
-                    _state.update {
-                        it.copy(
-                            userLoginProgress = UserLoginProgress.ErrorSigningUp(
-                                result.e.message ?: "Credentials were not setup. Please retry"
-                            )
-                        )
-                    }
-                }
-
-                is NetworkResult.Success -> {
-                    registerUserAccountInDatabase()
-                    sessionManager.storeKCC(result.data)
-                    // Store Did here
-
-                    _state.update {
-                        it.copy(
-                            userLoginProgress = UserLoginProgress.SuccessSigningUp(
-                                "Credential setup successful"
-                            )
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-
     fun signUp() {
         // Validate/verify email here
         // Mock it with delay
 
         viewModelScope.launch (Dispatchers.IO) {
             runningOperation()
-            delay(3000)
+            delay(1000)
 
             registerUserAccountInDatabase()
 

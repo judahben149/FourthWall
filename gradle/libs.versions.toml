@@ -33,6 +33,7 @@ splash-screen = "1.0.0-beta01"
 jackson = "2.14.2"
 smileyRating = "1.0.5"
 dotIndicator = "5.0"
+balloon = "1.6.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -78,6 +79,7 @@ splash-screen = { group = "androidx.core", name = "core-splashscreen", version.r
 jackson = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
 smiley-rating = { group = "com.github.unaisulhadi", name = "emojiratingbar", version.ref = "smileyRating" }
 dot-indicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotIndicator" }
+balloon = { group = "com.github.skydoves", name = "balloon", version.ref = "balloon" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

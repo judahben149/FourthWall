@@ -6,6 +6,7 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricPrompt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
@@ -18,6 +19,8 @@ import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.presentation.MainActivity
 import com.judahben149.fourthwall.presentation.onboarding.FinalOnboardingActivity
 import com.judahben149.fourthwall.presentation.onboarding.OnboardingActivity
+import com.judahben149.fourthwall.utils.biometrics.BiometricAuthListener
+import com.judahben149.fourthwall.utils.biometrics.BiometricUtils
 import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
 import com.judahben149.fourthwall.utils.views.isLoading
@@ -31,7 +34,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginActivity : AppCompatActivity(), OnCountryPickerListener {
+class LoginActivity : AppCompatActivity(), OnCountryPickerListener, BiometricAuthListener {
 
     private var _binding: ActivityLoginBinding? = null
     private val binding get() = _binding!!
@@ -41,6 +44,7 @@ class LoginActivity : AppCompatActivity(), OnCountryPickerListener {
     private val viewModel: UserRegistrationViewModel by viewModels()
 
     private lateinit var country: Country
+    private var enableBiometricsSignIn: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,11 +54,6 @@ class LoginActivity : AppCompatActivity(), OnCountryPickerListener {
             startActivity(intent)
             finish()
         }
-
-        if (!sessionManager.isUserSignedUp()) {
-
-        }
-
 
 
         enableEdgeToEdge()
@@ -82,13 +81,8 @@ class LoginActivity : AppCompatActivity(), OnCountryPickerListener {
                     when (val status = state.userLoginProgress) {
                         is UserLoginProgress.HasNotSignedUp -> {
                             binding.run {
-                                listOf(
-                                    layoutName,
-                                    layoutCountry,
-                                    layoutEmail,
-                                    layoutPassword,
-                                    toolbarTitleSignUp
-                                ).forEach {
+                                listOf(layoutName, layoutCountry, layoutEmail, layoutPassword, toolbarTitleSignUp)
+                                    .forEach {
                                     it.visibility = View.VISIBLE
                                 }
 
@@ -111,6 +105,11 @@ class LoginActivity : AppCompatActivity(), OnCountryPickerListener {
                                 btnSignUp.visibility = View.GONE
 
                                 btnSignIn.disable(resources, binding.progressBarSignIn)
+
+                                if (sessionManager.isBiometricsEnabled()) {
+                                    cardFingerprint.visibility = View.VISIBLE
+                                    cbBiometrics.visibility = View.GONE
+                                }
                             }
                         }
 
@@ -120,8 +119,12 @@ class LoginActivity : AppCompatActivity(), OnCountryPickerListener {
                         }
 
                         is UserLoginProgress.SuccessSigningUp -> {
-                            showSuccessAlerter(status.message) {
-                                navigateToFinalOnboardingScreen()
+                            if (enableBiometricsSignIn) {
+                                performBiometricsCheck()
+                            } else {
+                                showSuccessAlerter(status.message, 1500) {
+                                    navigateToFinalOnboardingScreen()
+                                }
                             }
                         }
 
@@ -197,6 +200,14 @@ class LoginActivity : AppCompatActivity(), OnCountryPickerListener {
             btnSignIn.setOnClickListener {
                 viewModel.signIn()
             }
+
+            cbBiometrics.setOnCheckedChangeListener { buttonView, isChecked ->
+                enableBiometricsSignIn = isChecked
+            }
+
+            cardFingerprint.setOnClickListener {
+                performBiometricsCheck()
+            }
         }
     }
 
@@ -271,6 +282,36 @@ class LoginActivity : AppCompatActivity(), OnCountryPickerListener {
 
     private fun initializeUiState() {
         viewModel.getSignUpState()
+    }
+
+
+    private fun performBiometricsCheck() {
+        if (BiometricUtils.isBiometricReady(this)) {
+            BiometricUtils.showBiometricPrompt(
+                activity = this,
+                listener = this,
+                cryptoObject = null,
+            )
+        } else {
+            //
+        }
+    }
+
+    override fun onBiometricAuthenticateError(error: Int, errMsg: String) {
+
+    }
+
+    override fun onBiometricAuthenticateSuccess(result: BiometricPrompt.AuthenticationResult) {
+        if (sessionManager.isUserSignedUp().not()) {
+            showSuccessAlerter("Signed up successfully") {
+                sessionManager.toggleBiometrics(isEnabled = true)
+                navigateToFinalOnboardingScreen()
+            }
+        } else {
+            showSuccessAlerter("Sign in successful") {
+                navigateToMainScreen()
+            }
+        }
     }
 
     override fun onDestroy() {

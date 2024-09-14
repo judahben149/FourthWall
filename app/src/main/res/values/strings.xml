@@ -63,4 +63,6 @@
     <string name="terms_conditions">FourthWall will securely store your Decentralized Identifier and Verifiable Credentials for use in subsequent transactions. \n\nYou can revoke this in settings</string>
     <string name="explore">Explore</string>
     <string name="recipient">Recipient</string>
+    <string name="fingerprint_image">Fingerprint image</string>
+    <string name="sign_in_with_biometrics">Sign in with biometrics</string>
 </resources>

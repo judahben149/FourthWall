@@ -45,6 +45,17 @@ class OrdersFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 viewModel.state.value.allOrders.collect { it ->
+
+                    if (it.isEmpty()) {
+                        binding.tvEmptyLabel.visibility = View.VISIBLE
+                        binding.animEmpty.visibility = View.VISIBLE
+                        binding.rvOrders.visibility = View.GONE
+                    } else {
+                        binding.tvEmptyLabel.visibility = View.GONE
+                        binding.animEmpty.visibility = View.GONE
+                        binding.rvOrders.visibility = View.VISIBLE
+                    }
+
                     orderAdapter.submitOrders(it.map { it.toFwOrder() })
                 }
             }

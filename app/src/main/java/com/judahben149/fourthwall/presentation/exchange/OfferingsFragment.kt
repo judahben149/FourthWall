@@ -1,6 +1,7 @@
 package com.judahben149.fourthwall.presentation.exchange
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -35,6 +36,11 @@ import com.judahben149.fourthwall.utils.views.setAmountFont
 import com.judahben149.fourthwall.utils.views.showInfoAlerter
 import com.judahben149.fourthwall.utils.views.showSnack
 import com.judahben149.fourthwall.utils.views.showWarningAlerter
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.Balloon
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
+import com.skydoves.balloon.balloon
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -434,6 +440,33 @@ class OfferingsFragment : Fragment() {
             expandedOffset = (resources.displayMetrics.heightPixels * 0.3).toInt()
             state = BottomSheetBehavior.STATE_EXPANDED
         }
+    }
+
+    fun showCurrencyToolTip() {
+        val balloon = Balloon.Builder(requireContext())
+//            .setWidthRatio(1.0f)
+            .setWidth(BalloonSizeSpec.WRAP)
+            .setHeight(BalloonSizeSpec.WRAP)
+            .setText("Edit your profile here!")
+            .setTextColorResource(R.color.white)
+            .setTextTypeface(Typeface.BOLD)
+            .setTextSize(14f)
+            .setIconDrawableResource(R.drawable.ic_dollar)
+            .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+            .setArrowSize(10)
+            .setArrowPosition(0.5f)
+            .setPadding(8)
+            .setCornerRadius(8f)
+            .setIsVisibleArrow(true)
+            .setBackgroundColorResource(R.color.base_purple)
+            .setBalloonAnimation(BalloonAnimation.ELASTIC)
+            .setLifecycleOwner(viewLifecycleOwner)
+            .setPreferenceName("CurrencySelectionToolTip")
+            .setShowCounts(3)
+            .build()
+
+        binding.ivSelectPayInCurrency
+
     }
 
     private fun startAnimatingScrim() {

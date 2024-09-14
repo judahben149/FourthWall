@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.judahben149.fourthwall.utils.AndroidKeyManager
 import com.judahben149.fourthwall.utils.Constants
 import com.judahben149.fourthwall.utils.Constants.BASE_USER_ID
+import com.judahben149.fourthwall.utils.Constants.IS_BIOMETRICS_ENABLED
 import com.judahben149.fourthwall.utils.Constants.KCC_VC_JWT
 import com.judahben149.fourthwall.utils.Constants.USER_DID
 import com.judahben149.fourthwall.utils.log
@@ -69,4 +70,12 @@ class SessionManager @Inject constructor(
     }
 
     fun getUserId(): Int = BASE_USER_ID
+
+    fun toggleBiometrics(isEnabled: Boolean) {
+        sharedPrefs.edit().putBoolean(IS_BIOMETRICS_ENABLED, isEnabled).apply()
+    }
+
+    fun isBiometricsEnabled(): Boolean {
+        return sharedPrefs.getBoolean(IS_BIOMETRICS_ENABLED, false)
+    }
 }

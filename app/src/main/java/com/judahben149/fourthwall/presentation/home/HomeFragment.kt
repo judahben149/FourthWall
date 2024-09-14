@@ -166,6 +166,17 @@ class HomeFragment : Fragment() {
                 launch {
                     viewModel.allOrders.collect { orderEntities ->
                         val orders = orderEntities.map { it.toFwOrder() }
+
+                        if (orders.isEmpty()) {
+                            binding.tvEmptyLabel.visibility = View.VISIBLE
+                            binding.animEmpty.visibility = View.VISIBLE
+                            binding.rvLatestOrders.visibility = View.GONE
+                        } else {
+                            binding.tvEmptyLabel.visibility = View.GONE
+                            binding.animEmpty.visibility = View.GONE
+                            binding.rvLatestOrders.visibility = View.VISIBLE
+                        }
+
                         recentOrdersAdapter.submitOrders(orders)
                     }
                 }

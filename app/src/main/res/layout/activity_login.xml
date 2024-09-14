@@ -164,6 +164,39 @@
             app:tint="@color/textOnBackground" />
     </LinearLayout>
 
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/cb_biometrics"
+        app:layout_constraintTop_toBottomOf="@id/layout_password"
+        app:layout_constraintEnd_toEndOf="@id/layout_password"
+        android:text="@string/sign_in_with_biometrics"
+        android:fontFamily="@font/cera_pro_medium"
+        android:textSize="13sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_fingerprint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        app:layout_constraintVertical_bias="0.7">
+
+        <ImageView
+            android:id="@+id/iv_fingerprint"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:contentDescription="@string/fingerprint_image"
+            android:padding="12dp"
+            android:src="@drawable/ic_fingerprint" />
+    </com.google.android.material.card.MaterialCardView>
+
+
     <RelativeLayout
         android:id="@+id/layout_btn_sign_in"
         android:layout_width="0dp"
