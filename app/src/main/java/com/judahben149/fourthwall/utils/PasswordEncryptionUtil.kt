@@ -12,8 +12,8 @@ object PasswordEncryptionUtil {
     private const val KEY_ALGORITHM = "PBKDF2WithHmacSHA256"
     private const val ITERATIONS = 10000
     private const val KEY_LENGTH = 256
-    private const val SALT = "FourthWallSaltParameter"
-    private const val IV = "FourthWallInitializationVector"
+    private const val SALT = "FourthWallSaltPP"
+    private const val IV = "FourthWallVector"
 
     fun encrypt(password: String, secretKey: String): String {
         val cipher = Cipher.getInstance(ALGORITHM)

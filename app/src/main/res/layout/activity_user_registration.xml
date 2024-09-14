@@ -165,6 +165,39 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/layout_btn_sign_in"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:visibility="gone"
+        android:layout_marginHorizontal="48dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/primaryBtnBackgroundTint"
+            android:fontFamily="@font/cera_pro_medium"
+            android:text="Sign in"
+            android:textColor="@color/primaryBtnTextOnBackground"
+            android:textSize="18sp" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_bar_sign_in"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            app:indicatorColor="@color/white"
+            app:indicatorSize="24dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_btn_sign_up"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_marginHorizontal="48dp"
@@ -184,7 +217,7 @@
             android:textSize="18sp" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/progress_bar"
+            android:id="@+id/progress_bar_sign_up"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_centerInParent="true"

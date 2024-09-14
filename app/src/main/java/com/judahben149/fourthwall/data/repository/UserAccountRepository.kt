@@ -5,8 +5,10 @@ import com.judahben149.fourthwall.data.local.entities.CurrencyAccountEntity
 import com.judahben149.fourthwall.data.local.entities.UserAccountEntity
 import com.judahben149.fourthwall.data.local.relations.UserWithCurrencyAccounts
 import com.judahben149.fourthwall.domain.models.PfiData
+import com.judahben149.fourthwall.utils.log
 import com.judahben149.fourthwall.utils.text.FourthWallParser
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
 
 class UserAccountRepository (
     private val userAccountDao: UserAccountDao,

@@ -73,7 +73,7 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
 
                                 toolbarTitleSignIn.visibility = View.GONE
                                 btnSignUp.text = "Sign up"
-                                btnSignUp.disable(resources, binding.progressBar)
+                                btnSignUp.disable(resources, binding.progressBarSignUp)
                             }
                         }
                         is UserLoginProgress.HasSignedUpButIsNotSignedIn ->{
@@ -84,13 +84,13 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
 
                                 toolbarTitleSignIn.visibility = View.VISIBLE
                                 btnSignUp.text = "Sign in"
-                                btnSignUp.disable(resources, binding.progressBar)
+                                btnSignUp.disable(resources, binding.progressBarSignIn)
                             }
                         }
 
                         is UserLoginProgress.ErrorSigningUp ->{
                             showErrorAlerter(status.message) {}
-                            binding.btnSignUp.enable(resources, binding.progressBar)
+                            binding.btnSignUp.enable(resources, binding.progressBarSignUp)
                         }
 
                         is UserLoginProgress.SuccessSigningUp ->{
@@ -101,7 +101,7 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
 
                         is UserLoginProgress.ErrorSigningIn -> {
                             showErrorAlerter(status.message) {}
-                            binding.btnSignUp.enable(resources, binding.progressBar)
+                            binding.btnSignUp.enable(resources, binding.progressBarSignIn)
                         }
 
                         is UserLoginProgress.IsReadyToSignIn -> {
@@ -117,7 +117,8 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
                         }
 
                         is UserLoginProgress.RunningOperation -> {
-                            binding.btnSignUp.isLoading(resources, binding.progressBar)
+                            binding.btnSignUp.isLoading(resources, binding.progressBarSignUp)
+                            binding.btnSignIn.isLoading(resources, binding.progressBarSignIn)
                         }
                     }
                 }
@@ -160,6 +161,14 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
                 val picker = builder.build()
                 picker.showBottomSheet(this@UserRegistrationActivity)
             }
+
+            btnSignUp.setOnClickListener {
+                viewModel.signUp()
+            }
+
+            btnSignIn.setOnClickListener {
+                viewModel.signIn()
+            }
         }
     }
 
@@ -183,9 +192,9 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
             UserLoginProgress.HasSignedUpButIsNotSignedIn -> {
                 binding.run {
                     if (tvEmail.text.isNullOrEmpty().not() && tvPassword.text.isNullOrEmpty().not()) {
-                        btnSignUp.enable(resources, progressBar)
+                        btnSignUp.enable(resources, progressBarSignIn)
                     } else {
-                        btnSignUp.disable(resources, progressBar)
+                        btnSignUp.disable(resources, progressBarSignIn)
                     }
                 }
             }
@@ -198,9 +207,9 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
                         tvName.text.isNullOrEmpty().not() &&
                         viewModel.state.value.countryCode.isNotEmpty()
                         ) {
-                        btnSignUp.enable(resources, progressBar)
+                        btnSignUp.enable(resources, progressBarSignUp)
                     } else {
-                        btnSignUp.disable(resources, progressBar)
+                        btnSignUp.disable(resources, progressBarSignUp)
                     }
                 }
 
