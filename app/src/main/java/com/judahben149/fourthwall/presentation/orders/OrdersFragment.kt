@@ -9,9 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.judahben149.fourthwall.databinding.FragmentOrdersBinding
-import com.judahben149.fourthwall.domain.mappers.toOrder
+import com.judahben149.fourthwall.domain.mappers.toFwOrder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -21,6 +22,7 @@ class OrdersFragment : Fragment() {
     private var _binding: FragmentOrdersBinding? = null
     private val binding get() = _binding!!
     private lateinit var orderAdapter: OrderAdapter
+    private val navController by lazy { findNavController() }
     private val viewModel: OrdersViewModel by viewModels()
 
     override fun onCreateView(
@@ -43,14 +45,17 @@ class OrdersFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 viewModel.state.value.allOrders.collect { it ->
-                    orderAdapter.submitOrders(it.map { it.toOrder() })
+                    orderAdapter.submitOrders(it.map { it.toFwOrder() })
                 }
             }
         }
     }
 
     private fun setupRecyclerView() {
-        orderAdapter = OrderAdapter(requireContext())
+        orderAdapter = OrderAdapter(requireContext()) { orderId ->
+            val action = OrdersFragmentDirections.actionOrdersFragmentToOrderDetailFragment(orderId)
+            navController.navigate(action)
+        }
 
         binding.rvOrders.apply {
             adapter = orderAdapter

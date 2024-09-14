@@ -2,15 +2,21 @@ package com.judahben149.fourthwall.utils.views
 
 import android.animation.Animator
 import android.animation.AnimatorSet
+import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.util.TypedValue
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.animation.addListener
@@ -20,14 +26,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.judahben149.fourthwall.R
-import android.animation.ArgbEvaluator
-import android.animation.PropertyValuesHolder
-import android.app.Activity
-import android.graphics.drawable.GradientDrawable
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.OvershootInterpolator
 import com.tapadoo.alerter.Alerter
-import com.tapadoo.alerter.OnHideAlertListener
 
 fun ImageView.animateBounce() {
     this.animate()
@@ -326,7 +325,7 @@ fun Activity.showInfoAlerter(message: String, durationInMillis: Long = 3000) {
         .setText(message)
         .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.light_purple_tint)
-        .setTextAppearance(R.style.AlerterInfoTextAppearanceLightBg)
+        .setTextAppearance(R.style.AlerterInfoTextAppearance)
         .setIcon(R.drawable.ic_dollar)
         .setIconColorFilter(0)
         .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
@@ -343,14 +342,14 @@ fun Activity.showSuccessAlerter(
         .setText(message)
         .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.green_success_bg)
-        .setTextAppearance(R.style.AlerterInfoTextAppearanceLightBg)
+        .setTextAppearance(R.style.AlerterSuccessTextAppearance)
         .setIcon(R.drawable.ic_dollar)
         .setIconColorFilter(0)
         .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
         .enableSwipeToDismiss()
-        .setOnHideListener(OnHideAlertListener {
+        .setOnHideListener {
             onHideCallBack()
-        })
+        }
         .show()
 }
 
@@ -363,14 +362,14 @@ fun Activity.showErrorAlerter(
         .setText(message)
         .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.red_error_alerter)
-        .setTextAppearance(R.style.AlerterInfoTextAppearanceDarkBg)
+        .setTextAppearance(R.style.AlerterErrorTextAppearance)
         .setIcon(R.drawable.ic_dollar)
         .setIconColorFilter(0)
         .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
         .enableSwipeToDismiss()
-        .setOnHideListener(OnHideAlertListener {
+        .setOnHideListener {
             onHideCallBack()
-        })
+        }
         .show()
 }
 
@@ -383,13 +382,13 @@ fun Activity.showWarningAlerter(
         .setText(message)
         .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.orange_warning)
-        .setTextAppearance(R.style.AlerterInfoTextAppearanceDarkBg)
+        .setTextAppearance(R.style.AlerterWarningTextAppearance)
         .setIcon(R.drawable.ic_dollar)
         .setIconColorFilter(0)
         .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
         .enableSwipeToDismiss()
-        .setOnHideListener(OnHideAlertListener {
+        .setOnHideListener {
             onHideCallBack()
-        })
+        }
         .show()
 }

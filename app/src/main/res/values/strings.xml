@@ -62,4 +62,5 @@
     <string name="rate_your_experience_with">Rate your experience with %1$s</string>
     <string name="terms_conditions">FourthWall will securely store your Decentralized Identifier and Verifiable Credentials for use in subsequent transactions. \n\nYou can revoke this in settings</string>
     <string name="explore">Explore</string>
+    <string name="recipient">Recipient</string>
 </resources>

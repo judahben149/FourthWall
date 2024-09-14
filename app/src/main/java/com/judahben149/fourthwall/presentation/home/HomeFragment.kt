@@ -21,7 +21,8 @@ import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentHomeBinding
 import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.domain.mappers.toCurrencyAccount
-import com.judahben149.fourthwall.domain.mappers.toOrder
+import com.judahben149.fourthwall.domain.mappers.toFwOrder
+import com.judahben149.fourthwall.presentation.orders.OrdersFragmentDirections
 import com.judahben149.fourthwall.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -134,7 +135,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupOrdersRecyclerView() {
-        recentOrdersAdapter = RecentOrdersAdapter(requireContext())
+        recentOrdersAdapter = RecentOrdersAdapter(requireContext()) { orderId ->
+            val action = HomeFragmentDirections.actionHomeFragmentToOrderDetailFragment(orderId)
+            navController.navigate(action)
+        }
 
         binding.rvLatestOrders.apply {
             adapter = recentOrdersAdapter
@@ -161,7 +165,7 @@ class HomeFragment : Fragment() {
 
                 launch {
                     viewModel.allOrders.collect { orderEntities ->
-                        val orders = orderEntities.map { it.toOrder() }
+                        val orders = orderEntities.map { it.toFwOrder() }
                         recentOrdersAdapter.submitOrders(orders)
                     }
                 }

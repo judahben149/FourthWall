@@ -16,7 +16,8 @@ import com.judahben149.fourthwall.utils.CurrencyUtils.formatCurrency
 import com.judahben149.fourthwall.utils.formatDate
 
 class OrderAdapter(
-    private val context: Context
+    private val context: Context,
+    private val onItemClicked:(Int) -> Unit
 ): RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
 
     private var fwOrders: List<FwOrder> = emptyList()
@@ -44,6 +45,8 @@ class OrderAdapter(
                 tvAmount.text = fwOrder.payInAmount.formatCurrency(fwOrder.payInCurrency)
                 tvOrderTime.text =
                     context.getString(R.string.order_time, formatDate(fwOrder.orderTime))
+
+                itemCard.setOnClickListener { onItemClicked(fwOrder.orderId) }
 
                 tvInTransit.visibility = View.INVISIBLE
                 tvSuccess.visibility = View.INVISIBLE

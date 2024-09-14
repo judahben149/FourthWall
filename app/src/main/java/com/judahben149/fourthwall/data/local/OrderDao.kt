@@ -21,4 +21,7 @@ interface OrderDao {
 
     @Query("UPDATE orders SET orderStatus = :newStatus WHERE orderId = :orderId")
     suspend fun updateOrderStatus(orderId: Int, newStatus: Int)
+
+    @Query("SELECT * FROM orders WHERE orderId = :orderId")
+    fun getOrderById(orderId: Int): Flow<OrderEntity?>
 }

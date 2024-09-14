@@ -29,7 +29,7 @@ fun FwOrder.toOrderEntity(): OrderEntity {
     )
 }
 
-fun OrderEntity.toOrder(): FwOrder {
+fun OrderEntity.toFwOrder(): FwOrder {
     return FwOrder(
         orderId = orderId,
         orderExchangeId = orderExchangeId,

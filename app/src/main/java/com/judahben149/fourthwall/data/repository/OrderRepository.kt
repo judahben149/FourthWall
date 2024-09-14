@@ -19,4 +19,8 @@ class OrderRepository (private val orderDao: OrderDao) {
     suspend fun updateOrderStatus(orderId: Int, newStatus: Int) {
         orderDao.updateOrderStatus(orderId, newStatus)
     }
+
+    fun getOrderById(orderId: Int): Flow<OrderEntity?> {
+        return orderDao.getOrderById(orderId)
+    }
 }
