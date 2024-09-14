@@ -15,6 +15,7 @@ import com.judahben149.fourthwall.domain.usecase.user.InsertUserWithCurrencyAcco
 import com.judahben149.fourthwall.utils.AndroidKeyManager
 import com.judahben149.fourthwall.utils.Constants.BASE_USER_ID
 import com.judahben149.fourthwall.utils.PasswordEncryptionUtil
+import com.judahben149.fourthwall.utils.PasswordEncryptionUtil.encrypt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -41,9 +42,6 @@ class UserRegistrationViewModel @Inject constructor(
     private val _state = MutableStateFlow(UserRegistrationState())
     val state: StateFlow<UserRegistrationState> = _state.asStateFlow()
 
-    init {
-        getSignUpState()
-    }
 
     fun getCredentials() {
         val name = state.value.name
@@ -132,15 +130,17 @@ class UserRegistrationViewModel @Inject constructor(
         }
     }
 
-    private fun getSignUpState() {
+    fun getSignUpState() {
         viewModelScope.launch {
             val userAccount = getUserWithCurrencyAccountsUseCase(BASE_USER_ID).first()
 
-            userAccount?.let {
+            if (userAccount != null) {
                 _state.update {
-                    it.copy(
-                        userLoginProgress = UserLoginProgress.HasSignedUpButIsNotSignedIn
-                    )
+                    it.copy(userLoginProgress = UserLoginProgress.HasSignedUpButIsNotSignedIn)
+                }
+            } else {
+                _state.update {
+                    it.copy(userLoginProgress = UserLoginProgress.HasNotSignedUp)
                 }
             }
         }
@@ -159,8 +159,7 @@ class UserRegistrationViewModel @Inject constructor(
                     val storedEncryptedPassword = it.userEncryptedPassword
 
                     val currentEmail = state.value.email
-                    val currentEncryptedPassword =
-                        PasswordEncryptionUtil.decrypt(state.value.clearTextPassword, "secretKey")
+                    val currentEncryptedPassword = state.value.clearTextPassword.encrypt()
 
                     if (storedEmail == currentEmail) {
                         if (storedEncryptedPassword == currentEncryptedPassword) {
@@ -196,12 +195,12 @@ class UserRegistrationViewModel @Inject constructor(
         return DidDht.create(keyManager)
     }
 
-    fun registerUserAccountInDatabase() {
+    private fun registerUserAccountInDatabase() {
         val userAccountEntity = UserAccountEntity(
             userId = BASE_USER_ID,
             userName = state.value.name,
             userEmail = state.value.email,
-            userEncryptedPassword = PasswordEncryptionUtil.encrypt(state.value.clearTextPassword, "secretKey"),
+            userEncryptedPassword = state.value.clearTextPassword.encrypt(),
             userCountryCode = state.value.countryCode
         )
 
@@ -273,7 +272,7 @@ class UserRegistrationViewModel @Inject constructor(
         }
     }
 
-    fun runningOperation() {
+    private fun runningOperation() {
         _state.update {
             it.copy(userLoginProgress = UserLoginProgress.RunningOperation)
         }

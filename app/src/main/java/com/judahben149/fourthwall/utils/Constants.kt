@@ -16,6 +16,7 @@ object Constants {
 
     //Pref Keys
     const val HAS_COMPLETED_ONBOARDING = "HAS_COMPLETED_ONBOARDING"
+    const val HAS_STARTED_BUT_NOT_COMPLETED_ONBOARDING = "HAS_STARTED_BUT_NOT_COMPLETED_ONBOARDING"
     const val KCC_VC_JWT = "KCC_VC_JWT"
     const val USER_DID = "USER_DID"
 

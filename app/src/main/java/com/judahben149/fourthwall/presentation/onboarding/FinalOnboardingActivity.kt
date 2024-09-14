@@ -59,6 +59,7 @@ class FinalOnboardingActivity : AppCompatActivity() {
             btnGetStarted.setOnClickListener {
                 icBigIcon.clearAnimation()
                 icBigIcon.startTakeoffAnimation {
+                    sessionManager.updateHasStartedButNotCompletedOnboarding(false)
                     sessionManager.updateHasCompletedOnboarding(true)
                     navigateToHomeScreen()
                 }

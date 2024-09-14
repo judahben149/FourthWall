@@ -12,12 +12,12 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.ActivityUserRegistrationBinding
-import com.judahben149.fourthwall.databinding.BottomsheetLayoutRegistrationBinding
 import com.judahben149.fourthwall.domain.SessionManager
+import com.judahben149.fourthwall.presentation.MainActivity
 import com.judahben149.fourthwall.presentation.onboarding.FinalOnboardingActivity
+import com.judahben149.fourthwall.presentation.onboarding.OnboardingActivity
 import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
 import com.judahben149.fourthwall.utils.views.isLoading
@@ -44,6 +44,16 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!sessionManager.hasCompletedOnboarding()) {
+            if (sessionManager.hasStartedButNotCompletedOnboarding()) {
+
+                val intent = Intent(this, OnboardingActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+
         enableEdgeToEdge()
 
         _binding = ActivityUserRegistrationBinding.inflate(layoutInflater)
@@ -55,6 +65,8 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
             insets
         }
 
+
+        initializeUiState()
         observeState()
         setListeners()
     }
@@ -64,36 +76,47 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
 
-                    when(val status = state.userLoginProgress) {
-                        is UserLoginProgress.HasNotSignedUp ->{
+                    when (val status = state.userLoginProgress) {
+                        is UserLoginProgress.HasNotSignedUp -> {
                             binding.run {
-                                listOf(layoutName, layoutCountry, layoutEmail, layoutPassword, toolbarTitleSignUp).forEach {
+                                listOf(
+                                    layoutName,
+                                    layoutCountry,
+                                    layoutEmail,
+                                    layoutPassword,
+                                    toolbarTitleSignUp
+                                ).forEach {
                                     it.visibility = View.VISIBLE
                                 }
 
                                 toolbarTitleSignIn.visibility = View.GONE
-                                btnSignUp.text = "Sign up"
+                                btnSignIn.visibility = View.GONE
+                                btnSignUp.visibility = View.VISIBLE
+
                                 btnSignUp.disable(resources, binding.progressBarSignUp)
                             }
                         }
-                        is UserLoginProgress.HasSignedUpButIsNotSignedIn ->{
+
+                        is UserLoginProgress.HasSignedUpButIsNotSignedIn -> {
                             binding.run {
                                 listOf(layoutName, layoutCountry, toolbarTitleSignUp).forEach {
                                     it.visibility = View.GONE
                                 }
 
                                 toolbarTitleSignIn.visibility = View.VISIBLE
-                                btnSignUp.text = "Sign in"
-                                btnSignUp.disable(resources, binding.progressBarSignIn)
+                                btnSignIn.visibility = View.VISIBLE
+                                btnSignUp.visibility = View.GONE
+
+                                btnSignIn.disable(resources, binding.progressBarSignIn)
                             }
                         }
 
-                        is UserLoginProgress.ErrorSigningUp ->{
+                        is UserLoginProgress.ErrorSigningUp -> {
                             showErrorAlerter(status.message) {}
                             binding.btnSignUp.enable(resources, binding.progressBarSignUp)
                         }
 
-                        is UserLoginProgress.SuccessSigningUp ->{
+                        is UserLoginProgress.SuccessSigningUp -> {
                             showSuccessAlerter(status.message) {
                                 navigateToFinalOnboardingScreen()
                             }
@@ -101,7 +124,7 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
 
                         is UserLoginProgress.ErrorSigningIn -> {
                             showErrorAlerter(status.message) {}
-                            binding.btnSignUp.enable(resources, binding.progressBarSignIn)
+                            binding.btnSignIn.enable(resources, binding.progressBarSignIn)
                         }
 
                         is UserLoginProgress.IsReadyToSignIn -> {
@@ -113,7 +136,9 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
                         }
 
                         is UserLoginProgress.SuccessSigningIn -> {
-
+                            showSuccessAlerter(status.message) {
+                                navigateToMainScreen()
+                            }
                         }
 
                         is UserLoginProgress.RunningOperation -> {
@@ -188,13 +213,15 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
     }
 
     private fun evaluateButtonStatus() {
-        when(viewModel.state.value.userLoginProgress) {
+        when (viewModel.state.value.userLoginProgress) {
             UserLoginProgress.HasSignedUpButIsNotSignedIn -> {
                 binding.run {
-                    if (tvEmail.text.isNullOrEmpty().not() && tvPassword.text.isNullOrEmpty().not()) {
-                        btnSignUp.enable(resources, progressBarSignIn)
+                    if (
+                        tvEmail.text.isNullOrEmpty().not() && tvPassword.text.isNullOrEmpty().not()
+                    ) {
+                        btnSignIn.enable(resources, progressBarSignIn)
                     } else {
-                        btnSignUp.disable(resources, progressBarSignIn)
+                        btnSignIn.disable(resources, progressBarSignIn)
                     }
                 }
             }
@@ -206,7 +233,7 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
                         tvPassword.text.isNullOrEmpty().not() &&
                         tvName.text.isNullOrEmpty().not() &&
                         viewModel.state.value.countryCode.isNotEmpty()
-                        ) {
+                    ) {
                         btnSignUp.enable(resources, progressBarSignUp)
                     } else {
                         btnSignUp.disable(resources, progressBarSignUp)
@@ -221,6 +248,15 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
         }
     }
 
+    private fun navigateToMainScreen() {
+        sessionManager.updateHasCompletedOnboarding(true)
+
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
     private fun navigateToFinalOnboardingScreen() {
         sessionManager.updateHasCompletedOnboarding(true)
 
@@ -228,6 +264,10 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
+    }
+
+    private fun initializeUiState() {
+        viewModel.getSignUpState()
     }
 
     override fun onResume() {
@@ -241,5 +281,6 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        sessionManager.updateHasStartedButNotCompletedOnboarding(true)
     }
 }

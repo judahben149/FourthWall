@@ -36,6 +36,14 @@ class SessionManager @Inject constructor(
         return sharedPrefs.getBoolean(Constants.HAS_COMPLETED_ONBOARDING, false)
     }
 
+    fun hasStartedButNotCompletedOnboarding(): Boolean {
+        return sharedPrefs.getBoolean(Constants.HAS_STARTED_BUT_NOT_COMPLETED_ONBOARDING, false)
+    }
+
+    fun updateHasStartedButNotCompletedOnboarding(isTrue: Boolean) {
+        sharedPrefs.edit().putBoolean(Constants.HAS_STARTED_BUT_NOT_COMPLETED_ONBOARDING, isTrue).apply()
+    }
+
     fun updateHasCompletedOnboarding(hasCompleted: Boolean) {
         sharedPrefs.edit().putBoolean(Constants.HAS_COMPLETED_ONBOARDING, hasCompleted).apply()
     }

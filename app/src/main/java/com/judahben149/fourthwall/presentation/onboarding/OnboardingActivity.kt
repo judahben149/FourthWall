@@ -54,7 +54,7 @@ class OnboardingActivity : AppCompatActivity() {
                 if (viewPager.currentItem < 2) {
                     viewPager.currentItem += 1
                 } else {
-                    navigateToFinalOnboardingScreen()
+                    navigateToLoginScreen()
                 }
             }
         }
@@ -75,7 +75,7 @@ class OnboardingActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToFinalOnboardingScreen() {
+    private fun navigateToLoginScreen() {
         val intent = Intent(this, UserRegistrationActivity::class.java)
         startActivity(intent)
         finish()
@@ -84,6 +84,7 @@ class OnboardingActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        sessionManager.updateHasStartedButNotCompletedOnboarding(true)
         _binding = null
     }
 }

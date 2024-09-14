@@ -52,11 +52,6 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (!sessionManager.hasCompletedOnboarding()) {
-            val intent = Intent(requireContext(), OnboardingActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish()
-        }
     }
 
     override fun onCreateView(
