@@ -13,7 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.judahben149.fourthwall.R
-import com.judahben149.fourthwall.databinding.ActivityUserRegistrationBinding
+import com.judahben149.fourthwall.databinding.ActivityLoginBinding
 import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.presentation.MainActivity
 import com.judahben149.fourthwall.presentation.onboarding.FinalOnboardingActivity
@@ -31,9 +31,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
+class LoginActivity : AppCompatActivity(), OnCountryPickerListener {
 
-    private var _binding: ActivityUserRegistrationBinding? = null
+    private var _binding: ActivityLoginBinding? = null
     private val binding get() = _binding!!
 
     @Inject
@@ -56,7 +56,7 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
 
         enableEdgeToEdge()
 
-        _binding = ActivityUserRegistrationBinding.inflate(layoutInflater)
+        _binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -178,13 +178,13 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
 
                 val builder = CountryPicker
                     .Builder()
-                    .with(this@UserRegistrationActivity)
-                    .listener(this@UserRegistrationActivity)
+                    .with(this@LoginActivity)
+                    .listener(this@LoginActivity)
                     .style(R.style.CountryPickerStyle)
                     .canSearch(true)
 
                 val picker = builder.build()
-                picker.showBottomSheet(this@UserRegistrationActivity)
+                picker.showBottomSheet(this@LoginActivity)
             }
 
             btnSignUp.setOnClickListener {

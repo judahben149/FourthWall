@@ -10,7 +10,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.ActivityOnboardingBinding
 import com.judahben149.fourthwall.domain.SessionManager
-import com.judahben149.fourthwall.presentation.login.UserRegistrationActivity
+import com.judahben149.fourthwall.presentation.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -76,7 +76,7 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     private fun navigateToLoginScreen() {
-        val intent = Intent(this, UserRegistrationActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }
