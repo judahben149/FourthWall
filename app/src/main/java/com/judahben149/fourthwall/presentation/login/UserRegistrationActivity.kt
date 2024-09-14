@@ -1,4 +1,4 @@
-package com.judahben149.fourthwall.presentation.registration
+package com.judahben149.fourthwall.presentation.login
 
 import android.content.Intent
 import android.os.Bundle

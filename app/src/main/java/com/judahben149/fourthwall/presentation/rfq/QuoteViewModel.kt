@@ -15,7 +15,6 @@ import com.judahben149.fourthwall.domain.models.enums.PaymentMethods
 import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetUserWithCurrencyAccountsUseCase
-import com.judahben149.fourthwall.presentation.registration.UserLoginProgress
 import com.judahben149.fourthwall.utils.Constants
 import com.judahben149.fourthwall.utils.log
 import com.judahben149.fourthwall.utils.text.formatAddSpace

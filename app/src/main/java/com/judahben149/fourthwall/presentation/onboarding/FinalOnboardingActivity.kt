@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.judahben149.fourthwall.databinding.ActivityFinalOnboardingBinding
 import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.presentation.MainActivity
-import com.judahben149.fourthwall.presentation.registration.UserRegistrationViewModel
+import com.judahben149.fourthwall.presentation.login.UserRegistrationViewModel
 import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
 import com.judahben149.fourthwall.utils.views.startTakeoffAnimation

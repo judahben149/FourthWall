@@ -1,4 +1,4 @@
-package com.judahben149.fourthwall.presentation.registration
+package com.judahben149.fourthwall.presentation.login
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

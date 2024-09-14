@@ -10,7 +10,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.ActivityOnboardingBinding
 import com.judahben149.fourthwall.domain.SessionManager
-import com.judahben149.fourthwall.presentation.registration.UserRegistrationActivity
+import com.judahben149.fourthwall.presentation.login.UserRegistrationActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
