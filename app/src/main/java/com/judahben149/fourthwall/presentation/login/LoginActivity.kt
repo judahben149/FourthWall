@@ -45,14 +45,17 @@ class LoginActivity : AppCompatActivity(), OnCountryPickerListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (!sessionManager.hasCompletedOnboarding()) {
-            if (sessionManager.hasStartedButNotCompletedOnboarding()) {
-
-                val intent = Intent(this, OnboardingActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
+        if (sessionManager.shouldBeginOnboarding()) {
+            val intent = Intent(this, OnboardingActivity::class.java)
+            startActivity(intent)
+            finish()
         }
+
+        if (!sessionManager.isUserSignedUp()) {
+
+        }
+
+
 
         enableEdgeToEdge()
 
@@ -273,6 +276,8 @@ class LoginActivity : AppCompatActivity(), OnCountryPickerListener {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-        sessionManager.updateHasStartedButNotCompletedOnboarding(true)
+        if (sessionManager.isUserSignedUp().not()) {
+            sessionManager.updateShouldBeginOnboarding(true)
+        }
     }
 }

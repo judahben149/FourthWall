@@ -29,6 +29,10 @@ class OnboardingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        if (sessionManager.isUserSignedUp().not()) {
+            sessionManager.updateShouldBeginOnboarding(true)
+        }
+
         _binding = ActivityOnboardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -76,6 +80,7 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     private fun navigateToLoginScreen() {
+        sessionManager.updateShouldBeginOnboarding(false)
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
@@ -84,7 +89,6 @@ class OnboardingActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        sessionManager.updateHasStartedButNotCompletedOnboarding(true)
         _binding = null
     }
 }

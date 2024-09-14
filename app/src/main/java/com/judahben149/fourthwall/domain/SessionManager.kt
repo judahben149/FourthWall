@@ -32,20 +32,20 @@ class SessionManager @Inject constructor(
         }
     }
 
-    fun hasCompletedOnboarding(): Boolean {
-        return sharedPrefs.getBoolean(Constants.HAS_COMPLETED_ONBOARDING, false)
+    fun isUserSignedUp(): Boolean {
+        return sharedPrefs.getBoolean(Constants.IS_USER_SIGNED_UP, false)
     }
 
-    fun hasStartedButNotCompletedOnboarding(): Boolean {
-        return sharedPrefs.getBoolean(Constants.HAS_STARTED_BUT_NOT_COMPLETED_ONBOARDING, false)
+    fun shouldBeginOnboarding(): Boolean {
+        return sharedPrefs.getBoolean(Constants.SHOULD_BEGIN_ONBOARDING, true)
     }
 
-    fun updateHasStartedButNotCompletedOnboarding(isTrue: Boolean) {
-        sharedPrefs.edit().putBoolean(Constants.HAS_STARTED_BUT_NOT_COMPLETED_ONBOARDING, isTrue).apply()
+    fun updateShouldBeginOnboarding(shouldBegin: Boolean) {
+        sharedPrefs.edit().putBoolean(Constants.SHOULD_BEGIN_ONBOARDING, shouldBegin).apply()
     }
 
     fun updateHasCompletedOnboarding(hasCompleted: Boolean) {
-        sharedPrefs.edit().putBoolean(Constants.HAS_COMPLETED_ONBOARDING, hasCompleted).apply()
+        sharedPrefs.edit().putBoolean(Constants.IS_USER_SIGNED_UP, hasCompleted).apply()
     }
 
     fun storeKCC(kcc: String) {

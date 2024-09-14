@@ -26,7 +26,7 @@ object DatabaseModule {
             context,
             FourthWallDatabase::class.java,
             DATABASE_NAME
-        )
+        ).fallbackToDestructiveMigration()
             .build()
     }
 

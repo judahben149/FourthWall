@@ -7,7 +7,7 @@ import com.judahben149.fourthwall.data.local.entities.OrderEntity
 import com.judahben149.fourthwall.data.local.entities.PfiRatingEntity
 import com.judahben149.fourthwall.data.local.entities.UserAccountEntity
 
-@Database(entities = [UserAccountEntity::class, CurrencyAccountEntity::class, OrderEntity::class, PfiRatingEntity::class], version = 1, exportSchema = false)
+@Database(entities = [UserAccountEntity::class, CurrencyAccountEntity::class, OrderEntity::class, PfiRatingEntity::class], version = 2, exportSchema = false)
 abstract class FourthWallDatabase: RoomDatabase() {
 
     abstract fun orderDao(): OrderDao
