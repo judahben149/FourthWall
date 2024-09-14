@@ -28,6 +28,18 @@
         android:textSize="14sp"
         android:textStyle="bold" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_no_required_fields"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/cera_pro_medium"
+        android:text="No required payment details needed for this method"
+        android:textAlignment="center"
+        android:textColor="@color/textOnBackground"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
     <!--    Pay in section - fields-->
 
     <LinearLayout
@@ -42,6 +54,7 @@
 
 
     <Space
+        android:id="@+id/spacer"
         android:layout_width="match_parent"
         android:layout_height="24dp" />
 

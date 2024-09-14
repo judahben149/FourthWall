@@ -270,14 +270,6 @@ class UserRegistrationActivity : AppCompatActivity(), OnCountryPickerListener {
         viewModel.getSignUpState()
     }
 
-    override fun onResume() {
-        super.onResume()
-
-//        val country = CountryPicker.Builder()
-//        binding.tvName.setText(viewModel.state.value.name)
-//        binding.tvCountry.text = ""
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

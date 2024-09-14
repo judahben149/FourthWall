@@ -14,7 +14,6 @@ import com.judahben149.fourthwall.domain.usecase.user.InsertUserAccountUseCase
 import com.judahben149.fourthwall.domain.usecase.user.InsertUserWithCurrencyAccountsUseCase
 import com.judahben149.fourthwall.utils.AndroidKeyManager
 import com.judahben149.fourthwall.utils.Constants.BASE_USER_ID
-import com.judahben149.fourthwall.utils.PasswordEncryptionUtil
 import com.judahben149.fourthwall.utils.PasswordEncryptionUtil.encrypt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

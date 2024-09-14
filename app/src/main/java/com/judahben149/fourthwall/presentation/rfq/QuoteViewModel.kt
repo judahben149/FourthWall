@@ -2,6 +2,7 @@ package com.judahben149.fourthwall.presentation.rfq
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.judahben149.fourthwall.data.remote.result.NetworkResult
 import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.domain.mappers.toFwOffering
 import com.judahben149.fourthwall.domain.mappers.toFwOrderEntity
@@ -12,12 +13,17 @@ import com.judahben149.fourthwall.domain.models.enums.FwOrderStatus
 import com.judahben149.fourthwall.domain.models.enums.OrderType
 import com.judahben149.fourthwall.domain.models.enums.PaymentMethods
 import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
+import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
+import com.judahben149.fourthwall.domain.usecase.user.GetUserWithCurrencyAccountsUseCase
+import com.judahben149.fourthwall.presentation.registration.UserLoginProgress
+import com.judahben149.fourthwall.utils.Constants
 import com.judahben149.fourthwall.utils.log
 import com.judahben149.fourthwall.utils.text.formatAddSpace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tbdex.sdk.httpclient.TbdexHttpClient
@@ -36,7 +42,9 @@ import javax.inject.Inject
 @HiltViewModel
 class QuoteViewModel @Inject constructor(
     private val sessionManager: SessionManager,
+    private val getKccUseCase: GetKccUseCase,
     private val insertOrdersUseCase: InsertOrdersUseCase,
+    private val getUserWithCurrencyAccountsUseCase: GetUserWithCurrencyAccountsUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(QuoteState())
@@ -387,6 +395,60 @@ class QuoteViewModel @Inject constructor(
             }
         }
     }
+
+    fun getKCC() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val did = sessionManager.getBearerDid()
+            val userAccount = getUserWithCurrencyAccountsUseCase(Constants.BASE_USER_ID).first()
+
+            try {
+                userAccount?.let {
+                    val name = userAccount.userAccountEntity.userName
+                    val countryCode = userAccount.userAccountEntity.userCountryCode
+
+                    when (val result = getKccUseCase(name, countryCode, did!!.uri)) {
+                        is NetworkResult.Error -> {
+                            _state.update {
+                                it.copy(
+                                    exchangeProgress = ExchangeProgress.ErrorGettingCredentials(
+                                        result.message ?: "Credentials were not gotten. Please retry"
+                                    )
+                                )
+                            }
+                        }
+
+                        is NetworkResult.Exception -> {
+                            _state.update {
+                                it.copy(
+                                    exchangeProgress = ExchangeProgress.ErrorGettingCredentials(
+                                        result.e.message ?: "Credentials were not gotten. Please retry"
+                                    )
+                                )
+                            }
+                        }
+
+                        is NetworkResult.Success -> {
+                            sessionManager.storeKCC(result.data)
+
+                            _state.update {
+                                it.copy(
+                                    exchangeProgress = ExchangeProgress.HasGottenCredentials
+                                )
+                            }
+                        }
+                    }
+                }
+            } catch (ex: Exception) {
+                _state.update {
+                    it.copy(
+                        exchangeProgress = ExchangeProgress.ErrorGettingCredentials(
+                            "Credentials were not gotten. Please retry"
+                        )
+                    )
+                }
+            }
+        }
+    }
 }
 
 data class QuoteState(
@@ -405,6 +467,9 @@ data class QuoteState(
 
 sealed class ExchangeProgress {
     data object JustStarted : ExchangeProgress()
+    data object HasRequestedCredentials : ExchangeProgress()
+    data object HasGottenCredentials : ExchangeProgress()
+    data class ErrorGettingCredentials(val message: String) : ExchangeProgress()
     data object YetToRequestQuote : ExchangeProgress()
     data object IsReadyToRequestQuote : ExchangeProgress()
     data object HasRequestedQuote : ExchangeProgress()

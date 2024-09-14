@@ -57,15 +57,15 @@ class PaymentMethodBottomSheet : BottomSheetDialogFragment() {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
         inflateViews()
-        decideViewToShow()
-        setupListeners()
     }
 
     private fun inflateViews() {
+        binding.btnUpdate.disable(resources)
+
         val container = binding.layoutPayIn
         val textManager = DynamicTextInputManager(requireContext(), resources)
 
-        viewModel.state.value.fwOffering?.let {
+        viewModel.state.value.fwOffering?.let { it ->
 
             val payInConfigs = it.payInMethods.map { method ->
                 method.paymentFields
@@ -81,60 +81,46 @@ class PaymentMethodBottomSheet : BottomSheetDialogFragment() {
 
 
             if (isPayIn) {
-                textManager.createTextInputs(container, payInConfigs, binding.btnUpdate) { detailsMap ->
-                    viewModel.updateRequestedDetailsFields(isPayIn, payKind, detailsMap)
-                    dismiss()
+                if (payInConfigs.isNotEmpty()) {
+                    textManager.createTextInputs(
+                        container,
+                        payInConfigs,
+                        binding.btnUpdate
+                    ) { detailsMap ->
+                        viewModel.updateRequestedDetailsFields(isPayIn, payKind, detailsMap)
+                        dismiss()
+                    }
+                } else {
+                    binding.run {
+                        listOf(layoutPayIn, layoutPayOut, btnUpdate, spacer).forEach {
+                            it.visibility = View.GONE
+                        }
+
+                        tvNoRequiredFields.visibility = View.VISIBLE
+                    }
                 }
             } else {
-                textManager.createTextInputs(container, payOutConfigs, binding.btnUpdate) { detailsMap ->
-                    viewModel.updateRequestedDetailsFields(isPayIn, payKind, detailsMap)
-                    dismiss()
+
+                if (payOutConfigs.isNotEmpty()) {
+                    textManager.createTextInputs(
+                        container,
+                        payOutConfigs,
+                        binding.btnUpdate
+                    ) { detailsMap ->
+                        viewModel.updateRequestedDetailsFields(isPayIn, payKind, detailsMap)
+                        dismiss()
+                    }
+                } else {
+                    binding.run {
+                        listOf(layoutPayIn, layoutPayOut, btnUpdate, spacer).forEach {
+                            it.visibility = View.GONE
+                        }
+
+                        tvNoRequiredFields.visibility = View.VISIBLE
+                    }
                 }
             }
         }
-    }
-
-    private fun setupListeners() {
-        setupTextFieldListeners()
-
-//        binding.btnUpdate.setOnClickListener {
-////            viewModel.updateSelectedPaymentKind(updatedPaymentKind)
-//            dismiss()
-//        }
-
-        //
-//        Button listener has been set up in event input lambda
-    }
-
-    private fun setupTextFieldListeners() {
-
-    }
-
-    private fun decideViewToShow() {
-
-
-        //disable button
-        binding.btnUpdate.disable(resources)
-    }
-
-    private fun validateInputs() {
-        var isPayInInputSatisfied = false
-        var isPayOutInputSatisfied = false
-
-
-        if (isPayInInputSatisfied && isPayOutInputSatisfied) {
-            enableBtn()
-        } else {
-            disableBtn()
-        }
-    }
-
-    private fun enableBtn() {
-        binding.btnUpdate.enable(resources)
-    }
-
-    private fun disableBtn() {
-        binding.btnUpdate.disable(resources)
     }
 
     override fun onDestroyView() {

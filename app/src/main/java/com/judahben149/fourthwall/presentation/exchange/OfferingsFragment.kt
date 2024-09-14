@@ -34,6 +34,7 @@ import com.judahben149.fourthwall.utils.views.isLoading
 import com.judahben149.fourthwall.utils.views.setAmountFont
 import com.judahben149.fourthwall.utils.views.showInfoAlerter
 import com.judahben149.fourthwall.utils.views.showSnack
+import com.judahben149.fourthwall.utils.views.showWarningAlerter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -79,6 +80,8 @@ class OfferingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.shimmerLayout.startShimmer()
+        requireActivity().showInfoAlerter("Finding available offerings", 800)
+
         setTextFieldFilters()
         setupBottomSheet()
         setupBottomSheetRecyclerView()
@@ -149,7 +152,7 @@ class OfferingsFragment : Fragment() {
             }.map { it.second }.distinct()
 
             showCurrencyBottomSheetForCurrencies(payOutCurrencies)
-        } ?: showSnack("Select pay in currency", binding.root)
+        } ?: requireActivity().showWarningAlerter("Select pay in currency", 1300) {}
     }
 
     private fun setupBottomSheetRecyclerView() {

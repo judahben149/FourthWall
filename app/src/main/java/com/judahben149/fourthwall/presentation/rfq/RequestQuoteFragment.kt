@@ -56,10 +56,10 @@ class RequestQuoteFragment : Fragment() {
         setListeners()
         setData()
         observeState()
+        confirmCredentialsAvailability()
 
-        //
 //        createRfq()
-        seeSelectedOffering()
+//        seeSelectedOffering()
     }
 
     private fun setData() {
@@ -67,9 +67,6 @@ class RequestQuoteFragment : Fragment() {
             state.selectedOffering?.let { viewModel.updateSelectedOffering(it) }
             state.payInAmount?.let { viewModel.updateAmount(it) }
         }
-
-
-        confirmCredentialsAvailability()
 
         //if pay in methods are empty, simply add in the pay in kind name
         // You should come back to make this selectable by the user, using the chip
@@ -106,6 +103,19 @@ class RequestQuoteFragment : Fragment() {
                         is ExchangeProgress.JustStarted -> {
                             binding.btnQuote.text = getString(R.string.get_quote)
                             binding.btnQuote.disable(resources)
+                            confirmCredentialsAvailability()
+                        }
+
+                        is ExchangeProgress.ErrorGettingCredentials -> {
+
+                        }
+
+                        ExchangeProgress.HasGottenCredentials -> {
+                            confirmCredentialsAvailability()
+                        }
+
+                        ExchangeProgress.HasRequestedCredentials -> {
+
                         }
 
                         is ExchangeProgress.YetToRequestQuote -> {
@@ -272,6 +282,11 @@ class RequestQuoteFragment : Fragment() {
             }
 
             btnCancel.setOnClickListener { viewModel.processCloseRequest() }
+
+            btnRequestCredentials.setOnClickListener {
+                val credBottomSheet = GetCredentialsBottomSheet.newInstance(viewModel)
+                credBottomSheet.show(childFragmentManager, "BOTTOM_SHEET_GET_CREDENTIALS")
+            }
         }
     }
 
