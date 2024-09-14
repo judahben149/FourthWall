@@ -109,6 +109,9 @@ dependencies {
     // Jackson
     implementation(libs.jackson)
 
+    // Dot Indicator - View Pager
+    implementation(libs.dot.indicator)
+
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)
 

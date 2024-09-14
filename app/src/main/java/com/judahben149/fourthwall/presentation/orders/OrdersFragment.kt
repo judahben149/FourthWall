@@ -12,7 +12,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.judahben149.fourthwall.databinding.FragmentOrdersBinding
 import com.judahben149.fourthwall.domain.mappers.toOrder
-import com.judahben149.fourthwall.utils.DummyDataUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

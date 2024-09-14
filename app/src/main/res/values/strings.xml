@@ -18,7 +18,7 @@
     <string name="i_understand_and_accept">I understand, and accept</string>
     <string name="get_credentials">Get Credentials</string>
     <string name="bottom_sheet_drag_handle">Bottom sheet drag handle</string>
-    <string name="recipient_gets">Recipient gets (excluding fees)</string>
+    <string name="recipient_gets">Recipient gets (excluding network fees)</string>
     <string name="you_send">You send</string>
     <string name="amount">Amount</string>
     <string name="country_flag">Country Flag</string>
@@ -61,4 +61,5 @@
     <string name="transaction_success_message">You have successfully paid %1$s</string>
     <string name="rate_your_experience_with">Rate your experience with %1$s</string>
     <string name="terms_conditions">FourthWall will securely store your Decentralized Identifier and Verifiable Credentials for use in subsequent transactions. \n\nYou can revoke this in settings</string>
+    <string name="explore">Explore</string>
 </resources>

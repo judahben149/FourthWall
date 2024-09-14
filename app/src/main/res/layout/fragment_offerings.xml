@@ -236,7 +236,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="24dp"
                                     android:backgroundTint="@color/light_purple_tint"
-                                    android:text="Explore"
+                                    android:text="@string/explore"
+                                    android:textColor="@color/black"
                                     android:textSize="13sp"
                                     app:chipCornerRadius="16dp"
                                     app:chipStrokeWidth="0dp" />
