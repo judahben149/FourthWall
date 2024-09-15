@@ -20,6 +20,7 @@ object Constants {
     const val KCC_VC_JWT = "KCC_VC_JWT"
     const val USER_DID = "USER_DID"
     const val IS_BIOMETRICS_ENABLED = "IS_BIOMETRICS_ENABLED"
+    const val SHOULD_STORE_VC = "SHOULD_STORE_VC"
 
     // Network
     const val VC_BASE_URL = "https://mock-idv.tbddev.org"

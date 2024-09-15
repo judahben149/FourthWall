@@ -203,8 +203,8 @@
                         android:id="@+id/card_fee_breakdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:layout_marginTop="24dp">
+                        android:layout_marginTop="24dp"
+                        android:visibility="gone">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
@@ -215,142 +215,125 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
+                                android:layout_marginBottom="12dp"
                                 android:fontFamily="@font/cera_pro_medium"
                                 android:text="Fee Breakdown"
-                                android:textColor="@color/textOnBackground"
-                                app:layout_constraintTop_toBottomOf="@id/tv_fees_label"
-                                android:layout_marginBottom="12dp"
+                                android:textColor="@color/popping_orange"
                                 android:textSize="14sp"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tv_fees_label"
                                 app:layout_constraintTop_toTopOf="parent" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_fees_label"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="48dp"
                                 android:layout_marginTop="12dp"
                                 android:fontFamily="@font/cera_pro_light"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
                                 android:visibility="gone"
-                                app:layout_constraintEnd_toStartOf="@+id/tv_fees"
-                                app:layout_constraintHorizontal_bias="0"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.25"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/tv_fee_breakdown_label"
-                                tools:text="Financial institution fee" />
+                                android:text="Network fee   " />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_fees"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginEnd="48dp"
-                                android:visibility="gone"
+                                android:layout_marginStart="96dp"
                                 android:fontFamily="@font/cera_pro_light"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
-                                app:layout_constraintEnd_toEndOf="parent"
+                                android:visibility="gone"
                                 app:layout_constraintStart_toEndOf="@id/tv_fees_label"
                                 app:layout_constraintTop_toTopOf="@id/tv_fees_label"
                                 tools:text="1.5%" />
 
-                            <com.ghedeon.dottedlineview.DottedLineView
-                                android:id="@+id/dotted1"
-                                android:layout_width="5dp"
-                                android:layout_height="16dp"
-                                android:layout_marginStart="12dp"
-                                android:layout_marginTop="4dp"
-                                android:alpha="0.5"
-                                android:visibility="gone"
-                                android:orientation="vertical"
-                                app:color="@color/textColorGreyed"
-                                app:radius="2dp"
-                                app:minGap="2dp"
-                                app:layout_constraintStart_toStartOf="@id/tv_fees_label"
-                                app:layout_constraintTop_toBottomOf="@id/tv_fees_label" />
-
-                            <com.ghedeon.dottedlineview.DottedLineView
-                                android:id="@+id/dotted2"
-                                android:layout_width="5dp"
-                                android:layout_height="16dp"
-                                android:layout_marginStart="12dp"
-                                android:alpha="0.5"
-                                android:visibility="gone"
-                                android:orientation="vertical"
-                                app:color="@color/textColorGreyed"
-                                app:radius="2dp"
-                                app:minGap="2dp"
-                                app:layout_constraintStart_toStartOf="@id/tv_fees"
-                                app:layout_constraintTop_toTopOf="@id/dotted1" />
-
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_wallet_fees_label"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="48dp"
                                 android:fontFamily="@font/cera_pro_light"
+                                android:text="FourthWall fee"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
+                                android:layout_marginTop="8dp"
                                 app:layout_constraintBottom_toTopOf="@id/tv_recipient_gets_label"
-                                app:layout_constraintEnd_toStartOf="@+id/tv_wallet_fees"
-                                app:layout_constraintHorizontal_bias="0"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.05"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/dotted1"
-                                app:layout_constraintVertical_bias="0"
-                                android:text="FourthWall fee" />
+                                app:layout_constraintTop_toBottomOf="@id/tv_fees_label"
+                                app:layout_constraintVertical_bias="0" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_wallet_fees"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
+                                android:layout_marginStart="48dp"
                                 android:layout_marginEnd="48dp"
                                 android:fontFamily="@font/cera_pro_light"
+                                tools:text="1.5%"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintHorizontal_bias="1.0"
                                 app:layout_constraintStart_toEndOf="@id/tv_wallet_fees_label"
                                 app:layout_constraintTop_toTopOf="@id/tv_wallet_fees_label"
-                                app:layout_constraintVertical_bias="0"
-                                android:text="0.5%" />
+                                app:layout_constraintVertical_bias="0" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_sender_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="24dp"
+                                android:layout_marginBottom="12dp"
+                                android:fontFamily="@font/cera_pro_medium"
+                                android:text="You send         "
+                                android:textSize="14sp"
+                                app:layout_constraintStart_toStartOf="@id/tv_wallet_fees_label"
+                                app:layout_constraintTop_toBottomOf="@id/tv_wallet_fees_label" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_sender_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/cera_pro_medium"
+                                tools:text="$477"
+                                android:layout_marginStart="48dp"
+                                android:textSize="14sp"
+                                app:layout_constraintStart_toEndOf="@id/tv_sender_label"
+                                app:layout_constraintTop_toTopOf="@id/tv_sender_label" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_recipient_gets_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="24dp"
-                                android:layout_marginEnd="48dp"
+                                android:layout_marginTop="4dp"
                                 android:layout_marginBottom="12dp"
                                 android:fontFamily="@font/cera_pro_medium"
+                                android:text="Recipient gets"
                                 android:textSize="14sp"
-                                app:layout_constraintBottom_toTopOf="@id/tv_order_expires_label"
-                                app:layout_constraintHorizontal_bias="1.0"
-                                app:layout_constraintStart_toStartOf="@id/tv_wallet_fees_label"
-                                app:layout_constraintTop_toBottomOf="@id/tv_wallet_fees_label"
-                                app:layout_constraintVertical_bias="0"
-                                android:text="Recipient gets" />
+                                app:layout_constraintStart_toStartOf="@id/tv_sender_label"
+                                app:layout_constraintTop_toBottomOf="@id/tv_sender_label" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_recipient_gets"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
                                 android:layout_marginEnd="48dp"
                                 android:fontFamily="@font/cera_pro_medium"
+                                android:text=""
+                                android:layout_marginStart="46dp"
                                 android:textSize="14sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="1.0"
                                 app:layout_constraintStart_toEndOf="@id/tv_recipient_gets_label"
                                 app:layout_constraintTop_toTopOf="@id/tv_recipient_gets_label"
                                 app:layout_constraintVertical_bias="0"
-                                android:text=""
-                                tools:text="$456.34"
-                                />
+                                tools:text="$456.34" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_order_expires_label"
@@ -360,33 +343,31 @@
                                 android:layout_marginEnd="48dp"
                                 android:layout_marginBottom="12dp"
                                 android:fontFamily="@font/cera_pro_medium"
-                                android:textSize="12sp"
+                                android:text="Order expires: "
                                 android:textColor="@color/shaded_base_purple"
+                                android:textSize="12sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintHorizontal_bias="1.0"
-                                app:layout_constraintStart_toStartOf="@id/tv_wallet_fees_label"
-                                app:layout_constraintTop_toBottomOf="@id/tv_wallet_fees_label"
-                                app:layout_constraintVertical_bias="0"
-                                android:text="Order expires: " />
+                                app:layout_constraintStart_toStartOf="@id/tv_recipient_gets_label"
+                                app:layout_constraintTop_toBottomOf="@id/tv_recipient_gets_label"
+                                app:layout_constraintVertical_bias="0" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/tv_order_expires"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
+                                android:layout_marginStart="46dp"
                                 android:layout_marginEnd="48dp"
                                 android:fontFamily="@font/cera_pro_medium"
-                                android:textSize="12sp"
+                                android:text=""
                                 android:textColor="@color/shaded_base_purple"
+                                android:textSize="12sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintHorizontal_bias="1.0"
                                 app:layout_constraintStart_toEndOf="@id/tv_recipient_gets_label"
                                 app:layout_constraintTop_toTopOf="@id/tv_order_expires_label"
                                 app:layout_constraintVertical_bias="0"
-                                android:text=""
-                                tools:text="Monday, 1st May, 2027"
-                                />
+                                tools:text="Monday, 1st May, 2027" />
 
 
                         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,6 +34,7 @@ import com.judahben149.fourthwall.utils.views.enable
 import com.judahben149.fourthwall.utils.views.isLoading
 import com.judahben149.fourthwall.utils.views.setAmountFont
 import com.judahben149.fourthwall.utils.views.showBalloonOn
+import com.judahben149.fourthwall.utils.views.showErrorAlerter
 import com.judahben149.fourthwall.utils.views.showInfoAlerter
 import com.judahben149.fourthwall.utils.views.showWarningAlerter
 import dagger.hilt.android.AndroidEntryPoint
@@ -108,7 +109,11 @@ class OfferingsFragment : Fragment() {
             ivFlagPayOut.setOnClickListener { setPayOutCurrency() }
 
             btnContinue.setOnClickListener {
-                navController.navigate(R.id.action_offeringsFragment_to_requestQuoteFragment)
+                if (viewModel.state.value.getOfferingsState is GetOfferingsRequestState.Error) {
+                    viewModel.getPfiOfferings()
+                } else {
+                    navController.navigate(R.id.action_offeringsFragment_to_requestQuoteFragment)
+                }
             }
 
             chipExplorePfi.setOnClickListener {
@@ -327,9 +332,12 @@ class OfferingsFragment : Fragment() {
                         }
                     }
 
-                    when(state.getOfferingsState) {
+                    when(val st = state.getOfferingsState) {
                         is GetOfferingsRequestState.Error -> {
-
+                            requireActivity().showErrorAlerter(st.message) {
+                                binding.btnContinue.enable(resources, binding.progressBar)
+                                binding.btnContinue.text = "Retry"
+                            }
                         }
 
                         GetOfferingsRequestState.Loading -> {
@@ -337,6 +345,8 @@ class OfferingsFragment : Fragment() {
                         }
 
                         GetOfferingsRequestState.Success -> {
+                            binding.btnContinue.text = "Continue"
+
                             binding.shimmerLayout.apply {
                                 stopShimmer()
                                 visibility = View.GONE

@@ -17,6 +17,7 @@ import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentRequestQuoteBinding
 import com.judahben149.fourthwall.domain.models.PaymentMethod
 import com.judahben149.fourthwall.presentation.exchange.OfferingsViewModel
+import com.judahben149.fourthwall.utils.CurrencyUtils.formatCurrency
 import com.judahben149.fourthwall.utils.log
 import com.judahben149.fourthwall.utils.text.extractPaymentFields
 import com.judahben149.fourthwall.utils.toCasualFriendlyDate
@@ -31,6 +32,7 @@ import com.judahben149.fourthwall.utils.views.showSuccessAlerter
 import com.judahben149.fourthwall.utils.views.showWarningAlerter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlin.time.times
 
 @AndroidEntryPoint
 class RequestQuoteFragment : Fragment() {
@@ -67,7 +69,18 @@ class RequestQuoteFragment : Fragment() {
     private fun setData() {
         offeringsViewModel.state.value.let { state ->
             state.selectedOffering?.let { viewModel.updateSelectedOffering(it) }
-            state.payInAmount?.let { viewModel.updateAmount(it) }
+            state.payInAmount?.let {
+                // Add in FourthWall flat fee of 1.5%
+                try {
+                    val amount = it.toDouble()
+                    val fourthWallFee = (amount * (1.5/100))
+                    val chargedAmount = amount + fourthWallFee
+
+                    viewModel.updateAmount(chargedAmount.toString(), fourthWallFee)
+                } catch (ex: Exception) {
+                    requireActivity().showWarningAlerter("Could not update amount. Please navigate a step back and retry") {}
+                }
+            }
         }
 
         //if pay in methods are empty, simply add in the pay in kind name
@@ -152,10 +165,22 @@ class RequestQuoteFragment : Fragment() {
                                     if (quote.data.payout.fee.isNullOrEmpty().not()) {
                                         tvFees.text = quote.data.payout.fee
 
-                                        listOf(tvFeesLabel, tvFees, dotted1, dotted2).forEach {
+                                        listOf(tvFeesLabel, tvFees).forEach {
                                             it.visibility = View.VISIBLE
                                         }
                                     }
+
+                                    // Display fee break down
+//                                    val amountEntered = viewModel.state.value.payInAmount!!.toDouble()
+                                    val payoutAmount = quote.data.payout.amount.toDouble()
+                                    val userSent = quote.data.payin.amount.toDouble()
+                                    val fourthWallFees = viewModel.state.value.fourthWallFee
+                                    val recipientGets = payoutAmount - (payoutAmount * (1.5/100))
+
+                                    tvWalletFees.text = fourthWallFees.formatCurrency(quote.data.payin.currencyCode)
+                                    tvRecipientGets.text = recipientGets.formatCurrency(quote.data.payout.currencyCode)
+                                    tvSenderValue.text = userSent.formatCurrency(quote.data.payin.currencyCode)
+
 
                                     tvOrderExpires.text =
                                         quote.data.expiresAt.toCasualFriendlyDate()
@@ -170,18 +195,17 @@ class RequestQuoteFragment : Fragment() {
                         }
 
                         is ExchangeProgress.IsProcessingOrderRequest -> {
-                            binding.btnQuote.disable(resources, binding.progressBar)
+                            binding.btnQuote.isLoading(resources, binding.progressBar)
                             binding.btnCancel.disableNoColourChange(resources, binding.progressBar)
                             requireActivity().showInfoAlerter("FourthWall is processing your order", 1600)
                         }
 
                         is ExchangeProgress.HasGottenNewOrderStatusMessage -> {
-                            requireActivity().showInfoAlerter("Status - ".plus(prg.message), 1000)
-
+//                            requireActivity().showInfoAlerter("Status - ".plus(prg.message), 1000)
                         }
 
                         is ExchangeProgress.HasGottenSuccessfulOrderResponse -> {
-                            requireActivity().showSuccessAlerter("Order Fulfilled") {
+                            requireActivity().showSuccessAlerter("Order completed") {
                                 viewModel.canSafelyNavigateAway()
                             }
                         }

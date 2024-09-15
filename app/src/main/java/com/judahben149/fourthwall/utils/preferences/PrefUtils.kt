@@ -1,4 +1,4 @@
-package com.judahben149.fourthwall.utils
+package com.judahben149.fourthwall.utils.preferences
 
 import android.content.SharedPreferences
 
@@ -39,7 +39,7 @@ fun SharedPreferences.fetchLong(key: String, defaultValue: Long): Long {
     return this.getLong(key, defaultValue)
 }
 
-fun SharedPreferences.fetchBoolean(key: String, defaultValue: Boolean): Boolean {
+fun SharedPreferences.fetchBoolean(key: String, defaultValue: Boolean = false): Boolean {
     return this.getBoolean(key, defaultValue)
 }
 

@@ -35,7 +35,7 @@ class OfferingsViewModel @Inject constructor(
         getPfiOfferings()
     }
 
-    private fun getPfiOfferings() {
+    fun getPfiOfferings() {
         updateBtnState(OfferingsBtnState.Loading)
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -51,28 +51,43 @@ class OfferingsViewModel @Inject constructor(
 
                 val offeringsList = pfiData.map { pfi ->
                     async {
-                        getPfiOfferingsUseCase(pfi)
+                        try {
+                            getPfiOfferingsUseCase(pfi)
+                        } catch (e: Exception) {
+                            _state.update { it.copy(getOfferingsState = GetOfferingsRequestState.Error(
+                                "Error fetching offerings, please retry"
+                            )) }
+
+                            emptyList()
+                        }
                     }
                 }.awaitAll()
 
                 val flatOfferingsList = offeringsList.flatten()
 
-                _state.update {
-                    it.copy(
-                        pfiData = pfiData,
-                        getOfferingsState = GetOfferingsRequestState.Success,
-                        offeringsList = flatOfferingsList,
-                        supportedCurrencyPairs = createCurrencyPairs(flatOfferingsList),
-                        supportedPayInCurrencies = parseSupportedPayInCurrencies(flatOfferingsList),
-                        supportedPayOutCurrencies = parseSupportedPayOutCurrencies(flatOfferingsList),
-                    )
-                }
+                if (flatOfferingsList.isNotEmpty()) {
 
-                state.value.run {
-                    if (selectedOffering != null && selectedPayInCurrency != null && selectedPayOutCurrency != null) {
-                        updateBtnState(OfferingsBtnState.Enabled())
-                    } else {
-                        updateBtnState(OfferingsBtnState.Disabled())
+                    _state.update {
+                        it.copy(
+                            pfiData = pfiData,
+                            getOfferingsState = GetOfferingsRequestState.Success,
+                            offeringsList = flatOfferingsList,
+                            supportedCurrencyPairs = createCurrencyPairs(flatOfferingsList),
+                            supportedPayInCurrencies = parseSupportedPayInCurrencies(
+                                flatOfferingsList
+                            ),
+                            supportedPayOutCurrencies = parseSupportedPayOutCurrencies(
+                                flatOfferingsList
+                            ),
+                        )
+                    }
+
+                    state.value.run {
+                        if (selectedOffering != null && selectedPayInCurrency != null && selectedPayOutCurrency != null) {
+                            updateBtnState(OfferingsBtnState.Enabled())
+                        } else {
+                            updateBtnState(OfferingsBtnState.Disabled())
+                        }
                     }
                 }
 
@@ -198,9 +213,9 @@ class OfferingsViewModel @Inject constructor(
                     try {
                         // Add in FourthWall fee here (1.2% flat fee)
                         val payoutAmount = (payInAmount.toDouble()) * units.toDouble()
-                        val payoutAmountCharged = payoutAmount - (payoutAmount * (1.2/100))
+//                        val payoutAmountCharged = payoutAmount - (payoutAmount * (1.2 / 100))
 
-                        val payoutAmountFormatted = String.format("%.2f", payoutAmountCharged)
+                        val payoutAmountFormatted = String.format("%.2f", payoutAmount)
 
                         _state.update {
                             it.copy(

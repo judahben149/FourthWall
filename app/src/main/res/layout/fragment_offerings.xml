@@ -350,7 +350,7 @@
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="12dp"
                                 android:fontFamily="@font/cera_pro_light"
-                                android:text="FourthWall charges a flat fee of 1.2%"
+                                android:text="FourthWall appends a flat fee of 1.5%"
                                 android:textAlignment="center"
                                 android:textSize="14sp"
                                 android:textStyle="bold"

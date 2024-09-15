@@ -18,7 +18,7 @@
     <string name="i_understand_and_accept">I understand, and accept</string>
     <string name="get_credentials">Get Credentials</string>
     <string name="bottom_sheet_drag_handle">Bottom sheet drag handle</string>
-    <string name="recipient_gets">Recipient gets (excluding network fees)</string>
+    <string name="recipient_gets">Recipient gets</string>
     <string name="you_send">You send</string>
     <string name="amount">Amount</string>
     <string name="country_flag">Country Flag</string>

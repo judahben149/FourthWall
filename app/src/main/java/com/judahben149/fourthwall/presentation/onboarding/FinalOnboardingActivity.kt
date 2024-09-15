@@ -54,6 +54,8 @@ class FinalOnboardingActivity : AppCompatActivity() {
                 } else {
                     btnGetStarted.disable(resources)
                 }
+
+                sessionManager.toggleShouldStoreVerifiableCredentials(isChecked)
             }
 
             btnGetStarted.setOnClickListener {

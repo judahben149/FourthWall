@@ -96,7 +96,7 @@ class LoginActivity : AppCompatActivity(), OnCountryPickerListener, BiometricAut
 
                         is UserLoginProgress.HasSignedUpButIsNotSignedIn -> {
                             binding.run {
-                                listOf(layoutName, layoutCountry, toolbarTitleSignUp).forEach {
+                                listOf(layoutName, layoutCountry, toolbarTitleSignUp, cbBiometrics).forEach {
                                     it.visibility = View.GONE
                                 }
 

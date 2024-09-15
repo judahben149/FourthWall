@@ -16,6 +16,7 @@ import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetUserWithCurrencyAccountsUseCase
 import com.judahben149.fourthwall.utils.Constants
+import com.judahben149.fourthwall.utils.CredentialUtils
 import com.judahben149.fourthwall.utils.log
 import com.judahben149.fourthwall.utils.text.formatAddSpace
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,11 +48,18 @@ class QuoteViewModel @Inject constructor(
     private val getUserWithCurrencyAccountsUseCase: GetUserWithCurrencyAccountsUseCase,
 ) : ViewModel() {
 
+    @Inject
+    lateinit var credentialUtils: CredentialUtils
+
+
     private val _state = MutableStateFlow(QuoteState())
     val state: StateFlow<QuoteState> = _state
 
-    fun updateAmount(amount: String) {
-        _state.update { it.copy(payInAmount = amount) }
+    fun updateAmount(amount: String, fee: Double) {
+        _state.update { it.copy(
+            payInAmount = amount,
+            fourthWallFee = fee
+            ) }
     }
 
     fun updateSelectedOffering(offering: Offering) {
@@ -130,7 +138,7 @@ class QuoteViewModel @Inject constructor(
 
                 rfq = Rfq.create(
                     to = off.pfiDid,
-                    from = sessionManager.getDid() ?: "",
+                    from = sessionManager.getDidUri() ?: "",
                     rfqData = rfqData
                 )
 
@@ -147,11 +155,21 @@ class QuoteViewModel @Inject constructor(
                         // Start polling for results
                         beginPollingForQuoteResponse(rfq, bearerDid)
                     } catch (ex: Exception) {
+                        val exceptionMessage = when {
+                            ex.message.toString().contains("400", true) -> {
+                                "Please fill in all necessary fields"
+                            }
+
+                            ex.message.toString().contains("timeout", true) -> {
+                                "The request timed out. Please retry"
+                            }
+
+                            else -> ex.message.toString()
+                        }
+
                         _state.update {
                             it.copy(
-                                exchangeProgress = ExchangeProgress.ErrorRequestingQuote(
-                                    ex.message.toString()
-                                )
+                                exchangeProgress = ExchangeProgress.ErrorRequestingQuote(exceptionMessage)
                             )
                         }
                     }
@@ -193,7 +211,7 @@ class QuoteViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     tbDexQuote = receivedQuote,
-                    fee = receivedQuote.data.payout.fee?.toDoubleOrNull() ?: 0.0,
+                    pfiFee = receivedQuote.data.payout.fee?.toDoubleOrNull() ?: 0.0,
                     exchangeProgress = ExchangeProgress.HasGottenQuoteResponse
                 )
             }
@@ -307,7 +325,7 @@ class QuoteViewModel @Inject constructor(
     private fun createOrderMessage(quote: Quote): Order {
 
         return Order.create(
-            from = sessionManager.getDid()!!,
+            from = sessionManager.getDidUri()!!,
             to = quote.metadata.from,
             exchangeId = quote.metadata.exchangeId
         )
@@ -410,7 +428,7 @@ class QuoteViewModel @Inject constructor(
                 orderType = OrderType.SENT,
                 walletAddress = walletAddress,
                 recipientAccount = recipientAccount,
-                fee = state.value.fee
+                fee = state.value.fourthWallFee
             )
 
             insertOrdersUseCase(orderEntity)
@@ -421,7 +439,7 @@ class QuoteViewModel @Inject constructor(
         state.value.run {
             val orderResult = FwOrderResult(
                 payInAmount = tbDexQuote!!.data.payin.amount,
-                payOutAmount = tbDexQuote.data.payout.amount + tbDexQuote.data.payout.fee + fee,
+                payOutAmount = tbDexQuote.data.payout.amount + tbDexQuote.data.payout.fee + fourthWallFee,
                 payInCurrency = tbDexQuote.data.payin.currencyCode,
                 payOutCurrency = tbDexQuote.data.payout.currencyCode,
                 pfiDid = tbDexQuote.metadata.from,
@@ -499,7 +517,8 @@ data class QuoteState(
     val exchangeProgress: ExchangeProgress = ExchangeProgress.JustStarted,
     val payInKind: String = "",
     val payOutKind: String = "",
-    val fee: Double = 0.0,
+    val fourthWallFee: Double = 0.0,
+    val pfiFee: Double = 0.0,
     val payInRfqRequestFields: Map<String, Any> = emptyMap(),
     val payOutRfqRequestFields: Map<String, Any> = emptyMap(),
     val tbDexQuote: Quote? = null,

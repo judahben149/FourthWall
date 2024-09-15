@@ -323,7 +323,7 @@ fun MaterialButton.disableNoColourChange(res: Resources, pgBar: CircularProgress
     // Disable clicking
     this.isClickable = false
     this.isEnabled = false
-    this.alpha = 1F
+    this.alpha = 0.5F
     this.textScaleX = 1F
 
     pgBar?.let {

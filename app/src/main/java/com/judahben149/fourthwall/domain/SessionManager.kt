@@ -7,9 +7,13 @@ import com.judahben149.fourthwall.utils.Constants
 import com.judahben149.fourthwall.utils.Constants.BASE_USER_ID
 import com.judahben149.fourthwall.utils.Constants.IS_BIOMETRICS_ENABLED
 import com.judahben149.fourthwall.utils.Constants.KCC_VC_JWT
+import com.judahben149.fourthwall.utils.Constants.SHOULD_STORE_VC
 import com.judahben149.fourthwall.utils.Constants.USER_DID
+import com.judahben149.fourthwall.utils.CredentialUtils
+import com.judahben149.fourthwall.utils.preferences.fetchBoolean
 import com.judahben149.fourthwall.utils.log
-import com.judahben149.fourthwall.utils.storeSecret
+import com.judahben149.fourthwall.utils.preferences.saveBoolean
+import com.judahben149.fourthwall.utils.preferences.storeSecret
 import web5.sdk.dids.did.BearerDid
 import web5.sdk.dids.methods.dht.DidDht
 import javax.inject.Inject
@@ -17,12 +21,13 @@ import javax.inject.Inject
 class SessionManager @Inject constructor(
     private val sharedPrefs: SharedPreferences,
     private val encryptedSharedPrefs: SharedPreferences,
-    applicationContext: Context
+    private val applicationContext: Context,
+    credentialUtils: CredentialUtils
 ) {
 
     private lateinit var bearerDid: BearerDid
 
-    init {
+    fun initializeDid() {
         try {
             val keyManager = AndroidKeyManager(applicationContext)
             bearerDid = DidDht.create(keyManager)
@@ -50,14 +55,16 @@ class SessionManager @Inject constructor(
     }
 
     fun storeKCC(kcc: String) {
-        encryptedSharedPrefs.storeSecret(KCC_VC_JWT, kcc)
+        if (isStoringVerifiableCredentialsEnabled()) {
+            encryptedSharedPrefs.storeSecret(KCC_VC_JWT, kcc)
+        }
     }
 
     fun getKCC(default: String): String? {
         return encryptedSharedPrefs.getString(KCC_VC_JWT, default)
     }
 
-    fun getDid(): String? {
+    fun getDidUri(): String? {
         return encryptedSharedPrefs.getString(USER_DID, null)
     }
 
@@ -72,10 +79,26 @@ class SessionManager @Inject constructor(
     fun getUserId(): Int = BASE_USER_ID
 
     fun toggleBiometrics(isEnabled: Boolean) {
-        sharedPrefs.edit().putBoolean(IS_BIOMETRICS_ENABLED, isEnabled).apply()
+        sharedPrefs.saveBoolean(IS_BIOMETRICS_ENABLED, isEnabled)
     }
 
     fun isBiometricsEnabled(): Boolean {
-        return sharedPrefs.getBoolean(IS_BIOMETRICS_ENABLED, false)
+        return sharedPrefs.fetchBoolean(IS_BIOMETRICS_ENABLED)
+    }
+
+    fun toggleShouldStoreVerifiableCredentials(isEnabled: Boolean) {
+        sharedPrefs.saveBoolean(SHOULD_STORE_VC, isEnabled)
+    }
+
+    fun isStoringVerifiableCredentialsEnabled(): Boolean {
+        return sharedPrefs.fetchBoolean(SHOULD_STORE_VC)
+    }
+
+    fun revokeVCs() {
+        encryptedSharedPrefs.edit().remove(KCC_VC_JWT).apply()
+    }
+
+    fun revokeDid() {
+        encryptedSharedPrefs.edit().remove(USER_DID).apply()
     }
 }
