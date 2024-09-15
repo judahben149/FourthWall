@@ -65,19 +65,14 @@ class OtherOfferingsAdapter(
             binding.run {
                 tvPfiProvider.text = pfiName
 
-                // check out this rating stuff. It doesn't work fine
-                if (highestRatedPfi == offering.metadata.from) {
-                    highestRatedPfi?.let {  bestRatedPfiName ->
-                        tvBestRated.text = "Best rating"
-                        tvBestRated.visibility = View.VISIBLE
+                try {
+                    val rating = pfiRatings.getValue(offering.metadata.from)
+                    val formattedRating = "%.1f".format(rating)
 
-                        pfiRatings.getValue(bestRatedPfiName).let {
-                            if (it > 3.0) {
-                                val formattedRating = "%.2f".format(it)
-                                tvBestRated.text = "${tvBestRated.text}(${formattedRating})"
-                            }
-                        }
-                    }
+                    listOf(tvPfiRating, ivPfiRating).forEach { it.visibility = View.VISIBLE }
+                    tvPfiRating.text = formattedRating
+                } catch (ex: Exception) {
+                    tvPfiNoRating.visibility = View.VISIBLE
                 }
 
                 tvValueDetail.text = context.getString(

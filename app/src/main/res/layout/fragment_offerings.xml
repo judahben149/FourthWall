@@ -235,9 +235,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="24dp"
+                                    android:checkable="true"
                                     android:backgroundTint="@color/light_purple_tint"
-                                    android:text="@string/explore"
                                     android:enabled="false"
+                                    android:text="@string/explore"
                                     android:textAppearance="@style/FourthWallChipTextAppearance"
                                     android:textColor="@color/black"
                                     android:textSize="13sp"
@@ -330,8 +331,8 @@
                         android:layout_marginTop="4dp"
                         android:fontFamily="@font/cera_pro_medium"
                         android:textColor="@color/popping_orange"
-                        tools:text="Money arrives in 34 hours"
-                        android:textSize="13sp" />
+                        android:textSize="13sp"
+                        tools:text="Money arrives in 34 hours" />
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_fee_breakdown"
@@ -476,6 +477,17 @@
                 android:visibility="gone"
                 tools:itemCount="6"
                 tools:listitem="@layout/item_other_offerings" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/prg_bar_bottom_sheet"
+                android:layout_width="28dp"
+                app:indicatorSize="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:indeterminate="true"
+                app:trackColor="@color/base_purple" />
 
         </LinearLayout>
 

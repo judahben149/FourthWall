@@ -8,6 +8,7 @@ import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -24,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.judahben149.fourthwall.R
@@ -331,6 +333,35 @@ fun MaterialButton.disableNoColourChange(res: Resources, pgBar: CircularProgress
     }
 }
 
+fun Chip.disable(res: Resources) {
+    this.isClickable = false
+    this.isEnabled = false
+
+    val enabledColor = res.getColor(R.color.light_purple_tint)
+    val disabledColor = res.getColor(R.color.disabledPrimaryBtnBackgroundTint)
+
+    val colorStateList = ColorStateList(
+        arrayOf(
+            intArrayOf(-android.R.attr.state_enabled),
+            intArrayOf()
+        ),
+        intArrayOf(
+            disabledColor,
+            enabledColor
+        )
+    )
+
+    this.chipBackgroundColor = colorStateList
+}
+
+fun Chip.enable(res: Resources) {
+    this.isClickable = true
+    this.isEnabled = true
+
+    val colorStateList = ColorStateList.valueOf(res.getColor(R.color.light_purple_tint))
+    this.chipBackgroundColor = colorStateList
+}
+
 fun MaterialButton.enable(res: Resources, pgBar: CircularProgressIndicator? = null) {
     this.setBackgroundColor(res.getColor(R.color.primaryBtnBackgroundTint))
 
@@ -394,9 +425,9 @@ fun Activity.showInfoAlerter(message: String, durationInMillis: Long = 3000) {
         .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.light_purple_tint)
         .setTextAppearance(R.style.AlerterInfoTextAppearance)
-        .setIcon(R.drawable.ic_dollar)
-        .setIconColorFilter(0)
-        .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
+        .setIcon(R.drawable.fourthwall)
+        .setIconColorFilter(getColor(R.color.dark_sea_blue))
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_medium)
         .enableSwipeToDismiss()
         .show()
 }
@@ -411,9 +442,9 @@ fun Activity.showSuccessAlerter(
         .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.green_success_bg)
         .setTextAppearance(R.style.AlerterSuccessTextAppearance)
-        .setIcon(R.drawable.ic_dollar)
-        .setIconColorFilter(0)
-        .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
+        .setIcon(R.drawable.fourthwall)
+        .setIconColorFilter(getColor(R.color.dark_sea_blue))
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_medium)
         .enableSwipeToDismiss()
         .setOnHideListener {
             onHideCallBack()
@@ -431,9 +462,9 @@ fun Activity.showErrorAlerter(
         .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.red_error_alerter)
         .setTextAppearance(R.style.AlerterErrorTextAppearance)
-        .setIcon(R.drawable.ic_dollar)
-        .setIconColorFilter(0)
-        .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
+        .setIcon(R.drawable.fourthwall)
+        .setIconColorFilter(getColor(R.color.dark_sea_blue))
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_medium)
         .enableSwipeToDismiss()
         .setOnHideListener {
             onHideCallBack()
@@ -451,9 +482,9 @@ fun Activity.showWarningAlerter(
         .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.orange_warning)
         .setTextAppearance(R.style.AlerterWarningTextAppearance)
-        .setIcon(R.drawable.ic_dollar)
-        .setIconColorFilter(0)
-        .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
+        .setIcon(R.drawable.fourthwall)
+        .setIconColorFilter(getColor(R.color.dark_sea_blue))
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_medium)
         .enableSwipeToDismiss()
         .setOnHideListener {
             onHideCallBack()

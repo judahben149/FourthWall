@@ -143,6 +143,7 @@ class OfferingsFragment : Fragment() {
     }
 
     private fun setPayInCurrency() {
+        binding.prgBarBottomSheet.visibility = View.VISIBLE
         clearEditTextFocus()
         currentCurrencyType = CurrencyType.PayIn
 
@@ -323,15 +324,6 @@ class OfferingsFragment : Fragment() {
                         }
                     }
 
-                    when(state.selectedOffering) {
-//                        null -> {
-//                            binding.run {
-//                                tvPfi.text = "--"
-//                                chipExplorePfi.isEnabled = false
-//                            }
-//                        }
-                    }
-
                     when(val st = state.getOfferingsState) {
                         is GetOfferingsRequestState.Error -> {
                             requireActivity().showErrorAlerter(st.message) {
@@ -459,7 +451,7 @@ class OfferingsFragment : Fragment() {
                                 binding.layoutPfiContent.visibility = View.VISIBLE
 
                                 binding.tvPfi.text = pfi
-                                binding.chipExplorePfi.isEnabled = true
+                                binding.chipExplorePfi.enable(resources)
                             }
                         }
 
@@ -477,7 +469,7 @@ class OfferingsFragment : Fragment() {
                                 binding.layoutPfiContent.visibility = View.VISIBLE
 
                                 binding.tvPfi.text = pfi
-                                binding.chipExplorePfi.isEnabled = false
+                                binding.chipExplorePfi.disable(resources)
                             }
                         }
 
@@ -495,7 +487,7 @@ class OfferingsFragment : Fragment() {
                                 binding.layoutPfiContent.visibility = View.VISIBLE
 
                                 binding.tvPfi.text = pfi
-                                binding.chipExplorePfi.isEnabled = true
+                                binding.chipExplorePfi.enable(resources)
                             }
                         }
                     }
@@ -513,9 +505,11 @@ class OfferingsFragment : Fragment() {
 
         currencyAdapter.updateCurrencies(currencies)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.prgBarBottomSheet.visibility = View.GONE
     }
 
     private fun showBottomSheetForOfferings() {
+        binding.prgBarBottomSheet.visibility = View.VISIBLE
         binding.rvCurrencies.visibility = View.GONE
         binding.rvOtherOfferings.visibility = View.VISIBLE
         binding.tvBSTitle.text = "Explore offerings"
@@ -526,6 +520,8 @@ class OfferingsFragment : Fragment() {
             val pfiAndOfferingsPair = viewModel.pairOfferingsWithPfiNames()
             val pfiRatings = viewModel.getAveragePfiRating()
             otherOfferingsAdapter.updateOfferings(pfiAndOfferingsPair, pfiRatings)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            binding.prgBarBottomSheet.visibility = View.GONE
         }
 
         bottomSheetBehavior.apply {
