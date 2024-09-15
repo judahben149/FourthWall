@@ -17,6 +17,7 @@ import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentRequestQuoteBinding
 import com.judahben149.fourthwall.domain.models.PaymentMethod
 import com.judahben149.fourthwall.presentation.exchange.OfferingsViewModel
+import com.judahben149.fourthwall.utils.Constants
 import com.judahben149.fourthwall.utils.CurrencyUtils.formatCurrency
 import com.judahben149.fourthwall.utils.log
 import com.judahben149.fourthwall.utils.text.extractPaymentFields
@@ -32,7 +33,6 @@ import com.judahben149.fourthwall.utils.views.showSuccessAlerter
 import com.judahben149.fourthwall.utils.views.showWarningAlerter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.time.times
 
 @AndroidEntryPoint
 class RequestQuoteFragment : Fragment() {
@@ -62,6 +62,7 @@ class RequestQuoteFragment : Fragment() {
         observeState()
         confirmCredentialsAvailability()
 
+        // convenience methods to mess around with offerings and quotes
 //        createRfq()
 //        seeSelectedOffering()
     }
@@ -171,7 +172,6 @@ class RequestQuoteFragment : Fragment() {
                                     }
 
                                     // Display fee break down
-//                                    val amountEntered = viewModel.state.value.payInAmount!!.toDouble()
                                     val payoutAmount = quote.data.payout.amount.toDouble()
                                     val userSent = quote.data.payin.amount.toDouble()
                                     val fourthWallFees = viewModel.state.value.fourthWallFee
@@ -180,6 +180,7 @@ class RequestQuoteFragment : Fragment() {
                                     tvWalletFees.text = fourthWallFees.formatCurrency(quote.data.payin.currencyCode)
                                     tvRecipientGets.text = recipientGets.formatCurrency(quote.data.payout.currencyCode)
                                     tvSenderValue.text = userSent.formatCurrency(quote.data.payin.currencyCode)
+                                    tvPfiName.text = Constants.pfiData.getValue(quote.metadata.from)
 
 
                                     tvOrderExpires.text =

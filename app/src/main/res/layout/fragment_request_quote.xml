@@ -214,7 +214,7 @@
                                 android:id="@+id/tv_fee_breakdown_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="14dp"
                                 android:layout_marginBottom="12dp"
                                 android:fontFamily="@font/cera_pro_medium"
                                 android:text="Fee Breakdown"
@@ -258,7 +258,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/cera_pro_light"
-                                android:text="FourthWall fee"
+                                android:text="FourthWall fee:"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
                                 android:layout_marginTop="8dp"
@@ -292,7 +292,7 @@
                                 android:layout_marginTop="24dp"
                                 android:layout_marginBottom="12dp"
                                 android:fontFamily="@font/cera_pro_medium"
-                                android:text="You send         "
+                                android:text="You send:         "
                                 android:textSize="14sp"
                                 app:layout_constraintStart_toStartOf="@id/tv_wallet_fees_label"
                                 app:layout_constraintTop_toBottomOf="@id/tv_wallet_fees_label" />
@@ -315,7 +315,7 @@
                                 android:layout_marginTop="4dp"
                                 android:layout_marginBottom="12dp"
                                 android:fontFamily="@font/cera_pro_medium"
-                                android:text="Recipient gets"
+                                android:text="Recipient gets:"
                                 android:textSize="14sp"
                                 app:layout_constraintStart_toStartOf="@id/tv_sender_label"
                                 app:layout_constraintTop_toBottomOf="@id/tv_sender_label" />
@@ -336,20 +336,47 @@
                                 tools:text="$456.34" />
 
                             <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/tv_order_expires_label"
+                                android:id="@+id/tv_pfi_name_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="24dp"
-                                android:layout_marginEnd="48dp"
                                 android:layout_marginBottom="12dp"
+                                android:fontFamily="@font/cera_pro_medium"
+                                android:text="Provider:          "
+                                android:textSize="14sp"
+                                app:layout_constraintStart_toStartOf="@id/tv_recipient_gets_label"
+                                app:layout_constraintTop_toBottomOf="@id/tv_recipient_gets_label" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_pfi_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="48dp"
+                                android:fontFamily="@font/cera_pro_medium"
+                                android:text=""
+                                android:layout_marginStart="46dp"
+                                android:textSize="14sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/tv_pfi_name_label"
+                                app:layout_constraintTop_toTopOf="@id/tv_pfi_name_label"
+                                app:layout_constraintVertical_bias="0"
+                                tools:text="AquaFinance Financial" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_order_expires_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:layout_marginEnd="48dp"
+                                android:layout_marginBottom="16dp"
                                 android:fontFamily="@font/cera_pro_medium"
                                 android:text="Order expires: "
                                 android:textColor="@color/shaded_base_purple"
-                                android:textSize="12sp"
+                                android:textSize="14sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintHorizontal_bias="1.0"
-                                app:layout_constraintStart_toStartOf="@id/tv_recipient_gets_label"
-                                app:layout_constraintTop_toBottomOf="@id/tv_recipient_gets_label"
+                                app:layout_constraintStart_toStartOf="@id/tv_pfi_name_label"
+                                app:layout_constraintTop_toBottomOf="@id/tv_pfi_name_label"
                                 app:layout_constraintVertical_bias="0" />
 
                             <com.google.android.material.textview.MaterialTextView
@@ -361,7 +388,7 @@
                                 android:fontFamily="@font/cera_pro_medium"
                                 android:text=""
                                 android:textColor="@color/shaded_base_purple"
-                                android:textSize="12sp"
+                                android:textSize="14sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintHorizontal_bias="1.0"
                                 app:layout_constraintStart_toEndOf="@id/tv_recipient_gets_label"
