@@ -196,9 +196,11 @@ class OfferingsViewModel @Inject constructor(
             payInAmount?.let { payInAmount ->
                 selectedOffering?.data?.payoutUnitsPerPayinUnit?.let { units ->
                     try {
-                        // Carry out your fee splitting here
+                        // Add in FourthWall fee here (1.2% flat fee)
                         val payoutAmount = (payInAmount.toDouble()) * units.toDouble()
-                        val payoutAmountFormatted = String.format("%.2f", payoutAmount)
+                        val payoutAmountCharged = payoutAmount - (payoutAmount * (1.2/100))
+
+                        val payoutAmountFormatted = String.format("%.2f", payoutAmountCharged)
 
                         _state.update {
                             it.copy(

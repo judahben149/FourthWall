@@ -1,7 +1,6 @@
 package com.judahben149.fourthwall.presentation.exchange
 
 import android.content.Context
-import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -28,6 +27,7 @@ import com.judahben149.fourthwall.databinding.FragmentOfferingsBinding
 import com.judahben149.fourthwall.domain.models.Currency
 import com.judahben149.fourthwall.utils.CurrencyUtils
 import com.judahben149.fourthwall.utils.text.DecimalDigitsInputFilter
+import com.judahben149.fourthwall.utils.toFriendlyTime
 import com.judahben149.fourthwall.utils.views.animateBorderColorForError
 import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
@@ -35,15 +35,10 @@ import com.judahben149.fourthwall.utils.views.isLoading
 import com.judahben149.fourthwall.utils.views.setAmountFont
 import com.judahben149.fourthwall.utils.views.showBalloonOn
 import com.judahben149.fourthwall.utils.views.showInfoAlerter
-import com.judahben149.fourthwall.utils.views.showSnack
 import com.judahben149.fourthwall.utils.views.showWarningAlerter
-import com.skydoves.balloon.ArrowPositionRules
-import com.skydoves.balloon.Balloon
-import com.skydoves.balloon.BalloonAnimation
-import com.skydoves.balloon.BalloonSizeSpec
-import com.skydoves.balloon.balloon
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import tbdex.sdk.protocol.models.PayoutMethod
 
 @AndroidEntryPoint
 class OfferingsFragment : Fragment() {
@@ -367,6 +362,16 @@ class OfferingsFragment : Fragment() {
                             binding.tvPayOut.apply {
                                 setAmountFont(requireContext())
                                 text = payoutState.amount
+                            }
+
+                            state.selectedOffering?.let {
+                                try {
+                                    val estimatedSettlementTime = (it.data.payout.methods[0] as PayoutMethod).estimatedSettlementTime
+                                    binding.tvSettlementTime.text = "Funds will arrive in ".plus(estimatedSettlementTime.toFriendlyTime())
+                                    binding.tvSettlementTime.visibility = View.VISIBLE
+                                } catch (ex: Exception) {
+
+                                }
                             }
                         }
 

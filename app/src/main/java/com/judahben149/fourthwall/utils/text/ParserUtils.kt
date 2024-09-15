@@ -59,6 +59,14 @@ fun extractPaymentFields(jsonNode: JsonNode): List<PaymentField> {
     return paymentFields
 }
 
+//fun getSettlementTime(): Int {
+//    return try {
+//
+//    } catch (ex: Exception) {
+//        0
+//    }
+//}
+
 fun camelCaseToWords(input: String): String {
     return input.replace(Regex("([a-z])([A-Z])"), "$1 $2")
         .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }

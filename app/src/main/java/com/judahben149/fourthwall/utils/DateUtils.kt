@@ -53,3 +53,8 @@ fun OffsetDateTime.toCasualFriendlyDate(): String {
 fun getCurrentTimeInMillis(): Long {
     return System.currentTimeMillis()
 }
+
+fun Int.toFriendlyTime(): String {
+    val hours = this / 3600
+    return "$hours hour${if (hours != 1) "s" else ""}"
+}
