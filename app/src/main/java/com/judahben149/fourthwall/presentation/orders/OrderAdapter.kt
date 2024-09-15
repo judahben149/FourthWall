@@ -48,13 +48,13 @@ class OrderAdapter(
 
                 itemCard.setOnClickListener { onItemClicked(fwOrder.orderId) }
 
-                tvInTransit.visibility = View.INVISIBLE
+                tvInCancelled.visibility = View.INVISIBLE
                 tvSuccess.visibility = View.INVISIBLE
                 tvFailure.visibility = View.INVISIBLE
 
                 if (fwOrder.orderType == OrderType.SENT) {
                     when (fwOrder.fwOrderStatus) {
-                        FwOrderStatus.IN_TRANSIT -> tvInTransit.visibility = View.VISIBLE
+                        FwOrderStatus.CANCELLED -> tvInCancelled.visibility = View.VISIBLE
                         FwOrderStatus.SUCCESSFUL -> tvSuccess.visibility = View.VISIBLE
                         FwOrderStatus.FAILED -> tvFailure.visibility = View.VISIBLE
                         FwOrderStatus.PENDING -> tvPending.visibility = View.VISIBLE

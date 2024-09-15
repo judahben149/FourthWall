@@ -22,10 +22,16 @@ import android.widget.TextView
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.judahben149.fourthwall.R
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.Balloon
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
+import com.skydoves.balloon.showAlignBottom
 import com.tapadoo.alerter.Alerter
 
 fun ImageView.animateBounce() {
@@ -211,6 +217,42 @@ fun ImageView.startIrregularHeartbeatAnimation() {
     }
 }
 
+fun ImageView.startJiggleAnimation() {
+    val rotationAnimation = createJiggleAnimatorSet()
+
+    rotationAnimation.addListener(object : Animator.AnimatorListener {
+        override fun onAnimationStart(animation: Animator) {}
+        override fun onAnimationEnd(animation: Animator) {
+            postDelayed({
+                startJiggleAnimation()
+            }, 1700)
+        }
+        override fun onAnimationCancel(animation: Animator) {}
+        override fun onAnimationRepeat(animation: Animator) {}
+    })
+
+    rotationAnimation.start()
+}
+
+private fun ImageView.createJiggleAnimatorSet(): AnimatorSet {
+    val rotateClockwise = ObjectAnimator.ofFloat(this, "rotation", 0f, 5f).apply {
+        duration = 100
+        interpolator = LinearInterpolator()
+    }
+    val rotateCounterClockwise = ObjectAnimator.ofFloat(this, "rotation", 5f, -5f).apply {
+        duration = 200
+        interpolator = LinearInterpolator()
+    }
+    val rotateToOriginal = ObjectAnimator.ofFloat(this, "rotation", -5f, 0f).apply {
+        duration = 100
+        interpolator = LinearInterpolator()
+    }
+
+    return AnimatorSet().apply {
+        playSequentially(rotateClockwise, rotateCounterClockwise, rotateToOriginal)
+    }
+}
+
 fun View.animateBorderColorForError(durationMs: Long = 2000) {
     val drawable = background as? GradientDrawable ?: return
     val context = context ?: return
@@ -276,8 +318,34 @@ fun MaterialButton.disable(res: Resources, pgBar: CircularProgressIndicator? = n
     }
 }
 
+fun MaterialButton.disableNoColourChange(res: Resources, pgBar: CircularProgressIndicator? = null) {
+
+    // Disable clicking
+    this.isClickable = false
+    this.isEnabled = false
+    this.alpha = 1F
+    this.textScaleX = 1F
+
+    pgBar?.let {
+        pgBar.visibility = View.INVISIBLE
+    }
+}
+
 fun MaterialButton.enable(res: Resources, pgBar: CircularProgressIndicator? = null) {
     this.setBackgroundColor(res.getColor(R.color.primaryBtnBackgroundTint))
+
+    // Disable clicking
+    this.isClickable = true
+    this.isEnabled = true
+    this.alpha = 1F
+    this.textScaleX = 1F
+
+    pgBar?.let {
+        pgBar.visibility = View.INVISIBLE
+    }
+}
+
+fun MaterialButton.enableNoColourChange(res: Resources, pgBar: CircularProgressIndicator? = null) {
 
     // Disable clicking
     this.isClickable = true
@@ -391,4 +459,35 @@ fun Activity.showWarningAlerter(
             onHideCallBack()
         }
         .show()
+}
+
+
+fun View.showBalloonOn(
+    text: String,
+    context: Context,
+    viewLifecycleOwner: LifecycleOwner,
+    prefsName: String = "DefaultToolTipPref"
+) {
+    val balloon = Balloon.Builder(context)
+        .setWidth(BalloonSizeSpec.WRAP)
+        .setHeight(BalloonSizeSpec.WRAP)
+        .setText(text)
+        .setTextColorResource(R.color.white)
+        .setTextTypeface(Typeface.BOLD)
+        .setTextSize(14f)
+        .setIconDrawableResource(R.drawable.ic_dollar)
+        .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+        .setArrowSize(10)
+        .setArrowPosition(0.5f)
+        .setPadding(8)
+        .setCornerRadius(8f)
+        .setIsVisibleArrow(true)
+        .setBackgroundColorResource(R.color.shaded_base_purple)
+        .setBalloonAnimation(BalloonAnimation.FADE)
+        .setLifecycleOwner(viewLifecycleOwner)
+        .setPreferenceName("CurrencySelectionToolTip")
+        .setShowCounts(3)
+        .build()
+
+    this.showAlignBottom(balloon)
 }

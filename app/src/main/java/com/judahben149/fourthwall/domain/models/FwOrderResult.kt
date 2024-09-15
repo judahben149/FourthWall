@@ -6,5 +6,6 @@ data class FwOrderResult(
     val payOutAmount: String,
     val payInCurrency: String,
     val payOutCurrency: String,
-    val pfiDid: String
+    val pfiDid: String,
+    val orderStatus: Int
 )

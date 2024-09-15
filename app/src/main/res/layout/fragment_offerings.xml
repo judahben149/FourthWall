@@ -37,16 +37,16 @@
             android:fontFamily="@font/cera_pro_light"
             android:text="@string/find_offerings"
             android:textColor="@color/textOnBackground"
-            android:textStyle="bold"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
-        android:paddingTop="8dp"
         android:background="@color/layoutBackground"
+        android:paddingTop="8dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".presentation.exchange.OfferingsFragment">
 
@@ -231,12 +231,12 @@
 
                                 <com.google.android.material.chip.Chip
                                     android:id="@+id/chip_explore_pfi"
-                                    android:textAppearance="@style/FourthWallChipTextAppearance"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="24dp"
                                     android:backgroundTint="@color/light_purple_tint"
                                     android:text="@string/explore"
+                                    android:textAppearance="@style/FourthWallChipTextAppearance"
                                     android:textColor="@color/black"
                                     android:textSize="13sp"
                                     app:chipCornerRadius="16dp"
@@ -251,7 +251,7 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="36dp"
+                        android:layout_marginTop="38dp"
                         android:fontFamily="@font/cera_pro_medium"
                         android:text="@string/recipient_gets"
                         android:textSize="13sp" />
@@ -320,6 +320,50 @@
                             app:tint="@color/textOnBackground" />
 
                     </LinearLayout>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_settlement_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/cera_pro_medium"
+                        android:textColor="@color/popping_orange"
+                        tools:text="Money arrives in 34 hours"
+                        android:textSize="13sp" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_fee_breakdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="36dp"
+                        android:visibility="visible">
+
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_fees_label"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginBottom="12dp"
+                                android:fontFamily="@font/cera_pro_light"
+                                android:text="FourthWall charges a flat fee of 1.2%"
+                                android:textAlignment="center"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:visibility="visible"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
                 </LinearLayout>
 
             </ScrollView>
@@ -400,21 +444,20 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_line"
-                android:alpha="0.5"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp"
-                />
+                android:alpha="0.5"
+                android:src="@drawable/ic_line" />
 
             <TextView
                 android:id="@+id/tvBSTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:alpha="0.8"
                 android:fontFamily="@font/cera_pro_light"
                 android:gravity="center_horizontal"
                 android:text="Select Currency"
                 android:textSize="14sp"
-                android:alpha="0.8"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -428,8 +471,8 @@
                 android:id="@+id/rvOtherOfferings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:itemCount="6"
                 android:visibility="gone"
+                tools:itemCount="6"
                 tools:listitem="@layout/item_other_offerings" />
 
         </LinearLayout>

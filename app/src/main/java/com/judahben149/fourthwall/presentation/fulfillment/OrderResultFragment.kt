@@ -13,6 +13,7 @@ import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentOrderResultBinding
 import com.judahben149.fourthwall.domain.models.FwOrderResult
 import com.judahben149.fourthwall.domain.models.PfiRating
+import com.judahben149.fourthwall.domain.models.enums.FwOrderStatus
 import com.judahben149.fourthwall.utils.Constants
 import com.judahben149.fourthwall.utils.CurrencyUtils.formatCurrency
 import com.judahben149.fourthwall.utils.views.animateCheckmark
@@ -43,21 +44,46 @@ class OrderResultFragment : Fragment(), RatingBar.OnRatingBarChangeListener {
         val orderResultJson = arguments?.getString("orderResult")
         orderResult = Gson().fromJson(orderResultJson, FwOrderResult::class.java)
 
+        val orderStatus = FwOrderStatus.entries[orderResult.orderStatus]
 
-        val successMessage = getString(
-            R.string.transaction_success_message,
-            orderResult.payInAmount.toDouble().formatCurrency(orderResult.payInCurrency)
-        )
+        when(orderStatus) {
+            FwOrderStatus.SUCCESSFUL -> {
+                val successMessage = getString(
+                    R.string.transaction_success_message,
+                    orderResult.payInAmount.toDouble().formatCurrency(orderResult.payInCurrency)
+                )
 
-        val pfiName = Constants.pfiData.getValue(orderResult.pfiDid)
+                binding.run {
+                    tvResultLabel.text = successMessage
+                    icBigIcon.animateCheckmark()
+                }
+
+            }
+
+            FwOrderStatus.CANCELLED -> {
+                val cancelledMessage = getString(
+                    R.string.transaction_cancelled_message,
+                    orderResult.payInAmount.toDouble().formatCurrency(orderResult.payInCurrency)
+                )
+
+                binding.run {
+                    tvResultLabel.text = cancelledMessage
+                    icBigIcon.setImageResource(R.drawable.ic_red_checkmark)
+                    icBigIcon.animateCheckmark()
+                }
+            }
+
+            else -> {}
+        }
+
+
 
         binding.run {
-            tvResultLabel.text = successMessage
+            val pfiName = Constants.pfiData.getValue(orderResult.pfiDid)
             btnGoHome.setOnClickListener { navController.popBackStack() }
 
             tvRatingLabel.text = getString(R.string.rate_your_experience_with, pfiName)
             ratingBar.onRatingBarChangeListener = this@OrderResultFragment
-            icBigIcon.animateCheckmark()
         }
     }
 
@@ -77,7 +103,7 @@ class OrderResultFragment : Fragment(), RatingBar.OnRatingBarChangeListener {
                 )
             )
 
-            requireActivity().showSuccessAlerter("Rating successful", 1400) {}
+            requireActivity().showSuccessAlerter("Rating successful", 1000) {}
         }
     }
 }

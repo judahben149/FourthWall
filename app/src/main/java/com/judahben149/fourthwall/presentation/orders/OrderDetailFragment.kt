@@ -71,9 +71,9 @@ class OrderDetailFragment : Fragment() {
     private fun getStatusColor(status: FwOrderStatus): Int {
         return when (status) {
             FwOrderStatus.SUCCESSFUL -> ContextCompat.getColor(requireContext(), R.color.green_offers)
-            FwOrderStatus.PENDING -> ContextCompat.getColor(requireContext(), R.color.orange_warning)
+            FwOrderStatus.PENDING -> ContextCompat.getColor(requireContext(), R.color.shaded_base_purple)
             FwOrderStatus.FAILED -> ContextCompat.getColor(requireContext(), R.color.bright_red_error)
-            FwOrderStatus.IN_TRANSIT -> ContextCompat.getColor(requireContext(), R.color.shaded_base_purple)
+            FwOrderStatus.CANCELLED -> ContextCompat.getColor(requireContext(), R.color.popping_orange)
         }
     }
 

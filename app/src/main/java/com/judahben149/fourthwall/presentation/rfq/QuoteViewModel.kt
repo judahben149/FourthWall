@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tbdex.sdk.httpclient.TbdexHttpClient
 import tbdex.sdk.protocol.models.Close
+import tbdex.sdk.protocol.models.CloseData
 import tbdex.sdk.protocol.models.CreateRfqData
 import tbdex.sdk.protocol.models.CreateSelectedPayinMethod
 import tbdex.sdk.protocol.models.CreateSelectedPayoutMethod
@@ -236,8 +237,46 @@ class QuoteViewModel @Inject constructor(
         return !sessionManager.getKCC("").isNullOrEmpty()
     }
 
-    fun processCloseRequest() {
+    fun processCloseRequest(reason: String = "Canceled by customer") {
+        _state.update { state ->
+            state.copy(exchangeProgress = ExchangeProgress.IsProcessingCloseRequest)
+        }
 
+        viewModelScope.launch(Dispatchers.IO) {
+            state.value.tbDexQuote?.let { quote ->
+                sessionManager.getBearerDid()?.let {
+                    val close = Close.create(
+                        from = it.uri,
+                        to = quote.metadata.from,
+                        exchangeId = quote.metadata.exchangeId,
+                        closeData = CloseData(reason = reason)
+                    )
+
+                    close.sign(it)
+                    TbdexHttpClient.submitClose(close)
+
+                    // store cancelled order in database
+                    val order = createOrderMessage(quote)
+                    saveOrderToLocalDatabase(order, FwOrderStatus.CANCELLED)
+
+                    // Prepare to navigate away
+                    val tbDexQuote = state.value.tbDexQuote
+
+                    val orderResult = FwOrderResult(
+                        payInAmount = tbDexQuote!!.data.payin.amount,
+                        payOutAmount = tbDexQuote.data.payout.amount + tbDexQuote.data.payout.fee,
+                        payInCurrency = tbDexQuote.data.payin.currencyCode,
+                        payOutCurrency = tbDexQuote.data.payout.currencyCode,
+                        pfiDid = tbDexQuote.metadata.from,
+                        orderStatus = FwOrderStatus.CANCELLED.ordinal
+                    )
+
+                    _state.update {
+                        it.copy(exchangeProgress = ExchangeProgress.ExchangeWasCancelled(orderResult))
+                    }
+                }
+            }
+        }
     }
 
     fun processOrderRequest() {
@@ -385,7 +424,8 @@ class QuoteViewModel @Inject constructor(
                 payOutAmount = tbDexQuote.data.payout.amount + tbDexQuote.data.payout.fee + fee,
                 payInCurrency = tbDexQuote.data.payin.currencyCode,
                 payOutCurrency = tbDexQuote.data.payout.currencyCode,
-                pfiDid = tbDexQuote.metadata.from
+                pfiDid = tbDexQuote.metadata.from,
+                orderStatus = FwOrderStatus.SUCCESSFUL.ordinal
             )
 
 
@@ -410,7 +450,8 @@ class QuoteViewModel @Inject constructor(
                             _state.update {
                                 it.copy(
                                     exchangeProgress = ExchangeProgress.ErrorGettingCredentials(
-                                        result.message ?: "Credentials were not gotten. Please retry"
+                                        result.message
+                                            ?: "Credentials were not gotten. Please retry"
                                     )
                                 )
                             }
@@ -420,7 +461,8 @@ class QuoteViewModel @Inject constructor(
                             _state.update {
                                 it.copy(
                                     exchangeProgress = ExchangeProgress.ErrorGettingCredentials(
-                                        result.e.message ?: "Credentials were not gotten. Please retry"
+                                        result.e.message
+                                            ?: "Credentials were not gotten. Please retry"
                                     )
                                 )
                             }
@@ -476,11 +518,12 @@ sealed class ExchangeProgress {
     data object HasGottenQuoteResponse : ExchangeProgress()
     data class ErrorRequestingQuote(val message: String) : ExchangeProgress()
     data object IsProcessingOrderRequest : ExchangeProgress()
-    data object HasSentCloseMessage : ExchangeProgress()
+    data object IsProcessingCloseRequest : ExchangeProgress()
     data class HasGottenNewOrderStatusMessage(val message: String) : ExchangeProgress()
     data object HasGottenSuccessfulOrderResponse : ExchangeProgress()
     data object HasGottenCloseResponse : ExchangeProgress()
     data class ErrorProcessingOrderMessage(val message: String) : ExchangeProgress()
     data class ErrorProcessingCloseMessage(val message: String) : ExchangeProgress()
     data class CanSafeNavigateAway(val orderResult: FwOrderResult) : ExchangeProgress()
+    data class ExchangeWasCancelled(val orderResult: FwOrderResult) : ExchangeProgress()
 }

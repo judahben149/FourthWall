@@ -50,6 +50,7 @@ class OnboardingActivity : AppCompatActivity() {
         val viewPager: ViewPager2 = binding.viewPager
         val adapter = OnboardingPagerAdapter(supportFragmentManager, lifecycle)
         viewPager.adapter = adapter
+        binding.dotIndicatorOnboarding.attachTo(viewPager)
 
         setupPageChangeCallback()
 

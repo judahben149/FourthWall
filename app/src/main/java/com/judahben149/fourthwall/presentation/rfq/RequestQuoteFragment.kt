@@ -21,7 +21,9 @@ import com.judahben149.fourthwall.utils.log
 import com.judahben149.fourthwall.utils.text.extractPaymentFields
 import com.judahben149.fourthwall.utils.toCasualFriendlyDate
 import com.judahben149.fourthwall.utils.views.disable
+import com.judahben149.fourthwall.utils.views.disableNoColourChange
 import com.judahben149.fourthwall.utils.views.enable
+import com.judahben149.fourthwall.utils.views.enableNoColourChange
 import com.judahben149.fourthwall.utils.views.isLoading
 import com.judahben149.fourthwall.utils.views.showErrorAlerter
 import com.judahben149.fourthwall.utils.views.showInfoAlerter
@@ -128,7 +130,7 @@ class RequestQuoteFragment : Fragment() {
 
                         is ExchangeProgress.HasRequestedQuote -> {
                             binding.btnQuote.isLoading(resources, binding.progressBar)
-                            requireActivity().showInfoAlerter("Has requested quote")
+                            requireActivity().showInfoAlerter("Requesting quote")
                         }
 
                         is ExchangeProgress.IsPollingForQuoteResponse -> {
@@ -136,7 +138,7 @@ class RequestQuoteFragment : Fragment() {
                         }
 
                         is ExchangeProgress.HasGottenQuoteResponse -> {
-                            requireActivity().showSuccessAlerter("Quote received. See fee breakdown") {}
+                            requireActivity().showSuccessAlerter("Quote received", 1400) {}
                             binding.btnQuote.enable(resources, binding.progressBar)
 
                             binding.run {
@@ -164,14 +166,17 @@ class RequestQuoteFragment : Fragment() {
                         is ExchangeProgress.ErrorRequestingQuote -> {
                             binding.btnQuote.text = getString(R.string.get_quote)
                             requireActivity().showWarningAlerter(prg.message) {}
+                            binding.btnQuote.enable(resources, binding.progressBar)
                         }
 
                         is ExchangeProgress.IsProcessingOrderRequest -> {
+                            binding.btnQuote.disable(resources, binding.progressBar)
+                            binding.btnCancel.disableNoColourChange(resources, binding.progressBar)
                             requireActivity().showInfoAlerter("FourthWall is processing your order", 1600)
                         }
 
                         is ExchangeProgress.HasGottenNewOrderStatusMessage -> {
-                            requireActivity().showErrorAlerter("Status - ".plus(prg.message), 1000) {}
+                            requireActivity().showInfoAlerter("Status - ".plus(prg.message), 1000)
 
                         }
 
@@ -183,9 +188,11 @@ class RequestQuoteFragment : Fragment() {
 
                         is ExchangeProgress.ErrorProcessingOrderMessage -> {
                             requireActivity().showErrorAlerter(prg.message) {}
+                            binding.btnQuote.enable(resources, binding.progressBar)
+                            binding.btnCancel.enableNoColourChange(resources, binding.progressBar)
                         }
 
-                        is ExchangeProgress.HasSentCloseMessage -> {
+                        is ExchangeProgress.IsProcessingCloseRequest -> {
 
                         }
 
@@ -195,6 +202,8 @@ class RequestQuoteFragment : Fragment() {
 
                         is ExchangeProgress.ErrorProcessingCloseMessage -> {
                             requireActivity().showErrorAlerter(prg.message) {}
+                            binding.btnQuote.enable(resources, binding.progressBar)
+                            binding.btnCancel.enable(resources, binding.progressBar)
                         }
 
                         is ExchangeProgress.CanSafeNavigateAway -> {
@@ -205,6 +214,17 @@ class RequestQuoteFragment : Fragment() {
                                 R.id.orderResultFragment, bundle, NavOptions.Builder()
                                 .setPopUpTo(R.id.homeFragment, false)
                                 .build())
+                        }
+
+                        is ExchangeProgress.ExchangeWasCancelled -> {
+                            val orderResultSerialized = Gson().toJson(prg.orderResult)
+                            val bundle = Bundle().apply { putString("orderResult", orderResultSerialized) }
+
+                            navController.navigate(
+                                R.id.orderResultFragment, bundle, NavOptions.Builder()
+                                    .setPopUpTo(R.id.homeFragment, false)
+                                    .build())
+
                         }
                     }
                 }
@@ -286,6 +306,10 @@ class RequestQuoteFragment : Fragment() {
             btnRequestCredentials.setOnClickListener {
                 val credBottomSheet = GetCredentialsBottomSheet.newInstance(viewModel)
                 credBottomSheet.show(childFragmentManager, "BOTTOM_SHEET_GET_CREDENTIALS")
+            }
+
+            btnCancel.setOnClickListener {
+                viewModel.processCloseRequest()
             }
         }
     }

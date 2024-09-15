@@ -115,13 +115,13 @@
             app:layout_constraintTop_toTopOf="@id/ivForward" />
 
         <TextView
-            android:id="@+id/tvInTransit"
+            android:id="@+id/tvCancelled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/cera_pro_light"
-            android:text="@string/in_transit"
-            android:textColor="@color/shaded_base_purple"
+            android:text="@string/cancelled"
+            android:textColor="#FF5900"
             android:textSize="13sp"
             android:textStyle="bold"
             android:visibility="invisible"
@@ -136,7 +136,7 @@
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/cera_pro_light"
             android:text="@string/pending"
-            android:textColor="#FF5900"
+            android:textColor="@color/shaded_base_purple"
             android:textSize="13sp"
             android:textStyle="bold"
             android:visibility="invisible"

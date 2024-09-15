@@ -11,6 +11,7 @@
     <color name="bright_red_error">#C80001</color>
     <color name="orange_warning">#E4FF9775</color>
     <color name="red_error_alerter">#FF7171</color>
+    <color name="popping_orange">#FF5900</color>
 
 <!--    Bottom Nav Bar icon colours-->
     <color name="selected_icon_color">#A259FF</color>
