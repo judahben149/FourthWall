@@ -29,6 +29,7 @@ object DummyDataUtils {
             orderType = Random.nextInt(2),
             orderStatus = Random.nextInt(3),
             pfiName = pfiNames.random(),
+            pfiDid = pfiNames.random(),
             recipientAccount = receiverNames.random(),
             walletAddress = generateRandomWalletAddress(),
             payoutFee = 2.3

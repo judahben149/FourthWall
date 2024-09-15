@@ -17,6 +17,7 @@ data class OrderEntity(
     val orderType: Int,
     val orderStatus: Int,
     val pfiName: String,
+    val pfiDid: String,
     val recipientAccount: String,
     val walletAddress: String,
     val payoutFee: Double,

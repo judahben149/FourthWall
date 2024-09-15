@@ -55,9 +55,7 @@ class SessionManager @Inject constructor(
     }
 
     fun storeKCC(kcc: String) {
-        if (isStoringVerifiableCredentialsEnabled()) {
-            encryptedSharedPrefs.storeSecret(KCC_VC_JWT, kcc)
-        }
+        encryptedSharedPrefs.storeSecret(KCC_VC_JWT, kcc)
     }
 
     fun getKCC(default: String): String? {

@@ -15,6 +15,8 @@ import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentOrderDetailBinding
 import com.judahben149.fourthwall.domain.models.FwOrder
 import com.judahben149.fourthwall.domain.models.enums.FwOrderStatus
+import com.judahben149.fourthwall.domain.models.enums.PaymentMethods
+import com.judahben149.fourthwall.utils.CurrencyUtils.formatCurrency
 import com.judahben149.fourthwall.utils.CurrencyUtils.getCountryFlag
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -53,14 +55,38 @@ class OrderDetailFragment : Fragment() {
         with(binding) {
             getCountryFlag(requireContext(), order.payInCurrency)?.let { flagIcon.setImageResource(it) }
 
-            amountAndCurrency.text = "${order.payInCurrency}${order.payInAmount}"
+            amountAndCurrency.text = order.payInAmount.formatCurrency(order.payInCurrency)
             status.text = order.fwOrderStatus.toString()
             status.setTextColor(getStatusColor(order.fwOrderStatus))
 
             orderDate.text = "Sent • ${formatDate(order.orderTime)}"
+            pfiName.text = order.pfiName
 
-            recipientName.text = order.receiverName
-            walletAddress.text = order.walletAddress
+            when(order.payOutMethod) {
+                PaymentMethods.WALLET_ADDRESS -> {
+                    walletAddress.text = order.walletAddress
+                    walletAddress.visibility = View.VISIBLE
+                    tvPaymentMethod.text = "Wallet Address"
+                }
+
+                PaymentMethods.BANK_TRANSFER -> {
+                    recipientAccount.text = order.recipientAccount
+                    recipientAccount.visibility = View.VISIBLE
+                    tvPaymentMethod.text = "Bank Transfer"
+                }
+
+                PaymentMethods.STORED_BALANCE -> {}
+            }
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                val pfiRating = viewModel.getPfiRating(order.pfiDid)
+                val formattedPfiRating = String.format("%.1f", pfiRating)
+
+
+                tvPfiRating.text = formattedPfiRating
+                tvPfiRating.visibility = View.VISIBLE
+                ivPfiRating.visibility = View.VISIBLE
+            }
         }
     }
 

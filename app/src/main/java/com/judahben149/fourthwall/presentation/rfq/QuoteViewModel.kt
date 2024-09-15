@@ -56,10 +56,12 @@ class QuoteViewModel @Inject constructor(
     val state: StateFlow<QuoteState> = _state
 
     fun updateAmount(amount: String, fee: Double) {
-        _state.update { it.copy(
-            payInAmount = amount,
-            fourthWallFee = fee
-            ) }
+        _state.update {
+            it.copy(
+                payInAmount = amount,
+                fourthWallFee = fee
+            )
+        }
     }
 
     fun updateSelectedOffering(offering: Offering) {
@@ -169,7 +171,9 @@ class QuoteViewModel @Inject constructor(
 
                         _state.update {
                             it.copy(
-                                exchangeProgress = ExchangeProgress.ErrorRequestingQuote(exceptionMessage)
+                                exchangeProgress = ExchangeProgress.ErrorRequestingQuote(
+                                    exceptionMessage
+                                )
                             )
                         }
                     }
@@ -262,36 +266,46 @@ class QuoteViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             state.value.tbDexQuote?.let { quote ->
-                sessionManager.getBearerDid()?.let {
-                    val close = Close.create(
-                        from = it.uri,
-                        to = quote.metadata.from,
-                        exchangeId = quote.metadata.exchangeId,
-                        closeData = CloseData(reason = reason)
-                    )
 
-                    close.sign(it)
-                    TbdexHttpClient.submitClose(close)
+                try {
 
-                    // store cancelled order in database
-                    val order = createOrderMessage(quote)
-                    saveOrderToLocalDatabase(order, FwOrderStatus.CANCELLED)
+                    sessionManager.getBearerDid()?.let {
+                        val close = Close.create(
+                            from = it.uri,
+                            to = quote.metadata.from,
+                            exchangeId = quote.metadata.exchangeId,
+                            closeData = CloseData(reason = reason)
+                        )
 
-                    // Prepare to navigate away
-                    val tbDexQuote = state.value.tbDexQuote
+                        close.sign(it)
+                        TbdexHttpClient.submitClose(close)
 
-                    val orderResult = FwOrderResult(
-                        payInAmount = tbDexQuote!!.data.payin.amount,
-                        payOutAmount = tbDexQuote.data.payout.amount + tbDexQuote.data.payout.fee,
-                        payInCurrency = tbDexQuote.data.payin.currencyCode,
-                        payOutCurrency = tbDexQuote.data.payout.currencyCode,
-                        pfiDid = tbDexQuote.metadata.from,
-                        orderStatus = FwOrderStatus.CANCELLED.ordinal
-                    )
+                        // store cancelled order in database
+                        val order = createOrderMessage(quote)
+                        saveOrderToLocalDatabase(order, FwOrderStatus.CANCELLED)
 
-                    _state.update {
-                        it.copy(exchangeProgress = ExchangeProgress.ExchangeWasCancelled(orderResult))
+                        // Prepare to navigate away
+                        val tbDexQuote = state.value.tbDexQuote
+
+                        val orderResult = FwOrderResult(
+                            payInAmount = tbDexQuote!!.data.payin.amount,
+                            payOutAmount = tbDexQuote.data.payout.amount + tbDexQuote.data.payout.fee,
+                            payInCurrency = tbDexQuote.data.payin.currencyCode,
+                            payOutCurrency = tbDexQuote.data.payout.currencyCode,
+                            pfiDid = tbDexQuote.metadata.from,
+                            orderStatus = FwOrderStatus.CANCELLED.ordinal
+                        )
+
+                        _state.update {
+                            it.copy(
+                                exchangeProgress = ExchangeProgress.ExchangeWasCancelled(
+                                    orderResult
+                                )
+                            )
+                        }
                     }
+                } catch (ex: Exception) {
+
                 }
             }
         }

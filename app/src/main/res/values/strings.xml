@@ -67,4 +67,5 @@
     <string name="fingerprint_image">Fingerprint image</string>
     <string name="sign_in_with_biometrics">Sign in with biometrics</string>
     <string name="cancelled">Cancelled</string>
+    <string name="profile">Profile</string>
 </resources>

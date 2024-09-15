@@ -16,7 +16,8 @@ data class FwOrder(
     val orderType: OrderType,
     val fwOrderStatus: FwOrderStatus,
     val pfiName: String,
-    val receiverName: String = "",
+    val pfiDid: String,
+    val recipientAccount: String = "",
     val walletAddress: String = "",
     val payoutFee: Double = 0.0
 )

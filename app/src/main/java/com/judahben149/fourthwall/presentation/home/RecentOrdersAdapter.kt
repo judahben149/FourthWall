@@ -41,7 +41,7 @@ class RecentOrdersAdapter(
     inner class OrderViewHolder(private val binding: ItemRecentOrdersBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(fwOrder: FwOrder) {
             binding.apply {
-                tvReceiverName.text = fwOrder.receiverName
+                tvReceiverName.text = fwOrder.recipientAccount
                 tvAmount.text = fwOrder.payInAmount.formatCurrency(fwOrder.payInCurrency)
                 tvOrderTime.text =
                     context.getString(R.string.order_time, formatDate(fwOrder.orderTime))

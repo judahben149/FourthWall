@@ -324,12 +324,12 @@ class OfferingsFragment : Fragment() {
                     }
 
                     when(state.selectedOffering) {
-                        null -> {
-                            binding.run {
-                                tvPfi.text = "--"
-                                chipExplorePfi.isEnabled = false
-                            }
-                        }
+//                        null -> {
+//                            binding.run {
+//                                tvPfi.text = "--"
+//                                chipExplorePfi.isEnabled = false
+//                            }
+//                        }
                     }
 
                     when(val st = state.getOfferingsState) {
@@ -398,8 +398,46 @@ class OfferingsFragment : Fragment() {
                         }
                     }
 
-                    when(state.isBestOfferSelected) {
-                        null -> {
+//                    when(state.isBestOfferSelected) {
+//                        null -> {
+//                            // Hasn't gotten any offers yet
+//                            binding.tvOnlyOffer.visibility = View.GONE
+//                            binding.tvBestOffer.visibility = View.GONE
+//
+//                            binding.tvProvider.visibility = View.INVISIBLE
+//                        }
+//
+//                        false -> {
+//                            // Auto-selected offer is the only one available
+//                            val pfiName = viewModel.getSelectedPfiName()
+//
+//                            pfiName?.let {  pfi ->
+//                                binding.tvOnlyOffer.visibility = View.VISIBLE
+//                                binding.tvProvider.visibility = View.VISIBLE
+//                                binding.layoutPfiContent.visibility = View.VISIBLE
+//
+//                                binding.tvPfi.text = pfi
+//                                binding.chipExplorePfi.isEnabled = true
+//                            }
+//                        }
+//
+//                        true -> {
+//                            // Auto-selected offer is the best one
+//                            val pfiName = viewModel.getSelectedPfiName()
+//
+//                            pfiName?.let {  pfi ->
+//                                binding.tvBestOffer.visibility = View.VISIBLE
+//                                binding.tvProvider.visibility = View.VISIBLE
+//                                binding.layoutPfiContent.visibility = View.VISIBLE
+//
+//                                binding.tvPfi.text = pfi
+//                                binding.chipExplorePfi.isEnabled = true
+//                            }
+//                        }
+//                    }
+
+                    when(state.selectedOfferType) {
+                        SelectedOfferType.NoOfferSelected -> {
                             // Hasn't gotten any offers yet
                             binding.tvOnlyOffer.visibility = View.GONE
                             binding.tvBestOffer.visibility = View.GONE
@@ -407,12 +445,16 @@ class OfferingsFragment : Fragment() {
                             binding.tvProvider.visibility = View.INVISIBLE
                         }
 
-                        false -> {
-                            // Auto-selected offer is the only one available
+                        SelectedOfferType.OtherOfferSelected -> {
+                            // Remove views - clean slate
+                            binding.tvOnlyOffer.visibility = View.GONE
+                            binding.tvBestOffer.visibility = View.GONE
+                            binding.tvProvider.visibility = View.INVISIBLE
+
+
                             val pfiName = viewModel.getSelectedPfiName()
 
                             pfiName?.let {  pfi ->
-                                binding.tvOnlyOffer.visibility = View.VISIBLE
                                 binding.tvProvider.visibility = View.VISIBLE
                                 binding.layoutPfiContent.visibility = View.VISIBLE
 
@@ -421,8 +463,30 @@ class OfferingsFragment : Fragment() {
                             }
                         }
 
-                        true -> {
-                            // Auto-selected offer is the best one
+                        SelectedOfferType.BestOfferSelectedSingleItem -> {
+                            // Remove views - clean slate
+                            binding.tvOnlyOffer.visibility = View.GONE
+                            binding.tvBestOffer.visibility = View.GONE
+                            binding.tvProvider.visibility = View.INVISIBLE
+
+                            val pfiName = viewModel.getSelectedPfiName()
+
+                            pfiName?.let {  pfi ->
+                                binding.tvOnlyOffer.visibility = View.VISIBLE
+                                binding.tvProvider.visibility = View.VISIBLE
+                                binding.layoutPfiContent.visibility = View.VISIBLE
+
+                                binding.tvPfi.text = pfi
+                                binding.chipExplorePfi.isEnabled = false
+                            }
+                        }
+
+                        SelectedOfferType.BestOfferSelected -> {
+                            // Remove views - clean slate
+                            binding.tvOnlyOffer.visibility = View.GONE
+                            binding.tvBestOffer.visibility = View.GONE
+                            binding.tvProvider.visibility = View.INVISIBLE
+
                             val pfiName = viewModel.getSelectedPfiName()
 
                             pfiName?.let {  pfi ->

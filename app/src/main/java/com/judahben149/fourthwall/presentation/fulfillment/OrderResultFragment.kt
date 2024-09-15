@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentOrderResultBinding
+import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.domain.models.FwOrderResult
 import com.judahben149.fourthwall.domain.models.PfiRating
 import com.judahben149.fourthwall.domain.models.enums.FwOrderStatus
@@ -19,6 +20,7 @@ import com.judahben149.fourthwall.utils.CurrencyUtils.formatCurrency
 import com.judahben149.fourthwall.utils.views.animateCheckmark
 import com.judahben149.fourthwall.utils.views.showSuccessAlerter
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class OrderResultFragment : Fragment(), RatingBar.OnRatingBarChangeListener {
@@ -29,6 +31,9 @@ class OrderResultFragment : Fragment(), RatingBar.OnRatingBarChangeListener {
 
     private val navController by lazy { findNavController() }
     private val viewModel: OrderResultViewModel by viewModels()
+
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,6 +96,12 @@ class OrderResultFragment : Fragment(), RatingBar.OnRatingBarChangeListener {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+
+        with(sessionManager) {
+            if (isStoringVerifiableCredentialsEnabled().not()) {
+                revokeVCs()
+            }
+        }
     }
 
     override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {

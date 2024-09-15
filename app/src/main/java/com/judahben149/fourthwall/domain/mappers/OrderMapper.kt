@@ -23,7 +23,8 @@ fun FwOrder.toOrderEntity(): OrderEntity {
         orderType = orderType.ordinal,
         orderStatus = fwOrderStatus.ordinal,
         pfiName = pfiName,
-        recipientAccount = receiverName,
+        pfiDid = pfiDid,
+        recipientAccount = recipientAccount,
         walletAddress = walletAddress,
         payoutFee = payoutFee,
     )
@@ -42,7 +43,8 @@ fun OrderEntity.toFwOrder(): FwOrder {
         orderType = OrderType.entries.getOrNull(orderType)!!,
         fwOrderStatus = FwOrderStatus.entries.getOrNull(orderStatus)!!,
         pfiName = pfiName,
-        receiverName = recipientAccount,
+        pfiDid = pfiDid,
+        recipientAccount = recipientAccount,
         walletAddress = walletAddress,
         payoutFee = payoutFee
     )
@@ -70,6 +72,7 @@ fun Order.toFwOrderEntity(
         orderStatus = fwOrderStatus.ordinal,
         orderType = orderType.ordinal,
         pfiName = Constants.pfiData.getValue(quote.metadata.from),
+        pfiDid = quote.metadata.from,
         recipientAccount = recipientAccount,
         walletAddress = walletAddress,
         payoutFee = fee
