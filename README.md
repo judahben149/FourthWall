@@ -1,8 +1,5 @@
-![fourthwall](https://github.com/user-attachments/assets/e79ddf5d-08ed-4a29-9dcd-faa4d3db1452)
-
 # FourthWall: A Decentralized Wallet Application
-
-![FourthWall Logo](path/to/logo.png)
+![FourthWall Logo](https://github.com/user-attachments/assets/74967d97-bc78-4e95-b357-71fd3a99cfb3)
 
 FourthWall is a cutting-edge, decentralized wallet application developed for the TBDex hackathon. Our solution aims to provide a seamless, secure, and user-centric experience for managing digital currencies and identities.
 
