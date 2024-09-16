@@ -8,7 +8,7 @@ FourthWall is a brilliant decentralized wallet application. Our solution aims to
 - [Overview](#overview)
 - [Key Features](#key-features)
 - [Design Considerations](#design-considerations)
-- [App Screenshots](app-screenshots)
+- [App Screenshots](#app-screenshots)
 - [Technical Stack](#technical-stack)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
