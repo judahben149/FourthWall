@@ -112,6 +112,7 @@
                     android:id="@+id/btn_revoke_did"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:visibility="gone"
                     android:backgroundTint="@color/primaryBtnBackgroundTint"
                     android:fontFamily="@font/cera_pro_medium"
                     android:text="Revoke Decentralized Identifier"

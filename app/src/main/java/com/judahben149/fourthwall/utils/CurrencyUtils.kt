@@ -391,10 +391,14 @@ object CurrencyUtils {
     )
 
     fun Double.formatCurrency(currencyCode: String): String {
-        val format = NumberFormat.getCurrencyInstance(Locale.getDefault())
-        val currency = Currency.getInstance(currencyCode)
-        format.currency = currency
-        format.maximumFractionDigits = currency.defaultFractionDigits
-        return format.format(this)
+        return try {
+            val format = NumberFormat.getCurrencyInstance(Locale.getDefault())
+            val currency = Currency.getInstance(currencyCode)
+            format.currency = currency
+            format.maximumFractionDigits = currency.defaultFractionDigits
+            format.format(this)
+        } catch (ex: Exception) {
+            this.toString()
+        }
     }
 }
