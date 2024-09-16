@@ -1,7 +1,9 @@
-# FourthWall: A Decentralized Wallet Application
+# FourthWall
 <img src="https://github.com/user-attachments/assets/74967d97-bc78-4e95-b357-71fd3a99cfb3" width="96" height="96" alt="Home Screen">
 
-FourthWall is a cutting-edge, decentralized wallet application developed for the TBDex hackathon. Our solution aims to provide a seamless, secure, and user-centric experience for managing digital currencies and identities.
+FourthWall is a brilliant decentralized wallet application. 
+Our solution aims to provide a seamless, secure, and user-centric experience for payments.
+We empower you to send money across the globe. And fast!
 
 ## Table of Contents
 - [Team](#team)
@@ -24,7 +26,7 @@ FourthWall is a cutting-edge, decentralized wallet application developed for the
 
 ## Overview
 
-FourthWall is an Android wallet application built with Kotlin. It leverages the power of decentralized technologies to offer a secure, transparent, and user-friendly platform for managing digital assets and identities.
+FourthWall is an Android wallet application built with Kotlin. It leverages the power of decentralized technologies to offer a secure, transparent, and user-friendly platform for making payments globally.
 
 ## Key Features
 
