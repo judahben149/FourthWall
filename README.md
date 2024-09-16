@@ -1,16 +1,14 @@
 # FourthWall
 <img src="https://github.com/user-attachments/assets/74967d97-bc78-4e95-b357-71fd3a99cfb3" width="96" height="96" alt="Home Screen">
 
-FourthWall is a brilliant decentralized wallet application. 
-Our solution aims to provide a seamless, secure, and user-centric experience for payments.
-We empower you to send money across the globe. And fast!
+FourthWall is a brilliant decentralized wallet application. Our solution aims to provide a seamless, secure, and user-centric experience for payments. We empower you to send money across the globe. And fast!
 
 ## Table of Contents
 - [Team](#team)
 - [Overview](#overview)
 - [Key Features](#key-features)
 - [Design Considerations](#design-considerations)
-- [FourthWall screenshots](app-screenshots)
+- [App Screenshots](app-screenshots)
 - [Technical Stack](#technical-stack)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
