@@ -111,8 +111,10 @@ We ensure high-quality service through:
 
 
 
-### App Flow Recording
-[![Watch the video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://youtu.be/_Fh0by5D4Gw)
+### App Flow Recording (#Click to view)
+<a href="https://youtu.be/_Fh0by5D4Gw">
+  <img src="https://github.com/user-attachments/assets/4cbe49fa-291e-4024-87dc-de4004cbd7d0" alt="Watch the video" width="250">
+</a>
 
 
 ## Getting Started
