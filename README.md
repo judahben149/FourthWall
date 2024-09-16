@@ -64,9 +64,10 @@ At FourthWall, we take customer satisfaction seriously. After each transaction, 
 
 Also, we believe in maintaining high standards for the services offered through our app. PFIs with consistently low ratings will be flagged and, if necessary, removed from our platform to ensure that only trusted and user-centric PFIs are onboarded.
 
+   
 
 
-### App Screenshots
+## App Screenshots
 
 #### Home Screen
 <img src="https://github.com/user-attachments/assets/c6d90e18-d1f3-4cdf-8d9c-baf772115548" width="250" alt="Home Screen (Empty)">
