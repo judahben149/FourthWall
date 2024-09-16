@@ -8,7 +8,8 @@ FourthWall is a cutting-edge, decentralized wallet application developed for the
 - [Overview](#overview)
 - [Key Features](#key-features)
 - [Design Considerations](#design-considerations)
-- [Technical Details](#technical-details)
+- [FourthWall screenshots](app-screenshots)
+- [Technical Stack](#technical-stack)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
 - [License](#license)
@@ -28,52 +29,42 @@ FourthWall is an Android wallet application built with Kotlin. It leverages the 
 ## Key Features
 
 - Secure wallet creation and management
-- Decentralized identity (DID) integration
+- Simple flow and top-tier user experience
 - Multi-currency support
 - Best-rate currency exchange
 - User-driven PFI ratings
 - Transparent fee structure
+- Enhanced security with Biometric login.
 
 ## Design Considerations
 
 ### Profitability
 
-FourthWall implements a transparent fee structure to ensure profitability while maintaining user trust:
+FourthWall charges a fee of 1.5% on currency exchanges, which is transparent and clearly communicated before each transaction. This fee allows us to facilitate smooth and reliable exchanges between different currencies. 
 
-- 1.5% fee on currency exchanges
-- Clear communication of fees before each transaction
+By keeping our fee structure transparent, users can confidently make informed decisions, without any hidden charges.
 
 ### Optionality
 
-Our app empowers users with choice and information:
+FourthWall employs a sorting algorithm to compare all available offerings from PFIs and pre-selects the best option for the user. This aims at reducing the cognitive load and improving user experience.
+Users can further explore to see exchange rates and user ratings for each PFI ensuring that they choose the most reliable option. 
 
-- Built-in algorithm compares offerings from all available PFIs
-- Displays exchange rates, transaction fees, and user ratings for each PFI
-- Highlights providers with the best track record when rates are similar
+When multiple PFIs offer the same rate, customer satisfaction and feedback come into play, highlighting the providers with the best track record. This helps the users to simplify the decision-making process.
+
 
 ### Customer Management
+For us at FourthWall, data privacy is at the forefront of our operations. The app enables users to securely generate and store their Decentralized Identifiers (DIDs) and Verifiable Credentials (VCs), which are linked to their identity. We ensure that only the user has control over their VCs, which based on the user’s authorization can be easily shared with PFIs during transactions.
 
-FourthWall prioritizes user privacy and control:
+Fourthwall users have full control over their credentials. They can choose to unlink or revoke credentials at any time (from the profile option), giving them the flexibility to manage their digital identity on their own terms.
 
-- Secure generation and storage of Decentralized Identifiers (DIDs) and Verifiable Credentials (VCs)
-- User-controlled sharing of DIDs with PFIs during transactions
-- Option to unlink or revoke credentials at any time via profile settings
 
 ### Customer Satisfaction
 
-We ensure high-quality service through:
+At FourthWall, we take customer satisfaction seriously. After each transaction, users are prompted to rate their experience with the PFI. This feedback is aggregated, and each PFI is assigned a score based on real user reviews. These scores are updated in real-time and play a critical role in the user’s decision-making process when selecting a PFI for future transactions.
 
-- Post-transaction user ratings for PFIs
-- Real-time aggregation and display of PFI scores
-- Flagging and potential removal of consistently low-rated PFIs over time
-
-## Technical Details
+Also, we believe in maintaining high standards for the services offered through our app. PFIs with consistently low ratings will be flagged and, if necessary, removed from our platform to ensure that only trusted and user-centric PFIs are onboarded.
 
 
-- App architecture
-- Libraries and dependencies
-- Flow diagrams
-- Screenshots and app recording
 
 ### App Screenshots
 
@@ -117,6 +108,22 @@ We ensure high-quality service through:
 </a>
 
 
+## Technical Stack
+This Android application leverages several key libraries and frameworks:
+
+- Hilt: For dependency injection, simplifying the management of app components.
+- Retrofit & OkHttp: Handle API communications and network requests.
+- Room: Provides an abstraction layer over SQLite for local data persistence.
+- Navigation Component: Manages in-app navigation and implements the single-activity architecture.
+- Glide: Efficient image loading and caching.
+- Gson: JSON parsing and serialization.
+- Coroutines: Manage asynchronous tasks and background operations.
+- ViewModel & LiveData: Implement MVVM architecture for robust and testable code.
+- Biometrics: Integrate device authentication features.
+- Lottie: Render high-quality animations.
+- tbdex-httpclient & tbdex-protocol: Implement TBDex protocol for decentralized exchanges.
+
+The project uses Kotlin and follows modern Android development practices, including Jetpack libraries and Material Design components.
 ## Getting Started
 
 ### Prerequisites
