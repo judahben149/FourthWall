@@ -9,6 +9,8 @@ FourthWall is a brilliant decentralized wallet application. Our solution aims to
 - [Key Features](#key-features)
 - [Design Considerations](#design-considerations)
 - [App Screenshots](#app-screenshots)
+- [Future Plans / Roadmap](#future-plans--roadmap)
+- [Current Limitations and Known Issues](#current-limitations-and-known-issues)
 - [Technical Stack](#technical-stack)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
@@ -110,6 +112,17 @@ Also, we believe in maintaining high standards for the services offered through 
 </a>
 
 
+
+## Future Plans / Roadmap
+1. Integration with More PFIs: Broaden our network of Participating Financial Institutions to offer more options to our users.
+
+## Current Limitations and Known Issues
+While we strive for excellence, FourthWall is still in active development. Here are some current limitations and known issues:
+
+1. Large app size: The size of the app will be significantly reduced in subsequent versions once the Proguard rules for the TBDex SDK are obtained and code shrinking is performed.
+2. Limited Currency Support: Currently, we support a limited number of currencies. We're working on expanding this list even as we onboard more PFIs.
+
+
 ## Technical Stack
 This Android application leverages several key libraries and frameworks:
 
@@ -161,4 +174,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 - [TBDex Hackathon](https://www.tbdex.io/hackathon)
 - [TBD Documentation](https://developer.tbd.website/docs/tbdex/wallet/overview/)
-
