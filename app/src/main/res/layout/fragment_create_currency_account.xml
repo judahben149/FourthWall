@@ -36,42 +36,17 @@
         tools:context=".presentation.account.CreateCurrencyAccountFragment">
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_name"
-            style="@style/CustomTextInputLayoutStyle"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginHorizontal="16dp"
-            android:hint="@string/full_name"
-            android:layout_marginTop="12dp"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/tv_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/cera_pro_light"
-                android:textStyle="bold" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
         <LinearLayout
             android:id="@+id/layout_currency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:background="@drawable/outlined_box_background"
             android:clickable="true"
             android:focusable="true"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/layout_name">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/iv_flag"

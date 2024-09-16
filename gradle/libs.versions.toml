@@ -26,10 +26,14 @@ timber = "5.0.1"
 blur-view = "version-2.0.5"
 lottie = "5.2.0"
 biometrics = "1.1.0"
-dot-view = "-SNAPSHOT"
+dot-view = "1.0.0"
 alerter = "7.2.4"
 navigation-safe-args = "2.7.7"
 splash-screen = "1.0.0-beta01"
+jackson = "2.14.2"
+smileyRating = "1.0.5"
+dotIndicator = "5.0"
+balloon = "1.6.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -67,10 +71,15 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 blur-view = { group = "com.github.Dimezis", name = "BlurView", version.ref = "blur-view" }
 lottie-animation = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 biometrics = { group = "androidx.biometric", name = "biometric", version.ref = "biometrics" }
-dot-view = { group = "com.github.imaNNeoFighT", name = "DottedView", version.ref = "dot-view" }
+dot-view = { group = "com.github.ghedeon", name = "dottedLineView", version.ref = "dot-view" }
 alerter = { group = "com.github.tapadoo", name = "alerter", version.ref = "alerter" }
 navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation-safe-args" }
 splash-screen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash-screen" }
+
+jackson = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
+smiley-rating = { group = "com.github.unaisulhadi", name = "emojiratingbar", version.ref = "smileyRating" }
+dot-indicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotIndicator" }
+balloon = { group = "com.github.skydoves", name = "balloon", version.ref = "balloon" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/itemLayoutAboveBackground"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -20,7 +21,7 @@
             android:layout_marginTop="48dp"
             android:layout_marginBottom="24dp"
             app:shapeAppearance="@style/CircularShapeAppearance"
-            android:src="@drawable/ic_profile_1" />
+            android:src="@drawable/ic_profile_3" />
 
         <!-- Security Settings -->
         <com.google.android.material.card.MaterialCardView
@@ -50,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cera_pro_light"
                     android:textStyle="bold"
-                    android:text="Biometric Authentication"/>
+                    android:text="Enable Biometric Authentication"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -75,14 +76,6 @@
                     android:fontFamily="@font/cera_pro_medium"
                     android:textSize="18sp"
                     android:layout_marginBottom="8dp"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switch_store_did"
-                    android:layout_width="match_parent"
-                    android:fontFamily="@font/cera_pro_light"
-                    android:textStyle="bold"
-                    android:layout_height="wrap_content"
-                    android:text="Store Decentralized Identifier"/>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_store_vc"
@@ -118,20 +111,23 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_revoke_did"
                     android:layout_width="match_parent"
-                    android:fontFamily="@font/cera_pro_light"
-                    android:textStyle="bold"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:backgroundTint="@color/primaryBtnBackgroundTint"
+                    android:fontFamily="@font/cera_pro_medium"
                     android:text="Revoke Decentralized Identifier"
-                    android:textColor="#FF0000"/>
+                    android:textColor="@color/primaryBtnTextOnBackground"
+                    android:textSize="14sp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_revoke_vc"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/cera_pro_light"
-                    android:textStyle="bold"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/primaryBtnBackgroundTint"
+                    android:fontFamily="@font/cera_pro_medium"
                     android:text="Revoke Verifiable Credentials"
-                    android:textColor="#FF0000"/>
+                    android:textColor="@color/primaryBtnTextOnBackground"
+                    android:textSize="14sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -160,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cera_pro_light"
                     android:textStyle="bold"
-                    android:text="Information about the app"/>
+                    android:text="Find out more about FourthWall"/>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_website_link"
@@ -169,7 +165,7 @@
                     android:text="Visit our website"
                     android:fontFamily="@font/cera_pro_light"
                     android:textStyle="bold"
-                    android:textColor="#0000FF"
+                    android:textColor="@color/base_purple"
                     android:layout_marginTop="8dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

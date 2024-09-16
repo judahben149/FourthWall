@@ -6,7 +6,7 @@ import com.judahben149.fourthwall.data.remote.VerifiableCredentialsService
 import com.judahben149.fourthwall.data.repository.CredentialsRepository
 import com.judahben149.fourthwall.data.repository.OrderRepository
 import com.judahben149.fourthwall.data.repository.UserAccountRepository
-import com.judahben149.fourthwall.utils.text.PfiDataParser
+import com.judahben149.fourthwall.utils.text.FourthWallParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,9 +28,9 @@ object RepositoryModule {
     @Singleton
     fun providesUserAccountRepository(
         userAccountDao: UserAccountDao,
-        pfiDataParser: PfiDataParser
+        fourthWallParser: FourthWallParser
     ): UserAccountRepository {
-        return UserAccountRepository(userAccountDao, pfiDataParser)
+        return UserAccountRepository(userAccountDao, fourthWallParser)
     }
 
     @Provides

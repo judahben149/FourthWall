@@ -7,6 +7,8 @@ import com.judahben149.fourthwall.domain.models.Currency
 import com.judahben149.fourthwall.domain.models.PfiData
 import com.judahben149.fourthwall.domain.usecase.pfi.GetPfiDataUseCase
 import com.judahben149.fourthwall.domain.usecase.pfi.GetPfiOfferingsUseCase
+import com.judahben149.fourthwall.domain.usecase.pfiRating.GetAllAveragePfiRatingsUseCase
+import com.judahben149.fourthwall.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -21,17 +23,20 @@ import javax.inject.Inject
 @HiltViewModel
 class OfferingsViewModel @Inject constructor(
     private val getPfiDataUseCase: GetPfiDataUseCase,
-    private val getPfiOfferingsUseCase: GetPfiOfferingsUseCase
+    private val getPfiOfferingsUseCase: GetPfiOfferingsUseCase,
+    private val getAllAveragePfiRatingsUseCase: GetAllAveragePfiRatingsUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(OfferingsFlowState())
     val state: StateFlow<OfferingsFlowState> = _state
 
+    var shouldPickBestOffering: Boolean = true
+
     init {
         getPfiOfferings()
     }
 
-    private fun getPfiOfferings() {
+    fun getPfiOfferings() {
         updateBtnState(OfferingsBtnState.Loading)
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -42,30 +47,52 @@ class OfferingsViewModel @Inject constructor(
 
                 val pfiData = getPfiDataUseCase()
 
+                // Store PFI Info in memory
+                Constants.pfiData = pfiData.associate { it.pfiDid to it.pfiName }
+
                 val offeringsList = pfiData.map { pfi ->
                     async {
-                        getPfiOfferingsUseCase(pfi)
+                        try {
+                            getPfiOfferingsUseCase(pfi)
+                        } catch (e: Exception) {
+                            _state.update {
+                                it.copy(
+                                    getOfferingsState = GetOfferingsRequestState.Error(
+                                        "Error fetching offerings, please retry"
+                                    )
+                                )
+                            }
+
+                            emptyList()
+                        }
                     }
                 }.awaitAll()
 
                 val flatOfferingsList = offeringsList.flatten()
 
-                _state.update {
-                    it.copy(
-                        pfiData = pfiData,
-                        getOfferingsState = GetOfferingsRequestState.Success,
-                        offeringsList = flatOfferingsList,
-                        supportedCurrencyPairs = createCurrencyPairs(flatOfferingsList),
-                        supportedPayInCurrencies = parseSupportedPayInCurrencies(flatOfferingsList),
-                        supportedPayOutCurrencies = parseSupportedPayOutCurrencies(flatOfferingsList),
-                    )
-                }
+                if (flatOfferingsList.isNotEmpty()) {
 
-                state.value.run {
-                    if (selectedOffering != null && selectedPayInCurrency != null && selectedPayOutCurrency != null) {
-                        updateBtnState(OfferingsBtnState.Enabled())
-                    } else {
-                        updateBtnState(OfferingsBtnState.Disabled())
+                    _state.update {
+                        it.copy(
+                            pfiData = pfiData,
+                            getOfferingsState = GetOfferingsRequestState.Success,
+                            offeringsList = flatOfferingsList,
+                            supportedCurrencyPairs = createCurrencyPairs(flatOfferingsList),
+                            supportedPayInCurrencies = parseSupportedPayInCurrencies(
+                                flatOfferingsList
+                            ),
+                            supportedPayOutCurrencies = parseSupportedPayOutCurrencies(
+                                flatOfferingsList
+                            ),
+                        )
+                    }
+
+                    state.value.run {
+                        if (selectedOffering != null && selectedPayInCurrency != null && selectedPayOutCurrency != null) {
+                            updateBtnState(OfferingsBtnState.Enabled())
+                        } else {
+                            updateBtnState(OfferingsBtnState.Disabled())
+                        }
                     }
                 }
 
@@ -113,9 +140,16 @@ class OfferingsViewModel @Inject constructor(
     }
 
     fun updateSelectedPayOutCurrency(currencyCode: String?) {
-        currencyCode?.toCurrency()?.let { currency ->
+        if (currencyCode?.toCurrency() == null) {
             _state.update { state ->
-                state.copy(selectedPayOutCurrency = currency)
+                state.copy(
+                    selectedPayOutCurrency = null,
+                    selectedOfferType = SelectedOfferType.NoOfferSelected
+                )
+            }
+        } else {
+            _state.update { state ->
+                state.copy(selectedPayOutCurrency = currencyCode.toCurrency())
             }
         }
 
@@ -189,7 +223,6 @@ class OfferingsViewModel @Inject constructor(
             payInAmount?.let { payInAmount ->
                 selectedOffering?.data?.payoutUnitsPerPayinUnit?.let { units ->
                     try {
-                        // Carry out your fee splitting here
                         val payoutAmount = (payInAmount.toDouble()) * units.toDouble()
                         val payoutAmountFormatted = String.format("%.2f", payoutAmount)
 
@@ -212,7 +245,6 @@ class OfferingsViewModel @Inject constructor(
 
                         updateBtnState(OfferingsBtnState.Disabled())
                     }
-
                 }
             }
         }
@@ -232,11 +264,24 @@ class OfferingsViewModel @Inject constructor(
                     val bestOffering =
                         validOfferings.maxByOrNull { it.data.payoutUnitsPerPayinUnit }
 
-                    _state.update {
-                        it.copy(
-                            selectedOffering = bestOffering,
-                            isBestOfferSelected = validOfferings.size > 1
-                        )
+                    val isMultipleItems = validOfferings.size > 1
+
+                    if (isMultipleItems) {
+                        _state.update {
+                            it.copy(
+                                selectedOffering = bestOffering,
+                                isBestOfferSelected = validOfferings.size > 1,
+                                selectedOfferType = SelectedOfferType.BestOfferSelected
+                            )
+                        }
+                    } else {
+                        _state.update {
+                            it.copy(
+                                selectedOffering = bestOffering,
+                                isBestOfferSelected = validOfferings.size > 1,
+                                selectedOfferType = SelectedOfferType.BestOfferSelectedSingleItem
+                            )
+                        }
                     }
                 }
             }
@@ -253,22 +298,32 @@ class OfferingsViewModel @Inject constructor(
         _state.update {
             it.copy(
                 selectedOffering = null,
-                isBestOfferSelected = null
+                isBestOfferSelected = null,
+                selectedOfferType = SelectedOfferType.NoOfferSelected
             )
         }
     }
 
     fun updateSelectedOffering(offeringId: String) {
-        invalidateOfferingSelection()
+//        invalidateOfferingSelection()
         val offering = state.value.offeringsList.find { it.metadata.id == offeringId }
 
         offering?.let {
             _state.update { state ->
                 state.copy(
-                    selectedOffering = offering
+                    selectedOffering = offering,
+                    selectedOfferType = SelectedOfferType.OtherOfferSelected
                 )
             }
+
+            shouldPickBestOffering = false
+            refreshPayOutAmountState()
+            // determine if the best offer and display appropriate label - function determineIsBestOffer()
         }
+    }
+
+    fun determineIsBestOffer(): Boolean {
+        return false
     }
 
     fun refreshPayOutInfo() {
@@ -278,7 +333,12 @@ class OfferingsViewModel @Inject constructor(
     fun updatePayInAmount(amount: String) {
         _state.update { it.copy(payInAmount = amount) }
         updateBtnState(OfferingsBtnState.Loading)
-        pickBestOffering()
+
+        if (shouldPickBestOffering) {
+            pickBestOffering()
+        } else {
+            refreshPayOutAmountState()
+        }
     }
 
     private fun updateBtnState(state: OfferingsBtnState) {
@@ -295,7 +355,7 @@ class OfferingsViewModel @Inject constructor(
         }
     }
 
-    fun getPfiNameFromOfferingId(offeringId: String): String {
+    private fun getPfiNameFromOfferingId(offeringId: String): String {
         val offering = state.value.offeringsList.find { it.metadata.id == offeringId }
 
         return offering?.let { off ->
@@ -324,6 +384,8 @@ class OfferingsViewModel @Inject constructor(
 
         return pairsList
     }
+
+    suspend fun getAveragePfiRating(): Map<String, Double> = getAllAveragePfiRatingsUseCase()
 }
 
 data class OfferingsFlowState(
@@ -335,6 +397,7 @@ data class OfferingsFlowState(
     val payOutAmountState: PayOutAmountState = PayOutAmountState.Inactive("0.0"),
     val selectedOffering: Offering? = null,
     val isBestOfferSelected: Boolean? = false,
+    val selectedOfferType: SelectedOfferType = SelectedOfferType.NoOfferSelected,
     val userDisregardsBestOffer: Boolean = false,
     val supportedCurrencyPairs: List<Pair<Currency, Currency>> = emptyList(),
     val supportedPayInCurrencies: List<Currency> = emptyList(),
@@ -344,6 +407,12 @@ data class OfferingsFlowState(
     val offeringsList: List<Offering> = emptyList()
 )
 
+sealed class SelectedOfferType {
+    data object NoOfferSelected : SelectedOfferType()
+    data object BestOfferSelected : SelectedOfferType()
+    data object BestOfferSelectedSingleItem : SelectedOfferType()
+    data object OtherOfferSelected : SelectedOfferType()
+}
 
 sealed class GetOfferingsRequestState {
     data object Loading : GetOfferingsRequestState()

@@ -46,6 +46,15 @@
         tools:listitem="@layout/item_user_account"
         tools:orientation="horizontal" />
 
+    <LinearLayout
+        android:id="@+id/indicatorContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rv_user_account" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -58,7 +67,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv_user_account"
+        app:layout_constraintTop_toBottomOf="@id/indicatorContainer"
         app:strokeWidth="0dp">
 
         <LinearLayout
@@ -74,6 +83,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
                 android:backgroundTint="@color/itemLayoutAboveBackground"
+                android:clickable="false"
                 android:padding="0dp"
                 android:paddingStart="12dp"
                 app:icon="@drawable/ic_swap2"
@@ -111,6 +121,33 @@
             android:layout_marginTop="64dp"
             tools:itemCount="6"
             tools:listitem="@layout/item_recent_orders" />
+
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/anim_empty"
+            android:layout_width="144dp"
+            android:layout_height="144dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="44dp"
+            android:alpha="0.6"
+            android:visibility="visible"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="anim_ghost_empty.json"
+            app:lottie_loop="true"
+            app:lottie_repeatMode="restart" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_empty_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="44dp"
+            android:fontFamily="@font/cera_pro_light"
+            android:text="You'll see your recent orders here"
+            android:textColor="@color/textOnBackground"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/pgBar"

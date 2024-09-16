@@ -6,13 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.judahben149.fourthwall.databinding.FragmentFundWalletBinding
 import com.judahben149.fourthwall.utils.Constants
 import com.judahben149.fourthwall.utils.CurrencyUtils.getCountryFlag
-import com.judahben149.fourthwall.utils.views.showInfoAlerter
+import com.judahben149.fourthwall.utils.views.showErrorAlerter
+import com.judahben149.fourthwall.utils.views.showSuccessAlerter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FundWalletFragment : Fragment() {
@@ -36,25 +41,42 @@ class FundWalletFragment : Fragment() {
         binding.run {
             toolBar.setOnClickListener { navController.navigateUp() }
 
-            btnFund.setOnClickListener {
-                try {
-                    val amount = binding.etFundAccount.text.toString().toDouble()
-                    viewModel.fundAccount(Constants.currencyAccountId, amount)
+            viewModel.getCurrencyCode(Constants.currencyAccountId) { currencyCode ->
+                btnFund.setOnClickListener {
+                        val amount = binding.etFundAccount.text.toString().toDouble()
+                        viewModel.fundAccount(Constants.currencyAccountId, amount, currencyCode)
+                }
 
-                } catch (ex: Exception) {
-                    requireActivity().showInfoAlerter("Error funding account. Please retry")
+                getCountryFlag(requireContext(), currencyCode)?.let {
+                    binding.run {
+                        tvCurrencyPayIn.text = currencyCode
+
+                        Glide.with(binding.ivFlagPayIn)
+                            .load(it)
+                            .into(binding.ivFlagPayIn)
+                    }
                 }
             }
         }
 
-        viewModel.getCurrencyCode(Constants.currencyAccountId) { currencyCode ->
-            getCountryFlag(requireContext(), currencyCode)?.let {
-                binding.run {
-                    tvCurrencyPayIn.text = currencyCode
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    when(val prg = state.fundAccountProgress) {
+                        is FundAccountProgress.Default -> {}
 
-                    Glide.with(binding.ivFlagPayIn)
-                        .load(it)
-                        .into(binding.ivFlagPayIn)
+                        is FundAccountProgress.ErrorFundingAccount -> {
+                            requireActivity().showErrorAlerter(prg.message) {
+
+                            }
+                        }
+
+                        is FundAccountProgress.FundedSuccessfully -> {
+                            requireActivity().showSuccessAlerter(prg.amount, 1300) {
+                                navController.navigateUp()
+                            }
+                        }
+                    }
                 }
             }
         }

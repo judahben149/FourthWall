@@ -10,7 +10,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.ActivityOnboardingBinding
 import com.judahben149.fourthwall.domain.SessionManager
-import com.judahben149.fourthwall.presentation.registration.UserRegistrationActivity
+import com.judahben149.fourthwall.presentation.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -29,6 +29,10 @@ class OnboardingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        if (sessionManager.isUserSignedUp().not()) {
+            sessionManager.updateShouldBeginOnboarding(true)
+        }
+
         _binding = ActivityOnboardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -46,6 +50,7 @@ class OnboardingActivity : AppCompatActivity() {
         val viewPager: ViewPager2 = binding.viewPager
         val adapter = OnboardingPagerAdapter(supportFragmentManager, lifecycle)
         viewPager.adapter = adapter
+        binding.dotIndicatorOnboarding.attachTo(viewPager)
 
         setupPageChangeCallback()
 
@@ -54,7 +59,7 @@ class OnboardingActivity : AppCompatActivity() {
                 if (viewPager.currentItem < 2) {
                     viewPager.currentItem += 1
                 } else {
-                    navigateToRegistrationScreen()
+                    navigateToLoginScreen()
                 }
             }
         }
@@ -75,8 +80,9 @@ class OnboardingActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToRegistrationScreen() {
-        val intent = Intent(this, UserRegistrationActivity::class.java)
+    private fun navigateToLoginScreen() {
+        sessionManager.updateShouldBeginOnboarding(false)
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }

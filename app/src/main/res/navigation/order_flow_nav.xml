@@ -13,12 +13,30 @@
         tools:layout="@layout/fragment_offerings" >
         <action
             android:id="@+id/action_offeringsFragment_to_requestQuoteFragment"
-            app:destination="@id/requestQuoteFragment" />
+            app:destination="@id/requestQuoteFragment"
+            app:enterAnim="@anim/enter_anim_slide_in_right"
+            app:exitAnim="@anim/exit_anim_slide_out_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_right" />
     </fragment>
 
     <fragment
         android:id="@+id/requestQuoteFragment"
         android:name="com.judahben149.fourthwall.presentation.rfq.RequestQuoteFragment"
         android:label="fragment_request_quote"
-        tools:layout="@layout/fragment_request_quote" />
+        tools:layout="@layout/fragment_request_quote" >
+        <action
+            android:id="@+id/action_requestQuoteFragment_to_orderResultFragment"
+            app:destination="@id/orderResultFragment"
+            app:enterAnim="@anim/enter_anim_slide_in_right"
+            app:exitAnim="@anim/exit_anim_slide_out_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderResultFragment"
+        android:name="com.judahben149.fourthwall.presentation.fulfillment.OrderResultFragment"
+        android:label="fragment_order_result"
+        tools:layout="@layout/fragment_order_result" >
+    </fragment>
 </navigation>

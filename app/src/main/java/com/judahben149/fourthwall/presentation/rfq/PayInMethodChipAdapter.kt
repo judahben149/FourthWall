@@ -4,15 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.judahben149.fourthwall.databinding.ItemChipBinding
+import com.judahben149.fourthwall.utils.text.formatAddSpace
 
-class PaymentMethodChipAdapter(
+class PayInMethodChipAdapter(
     private val onChipClicked: (String) -> Unit
 ) :
-    RecyclerView.Adapter<PaymentMethodChipAdapter.PaymentMethodChipViewHolder>() {
+    RecyclerView.Adapter<PayInMethodChipAdapter.PaymentMethodChipViewHolder>() {
 
-    private var methods: List<Pair<String, Boolean>> = emptyList()
+    private var methods: List<String> = emptyList()
 
-    fun updatePaymentKinds(updatedKinds: List<Pair<String, Boolean>>) {
+    fun updatePaymentKinds(updatedKinds: List<String>) {
         methods = updatedKinds
         notifyDataSetChanged()
     }
@@ -32,16 +33,12 @@ class PaymentMethodChipAdapter(
         private val binding: ItemChipBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(paymentMethod: Pair<String, Boolean>) {
-            binding.root.text = paymentMethod.first
-            binding.root.isChipIconVisible = paymentMethod.second
-
+        fun bind(paymentMethod: String) {
             binding.root.run {
-                text = paymentMethod.first
-                isChipIconVisible = paymentMethod.second
+                text = paymentMethod.formatAddSpace()
 
                 setOnClickListener {
-                    onChipClicked(paymentMethod.first)
+                    onChipClicked(paymentMethod)
                 }
             }
         }

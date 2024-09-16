@@ -19,6 +19,7 @@ object DummyDataUtils {
         val exchangeRate = Random.nextDouble(0.8, 1.2)
         return OrderEntity(
             orderId = id,
+            orderExchangeId = id.toString(),
             payInAmount = payInAmount,
             payOutAmount = payInAmount * exchangeRate,
             payInCurrency = currencies.random(),
@@ -28,8 +29,10 @@ object DummyDataUtils {
             orderType = Random.nextInt(2),
             orderStatus = Random.nextInt(3),
             pfiName = pfiNames.random(),
-            receiverName = receiverNames.random(),
-            walletAddress = generateRandomWalletAddress()
+            pfiDid = pfiNames.random(),
+            recipientAccount = receiverNames.random(),
+            walletAddress = generateRandomWalletAddress(),
+            payoutFee = 2.3
         )
     }
 

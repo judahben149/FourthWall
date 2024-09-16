@@ -7,14 +7,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.ActivityMainBinding
+import com.judahben149.fourthwall.domain.SessionManager
+import com.judahben149.fourthwall.utils.CredentialUtils
 import com.judahben149.fourthwall.utils.biometrics.BiometricAuthListener
 import com.judahben149.fourthwall.utils.biometrics.BiometricUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), BiometricAuthListener {
@@ -24,6 +30,13 @@ class MainActivity : AppCompatActivity(), BiometricAuthListener {
 
     private lateinit var navController: NavController
     private var isCurrentlyNavigatingFromBottomNav = false
+
+    @Inject
+    lateinit var credentialUtils: CredentialUtils
+
+    @Inject
+    lateinit var sessionManager: SessionManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +53,8 @@ class MainActivity : AppCompatActivity(), BiometricAuthListener {
 
 //        performBiometricsCheck()
         setupNavigation()
+//        createDid()
+        initializeDid()
     }
 
     private fun performBiometricsCheck() {
@@ -112,6 +127,18 @@ class MainActivity : AppCompatActivity(), BiometricAuthListener {
             .build()
 
         navController.navigate(destinationId, null, navOptions)
+    }
+
+    private fun createDid() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            credentialUtils.createDid()
+        }
+    }
+
+    private fun initializeDid() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            sessionManager.initializeDid()
+        }
     }
 
     override fun onDestroy() {

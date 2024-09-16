@@ -15,7 +15,6 @@ import com.judahben149.fourthwall.databinding.FragmentCreateCurrencyAccountBindi
 import com.judahben149.fourthwall.utils.CurrencyUtils.getCurrencyName
 import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
-import com.judahben149.fourthwall.utils.views.showInfoAlerter
 import com.judahben149.fourthwall.utils.views.showSuccessAlerter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

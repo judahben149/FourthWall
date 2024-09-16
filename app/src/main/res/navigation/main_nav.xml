@@ -12,13 +12,28 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_order_flow_nav"
-            app:destination="@id/order_flow_nav" />
+            app:destination="@id/order_flow_nav"
+            app:enterAnim="@anim/enter_anim_slide_in_right"
+            app:exitAnim="@anim/exit_anim_slide_out_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_fundWalletFragment"
-            app:destination="@id/fundWalletFragment" />
+            app:destination="@id/fundWalletFragment"
+            app:enterAnim="@anim/enter_anim_slide_in_right"
+            app:exitAnim="@anim/exit_anim_slide_out_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_createCurrencyAccountFragment"
-            app:destination="@id/createCurrencyAccountFragment" />
+            app:destination="@id/createCurrencyAccountFragment"
+            app:enterAnim="@anim/enter_anim_slide_in_right"
+            app:exitAnim="@anim/exit_anim_slide_out_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_right" />
+        <action
+            android:id="@+id/action_homeFragment_to_orderDetailFragment"
+            app:destination="@id/orderDetailFragment" />
     </fragment>
 
     <fragment
@@ -30,7 +45,15 @@
         android:id="@+id/ordersFragment"
         android:name="com.judahben149.fourthwall.presentation.orders.OrdersFragment"
         android:label="fragment_orders"
-        tools:layout="@layout/fragment_orders" />
+        tools:layout="@layout/fragment_orders" >
+        <action
+            android:id="@+id/action_ordersFragment_to_orderDetailFragment"
+            app:destination="@id/orderDetailFragment"
+            app:enterAnim="@anim/enter_anim_slide_in_right"
+            app:exitAnim="@anim/exit_anim_slide_out_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_right" />
+    </fragment>
 
     <include app:graph="@navigation/order_flow_nav" />
     <fragment
@@ -43,4 +66,14 @@
         android:name="com.judahben149.fourthwall.presentation.account.CreateCurrencyAccountFragment"
         android:label="CreateCurrencyAccountFragment"
         tools:layout="@layout/fragment_create_currency_account"/>
+
+    <fragment
+        android:id="@+id/orderDetailFragment"
+        android:name="com.judahben149.fourthwall.presentation.orders.OrderDetailFragment"
+        android:label="OrderDetailFragment"
+        tools:layout="@layout/fragment_order_detail">
+        <argument
+            android:name="orderId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

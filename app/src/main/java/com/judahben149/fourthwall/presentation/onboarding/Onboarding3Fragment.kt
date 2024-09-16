@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentOnboarding3Binding
 import com.judahben149.fourthwall.utils.views.setup3DBounceAnimation
+import com.judahben149.fourthwall.utils.views.startIrregularHeartbeatAnimation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,7 +33,7 @@ class Onboarding3Fragment : Fragment() {
             .load(R.drawable.img_decentralized)
             .into(binding.icBigIcon)
 
-        binding.icBigIcon.setup3DBounceAnimation()
+        binding.icBigIcon.startIrregularHeartbeatAnimation()
     }
 
 

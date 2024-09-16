@@ -1,30 +1,40 @@
 package com.judahben149.fourthwall.utils.views
 
+import android.animation.Animator
 import android.animation.AnimatorSet
+import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.util.TypedValue
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.judahben149.fourthwall.R
-import android.animation.ArgbEvaluator
-import android.animation.PropertyValuesHolder
-import android.app.Activity
-import android.graphics.drawable.GradientDrawable
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.Balloon
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
+import com.skydoves.balloon.showAlignBottom
 import com.tapadoo.alerter.Alerter
-import com.tapadoo.alerter.OnHideAlertListener
 
 fun ImageView.animateBounce() {
     this.animate()
@@ -111,6 +121,139 @@ fun View.dpToPx(dp: Float): Int {
     return (dp * resources.displayMetrics.density).toInt()
 }
 
+fun ImageView.animateCheckmark() {
+    val rotationAnimator = ValueAnimator.ofFloat(-3f, 3f).apply {
+        duration = 100
+        repeatCount = 3
+        repeatMode = ValueAnimator.REVERSE
+        interpolator = AccelerateDecelerateInterpolator()
+        addUpdateListener { animator ->
+            rotation = animator.animatedValue as Float
+        }
+    }
+
+    val delayBetweenAnimations = 1500L
+
+    val runAnimation = object : Runnable {
+        override fun run() {
+            rotationAnimator.start()
+            postDelayed(this, rotationAnimator.duration * (rotationAnimator.repeatCount + 1) + delayBetweenAnimations)
+        }
+    }
+
+    post(runAnimation)
+}
+
+fun ImageView.startWarmupAnimation() {
+    val bounce = ObjectAnimator.ofFloat(this, "translationY", 0f, -20f, 0f).apply {
+        duration = 1000
+        repeatCount = ValueAnimator.INFINITE
+        repeatMode = ValueAnimator.REVERSE
+        interpolator = AccelerateDecelerateInterpolator()
+    }
+
+    val shake = ObjectAnimator.ofFloat(this, "rotation", -2f, 2f).apply {
+        duration = 100
+        repeatCount = ValueAnimator.INFINITE
+        repeatMode = ValueAnimator.REVERSE
+    }
+
+    AnimatorSet().apply {
+        playTogether(bounce, shake)
+        start()
+    }
+}
+
+fun ImageView.startTakeoffAnimation(onAnimationEnd: () -> Unit) {
+    val screenHeight = resources.displayMetrics.heightPixels.toFloat()
+
+    val shake = PropertyValuesHolder.ofFloat(View.ROTATION, -5f, 5f)
+    val moveUp = PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, 0f, -screenHeight)
+    val shrink = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0.5f)
+    val shrinkY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0.5f)
+
+    ObjectAnimator.ofPropertyValuesHolder(this, shake, moveUp, shrink, shrinkY).apply {
+        duration = 2000
+        interpolator = AccelerateInterpolator()
+        addListener(onEnd = {
+            onAnimationEnd()
+        })
+        start()
+    }
+}
+
+fun ImageView.startIrregularHeartbeatAnimation() {
+    val scaleX = ObjectAnimator.ofFloat(this, "scaleX", 1f, 1.2f, 1f)
+    val scaleY = ObjectAnimator.ofFloat(this, "scaleY", 1f, 1.2f, 1f)
+
+    val firstBeat = AnimatorSet().apply {
+        playTogether(scaleX, scaleY)
+        duration = 200
+        interpolator = OvershootInterpolator()
+    }
+
+    val secondBeat = AnimatorSet().apply {
+        playTogether(
+            ObjectAnimator.ofFloat(this@startIrregularHeartbeatAnimation, "scaleX", 1f, 1.1f, 1f),
+            ObjectAnimator.ofFloat(this@startIrregularHeartbeatAnimation, "scaleY", 1f, 1.1f, 1f)
+        )
+        duration = 200
+        interpolator = AccelerateDecelerateInterpolator()
+    }
+
+    val pause = ValueAnimator.ofFloat(0f, 1f).apply {
+        duration = 1000
+    }
+
+    AnimatorSet().apply {
+        playSequentially(firstBeat, secondBeat, pause)
+        addListener(object : Animator.AnimatorListener {
+            override fun onAnimationEnd(animation: Animator) {
+                start()
+            }
+            override fun onAnimationStart(animation: Animator) {}
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationRepeat(animation: Animator) {}
+        })
+        start()
+    }
+}
+
+fun ImageView.startJiggleAnimation() {
+    val rotationAnimation = createJiggleAnimatorSet()
+
+    rotationAnimation.addListener(object : Animator.AnimatorListener {
+        override fun onAnimationStart(animation: Animator) {}
+        override fun onAnimationEnd(animation: Animator) {
+            postDelayed({
+                startJiggleAnimation()
+            }, 1700)
+        }
+        override fun onAnimationCancel(animation: Animator) {}
+        override fun onAnimationRepeat(animation: Animator) {}
+    })
+
+    rotationAnimation.start()
+}
+
+private fun ImageView.createJiggleAnimatorSet(): AnimatorSet {
+    val rotateClockwise = ObjectAnimator.ofFloat(this, "rotation", 0f, 5f).apply {
+        duration = 100
+        interpolator = LinearInterpolator()
+    }
+    val rotateCounterClockwise = ObjectAnimator.ofFloat(this, "rotation", 5f, -5f).apply {
+        duration = 200
+        interpolator = LinearInterpolator()
+    }
+    val rotateToOriginal = ObjectAnimator.ofFloat(this, "rotation", -5f, 0f).apply {
+        duration = 100
+        interpolator = LinearInterpolator()
+    }
+
+    return AnimatorSet().apply {
+        playSequentially(rotateClockwise, rotateCounterClockwise, rotateToOriginal)
+    }
+}
 
 fun View.animateBorderColorForError(durationMs: Long = 2000) {
     val drawable = background as? GradientDrawable ?: return
@@ -177,15 +320,69 @@ fun MaterialButton.disable(res: Resources, pgBar: CircularProgressIndicator? = n
     }
 }
 
+fun MaterialButton.disableNoColourChange(res: Resources, pgBar: CircularProgressIndicator? = null) {
+
+    // Disable clicking
+    this.isClickable = false
+    this.isEnabled = false
+    this.alpha = 0.5F
+    this.textScaleX = 1F
+
+    pgBar?.let {
+        pgBar.visibility = View.INVISIBLE
+    }
+}
+
+fun Chip.disable(res: Resources) {
+    this.isClickable = false
+    this.isEnabled = false
+
+    val enabledColor = res.getColor(R.color.light_purple_tint)
+    val disabledColor = res.getColor(R.color.disabledPrimaryBtnBackgroundTint)
+
+    val colorStateList = ColorStateList(
+        arrayOf(
+            intArrayOf(-android.R.attr.state_enabled),
+            intArrayOf()
+        ),
+        intArrayOf(
+            disabledColor,
+            enabledColor
+        )
+    )
+
+    this.chipBackgroundColor = colorStateList
+}
+
+fun Chip.enable(res: Resources) {
+    this.isClickable = true
+    this.isEnabled = true
+
+    val colorStateList = ColorStateList.valueOf(res.getColor(R.color.light_purple_tint))
+    this.chipBackgroundColor = colorStateList
+}
+
 fun MaterialButton.enable(res: Resources, pgBar: CircularProgressIndicator? = null) {
     this.setBackgroundColor(res.getColor(R.color.primaryBtnBackgroundTint))
 
     // Disable clicking
     this.isClickable = true
     this.isEnabled = true
-
-    this.textScaleX = 1F
     this.alpha = 1F
+    this.textScaleX = 1F
+
+    pgBar?.let {
+        pgBar.visibility = View.INVISIBLE
+    }
+}
+
+fun MaterialButton.enableNoColourChange(res: Resources, pgBar: CircularProgressIndicator? = null) {
+
+    // Disable clicking
+    this.isClickable = true
+    this.isEnabled = true
+    this.alpha = 1F
+    this.textScaleX = 1F
 
     pgBar?.let {
         pgBar.visibility = View.INVISIBLE
@@ -222,55 +419,106 @@ fun showSnack(message: String, rootView: View, duration: Int = Snackbar.LENGTH_S
     Snackbar.make(rootView, message, duration).show()
 }
 
-fun Activity.showInfoAlerter(message: String, durationInSecs: Long = 3) {
+fun Activity.showInfoAlerter(message: String, durationInMillis: Long = 3000) {
     Alerter.create(this)
         .setText(message)
-        .setDuration(durationInSecs * 1000)
+        .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.light_purple_tint)
         .setTextAppearance(R.style.AlerterInfoTextAppearance)
-        .setIcon(R.drawable.ic_dollar)
-        .setIconColorFilter(0)
-        .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
+        .setIcon(R.drawable.fourthwall)
+        .setIconColorFilter(getColor(R.color.dark_sea_blue))
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_medium)
         .enableSwipeToDismiss()
         .show()
 }
 
 fun Activity.showSuccessAlerter(
     message: String,
-    durationInSecs: Long = 3,
+    durationInMillis: Long = 3000,
     onHideCallBack: () -> Unit
 ) {
     Alerter.create(this)
         .setText(message)
-        .setDuration(durationInSecs * 1000)
+        .setDuration(durationInMillis)
         .setBackgroundColorRes(R.color.green_success_bg)
-        .setTextAppearance(R.style.AlerterInfoTextAppearance)
-        .setIcon(R.drawable.ic_dollar)
-        .setIconColorFilter(0)
-        .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
+        .setTextAppearance(R.style.AlerterSuccessTextAppearance)
+        .setIcon(R.drawable.fourthwall)
+        .setIconColorFilter(getColor(R.color.dark_sea_blue))
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_medium)
         .enableSwipeToDismiss()
-        .setOnHideListener(OnHideAlertListener {
+        .setOnHideListener {
             onHideCallBack()
-        })
+        }
         .show()
 }
 
 fun Activity.showErrorAlerter(
     message: String,
-    durationInSecs: Long = 3,
+    durationInMillis: Long = 3000,
     onHideCallBack: () -> Unit
 ) {
     Alerter.create(this)
         .setText(message)
-        .setDuration(durationInSecs * 1000)
-        .setBackgroundColorRes(R.color.red_error)
-        .setTextAppearance(R.style.AlerterInfoTextAppearance)
-        .setIcon(R.drawable.ic_dollar)
-        .setIconColorFilter(0)
-        .setIconSize(androidx.appcompat.R.dimen.abc_star_big)
+        .setDuration(durationInMillis)
+        .setBackgroundColorRes(R.color.red_error_alerter)
+        .setTextAppearance(R.style.AlerterErrorTextAppearance)
+        .setIcon(R.drawable.fourthwall)
+        .setIconColorFilter(getColor(R.color.dark_sea_blue))
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_medium)
         .enableSwipeToDismiss()
-        .setOnHideListener(OnHideAlertListener {
+        .setOnHideListener {
             onHideCallBack()
-        })
+        }
         .show()
+}
+
+fun Activity.showWarningAlerter(
+    message: String,
+    durationInMillis: Long = 3000,
+    onHideCallBack: () -> Unit
+) {
+    Alerter.create(this)
+        .setText(message)
+        .setDuration(durationInMillis)
+        .setBackgroundColorRes(R.color.orange_warning)
+        .setTextAppearance(R.style.AlerterWarningTextAppearance)
+        .setIcon(R.drawable.fourthwall)
+        .setIconColorFilter(getColor(R.color.dark_sea_blue))
+        .setIconSize(androidx.appcompat.R.dimen.abc_star_medium)
+        .enableSwipeToDismiss()
+        .setOnHideListener {
+            onHideCallBack()
+        }
+        .show()
+}
+
+
+fun View.showBalloonOn(
+    text: String,
+    context: Context,
+    viewLifecycleOwner: LifecycleOwner,
+    prefsName: String = "DefaultToolTipPref"
+) {
+    val balloon = Balloon.Builder(context)
+        .setWidth(BalloonSizeSpec.WRAP)
+        .setHeight(BalloonSizeSpec.WRAP)
+        .setText(text)
+        .setTextColorResource(R.color.white)
+        .setTextTypeface(Typeface.BOLD)
+        .setTextSize(14f)
+        .setIconDrawableResource(R.drawable.ic_dollar)
+        .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+        .setArrowSize(10)
+        .setArrowPosition(0.5f)
+        .setPadding(8)
+        .setCornerRadius(8f)
+        .setIsVisibleArrow(true)
+        .setBackgroundColorResource(R.color.shaded_base_purple)
+        .setBalloonAnimation(BalloonAnimation.FADE)
+        .setLifecycleOwner(viewLifecycleOwner)
+        .setPreferenceName("CurrencySelectionToolTip")
+        .setShowCounts(3)
+        .build()
+
+    this.showAlignBottom(balloon)
 }

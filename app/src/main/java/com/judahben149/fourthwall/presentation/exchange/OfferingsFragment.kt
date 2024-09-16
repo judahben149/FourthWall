@@ -27,15 +27,19 @@ import com.judahben149.fourthwall.databinding.FragmentOfferingsBinding
 import com.judahben149.fourthwall.domain.models.Currency
 import com.judahben149.fourthwall.utils.CurrencyUtils
 import com.judahben149.fourthwall.utils.text.DecimalDigitsInputFilter
+import com.judahben149.fourthwall.utils.toFriendlyTime
 import com.judahben149.fourthwall.utils.views.animateBorderColorForError
 import com.judahben149.fourthwall.utils.views.disable
 import com.judahben149.fourthwall.utils.views.enable
 import com.judahben149.fourthwall.utils.views.isLoading
 import com.judahben149.fourthwall.utils.views.setAmountFont
+import com.judahben149.fourthwall.utils.views.showBalloonOn
+import com.judahben149.fourthwall.utils.views.showErrorAlerter
 import com.judahben149.fourthwall.utils.views.showInfoAlerter
-import com.judahben149.fourthwall.utils.views.showSnack
+import com.judahben149.fourthwall.utils.views.showWarningAlerter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import tbdex.sdk.protocol.models.PayoutMethod
 
 @AndroidEntryPoint
 class OfferingsFragment : Fragment() {
@@ -50,6 +54,8 @@ class OfferingsFragment : Fragment() {
     private lateinit var currencyAdapter: CurrencyAdapter
     private lateinit var otherOfferingsAdapter: OtherOfferingsAdapter
     private lateinit var currentCurrencyType: CurrencyType
+
+    private var shouldShowCurrencyToolTip: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +85,8 @@ class OfferingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.shimmerLayout.startShimmer()
+        requireActivity().showInfoAlerter("Finding available offerings", 800)
+
         setTextFieldFilters()
         setupBottomSheet()
         setupBottomSheetRecyclerView()
@@ -101,7 +109,11 @@ class OfferingsFragment : Fragment() {
             ivFlagPayOut.setOnClickListener { setPayOutCurrency() }
 
             btnContinue.setOnClickListener {
-                navController.navigate(R.id.action_offeringsFragment_to_requestQuoteFragment)
+                if (viewModel.state.value.getOfferingsState is GetOfferingsRequestState.Error) {
+                    viewModel.getPfiOfferings()
+                } else {
+                    navController.navigate(R.id.action_offeringsFragment_to_requestQuoteFragment)
+                }
             }
 
             chipExplorePfi.setOnClickListener {
@@ -131,6 +143,7 @@ class OfferingsFragment : Fragment() {
     }
 
     private fun setPayInCurrency() {
+        binding.prgBarBottomSheet.visibility = View.VISIBLE
         clearEditTextFocus()
         currentCurrencyType = CurrencyType.PayIn
 
@@ -149,7 +162,7 @@ class OfferingsFragment : Fragment() {
             }.map { it.second }.distinct()
 
             showCurrencyBottomSheetForCurrencies(payOutCurrencies)
-        } ?: showSnack("Select pay in currency", binding.root)
+        } ?: requireActivity().showWarningAlerter("Select pay in currency", 1300) {}
     }
 
     private fun setupBottomSheetRecyclerView() {
@@ -311,18 +324,12 @@ class OfferingsFragment : Fragment() {
                         }
                     }
 
-                    when(state.selectedOffering) {
-                        null -> {
-                            binding.run {
-                                tvPfi.text = "--"
-                                chipExplorePfi.isEnabled = false
-                            }
-                        }
-                    }
-
-                    when(state.getOfferingsState) {
+                    when(val st = state.getOfferingsState) {
                         is GetOfferingsRequestState.Error -> {
-
+                            requireActivity().showErrorAlerter(st.message) {
+                                binding.btnContinue.enable(resources, binding.progressBar)
+                                binding.btnContinue.text = "Retry"
+                            }
                         }
 
                         GetOfferingsRequestState.Loading -> {
@@ -330,12 +337,25 @@ class OfferingsFragment : Fragment() {
                         }
 
                         GetOfferingsRequestState.Success -> {
+                            binding.btnContinue.text = "Continue"
+
                             binding.shimmerLayout.apply {
                                 stopShimmer()
                                 visibility = View.GONE
                             }
 
                             binding.layoutPfiContent.visibility = View.VISIBLE
+
+                            if (shouldShowCurrencyToolTip) {
+                                binding.ivSelectPayInCurrency.showBalloonOn(
+                                    "Select pay in currency",
+                                    requireContext(),
+                                    viewLifecycleOwner,
+                                    "CurrencyToolTipPref"
+                                )
+
+                                shouldShowCurrencyToolTip = false
+                            }
                         }
                     }
 
@@ -344,6 +364,16 @@ class OfferingsFragment : Fragment() {
                             binding.tvPayOut.apply {
                                 setAmountFont(requireContext())
                                 text = payoutState.amount
+                            }
+
+                            state.selectedOffering?.let {
+                                try {
+                                    val estimatedSettlementTime = (it.data.payout.methods[0] as PayoutMethod).estimatedSettlementTime
+                                    binding.tvSettlementTime.text = "Funds will arrive in ".plus(estimatedSettlementTime.toFriendlyTime())
+                                    binding.tvSettlementTime.visibility = View.VISIBLE
+                                } catch (ex: Exception) {
+
+                                }
                             }
                         }
 
@@ -360,8 +390,46 @@ class OfferingsFragment : Fragment() {
                         }
                     }
 
-                    when(state.isBestOfferSelected) {
-                        null -> {
+//                    when(state.isBestOfferSelected) {
+//                        null -> {
+//                            // Hasn't gotten any offers yet
+//                            binding.tvOnlyOffer.visibility = View.GONE
+//                            binding.tvBestOffer.visibility = View.GONE
+//
+//                            binding.tvProvider.visibility = View.INVISIBLE
+//                        }
+//
+//                        false -> {
+//                            // Auto-selected offer is the only one available
+//                            val pfiName = viewModel.getSelectedPfiName()
+//
+//                            pfiName?.let {  pfi ->
+//                                binding.tvOnlyOffer.visibility = View.VISIBLE
+//                                binding.tvProvider.visibility = View.VISIBLE
+//                                binding.layoutPfiContent.visibility = View.VISIBLE
+//
+//                                binding.tvPfi.text = pfi
+//                                binding.chipExplorePfi.isEnabled = true
+//                            }
+//                        }
+//
+//                        true -> {
+//                            // Auto-selected offer is the best one
+//                            val pfiName = viewModel.getSelectedPfiName()
+//
+//                            pfiName?.let {  pfi ->
+//                                binding.tvBestOffer.visibility = View.VISIBLE
+//                                binding.tvProvider.visibility = View.VISIBLE
+//                                binding.layoutPfiContent.visibility = View.VISIBLE
+//
+//                                binding.tvPfi.text = pfi
+//                                binding.chipExplorePfi.isEnabled = true
+//                            }
+//                        }
+//                    }
+
+                    when(state.selectedOfferType) {
+                        SelectedOfferType.NoOfferSelected -> {
                             // Hasn't gotten any offers yet
                             binding.tvOnlyOffer.visibility = View.GONE
                             binding.tvBestOffer.visibility = View.GONE
@@ -369,8 +437,30 @@ class OfferingsFragment : Fragment() {
                             binding.tvProvider.visibility = View.INVISIBLE
                         }
 
-                        false -> {
-                            // Auto-selected offer is the only one available
+                        SelectedOfferType.OtherOfferSelected -> {
+                            // Remove views - clean slate
+                            binding.tvOnlyOffer.visibility = View.GONE
+                            binding.tvBestOffer.visibility = View.GONE
+                            binding.tvProvider.visibility = View.INVISIBLE
+
+
+                            val pfiName = viewModel.getSelectedPfiName()
+
+                            pfiName?.let {  pfi ->
+                                binding.tvProvider.visibility = View.VISIBLE
+                                binding.layoutPfiContent.visibility = View.VISIBLE
+
+                                binding.tvPfi.text = pfi
+                                binding.chipExplorePfi.enable(resources)
+                            }
+                        }
+
+                        SelectedOfferType.BestOfferSelectedSingleItem -> {
+                            // Remove views - clean slate
+                            binding.tvOnlyOffer.visibility = View.GONE
+                            binding.tvBestOffer.visibility = View.GONE
+                            binding.tvProvider.visibility = View.INVISIBLE
+
                             val pfiName = viewModel.getSelectedPfiName()
 
                             pfiName?.let {  pfi ->
@@ -379,12 +469,16 @@ class OfferingsFragment : Fragment() {
                                 binding.layoutPfiContent.visibility = View.VISIBLE
 
                                 binding.tvPfi.text = pfi
-                                binding.chipExplorePfi.isEnabled = true
+                                binding.chipExplorePfi.disable(resources)
                             }
                         }
 
-                        true -> {
-                            // Auto-selected offer is the best one
+                        SelectedOfferType.BestOfferSelected -> {
+                            // Remove views - clean slate
+                            binding.tvOnlyOffer.visibility = View.GONE
+                            binding.tvBestOffer.visibility = View.GONE
+                            binding.tvProvider.visibility = View.INVISIBLE
+
                             val pfiName = viewModel.getSelectedPfiName()
 
                             pfiName?.let {  pfi ->
@@ -393,7 +487,7 @@ class OfferingsFragment : Fragment() {
                                 binding.layoutPfiContent.visibility = View.VISIBLE
 
                                 binding.tvPfi.text = pfi
-                                binding.chipExplorePfi.isEnabled = true
+                                binding.chipExplorePfi.enable(resources)
                             }
                         }
                     }
@@ -411,17 +505,24 @@ class OfferingsFragment : Fragment() {
 
         currencyAdapter.updateCurrencies(currencies)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.prgBarBottomSheet.visibility = View.GONE
     }
 
     private fun showBottomSheetForOfferings() {
+        binding.prgBarBottomSheet.visibility = View.VISIBLE
         binding.rvCurrencies.visibility = View.GONE
         binding.rvOtherOfferings.visibility = View.VISIBLE
         binding.tvBSTitle.text = "Explore offerings"
 
         startAnimatingScrim()
 
-        val pfiAndOfferingsPair = viewModel.pairOfferingsWithPfiNames()
-        otherOfferingsAdapter.updateOfferings(pfiAndOfferingsPair)
+        viewLifecycleOwner.lifecycleScope.launch {
+            val pfiAndOfferingsPair = viewModel.pairOfferingsWithPfiNames()
+            val pfiRatings = viewModel.getAveragePfiRating()
+            otherOfferingsAdapter.updateOfferings(pfiAndOfferingsPair, pfiRatings)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            binding.prgBarBottomSheet.visibility = View.GONE
+        }
 
         bottomSheetBehavior.apply {
             skipCollapsed = true

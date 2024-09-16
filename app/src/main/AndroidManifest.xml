@@ -18,11 +18,9 @@
         android:theme="@style/Theme.FourthWall"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.registration.UserRegistrationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.MainActivity"
-            android:exported="true">
+            android:name=".presentation.login.LoginActivity"
+            android:exported="true" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +28,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".presentation.MainActivity"
+            android:exported="true"/>
+        <activity
             android:name=".presentation.onboarding.OnboardingActivity"
+            android:exported="true" />
+        <activity
+            android:name=".presentation.onboarding.FinalOnboardingActivity"
             android:exported="true" />
     </application>
 

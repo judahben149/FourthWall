@@ -8,6 +8,7 @@ import com.judahben149.fourthwall.domain.mappers.toCurrencyAccount
 import com.judahben149.fourthwall.domain.usecase.user.GetCurrencyAccountUseCase
 import com.judahben149.fourthwall.domain.usecase.user.InsertCurrencyAccountUseCase
 import com.judahben149.fourthwall.domain.usecase.user.TopUpBalanceUseCase
+import com.judahben149.fourthwall.utils.CurrencyUtils.formatCurrency
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,15 +24,34 @@ class AccountViewModel @Inject constructor(
     private val topUpBalanceUseCase: TopUpBalanceUseCase,
     private val getCurrencyAccountUseCase: GetCurrencyAccountUseCase,
     private val insertCurrencyAccountUseCase: InsertCurrencyAccountUseCase
-): ViewModel() {
+) : ViewModel() {
 
-    private val _state =  MutableStateFlow(CreateAccountState())
-    val state: StateFlow<CreateAccountState> = _state
+    private val _state = MutableStateFlow(AccountState())
+    val state: StateFlow<AccountState> = _state
 
-    fun fundAccount(accountId: Int, amount: Double) {
+    fun fundAccount(accountId: Int, amount: Double, currencyCode: String) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            topUpBalanceUseCase(accountId, amount)
+            try {
+                topUpBalanceUseCase(accountId, amount)
+
+                _state.update {
+                    it.copy(
+                        fundAccountProgress = FundAccountProgress.FundedSuccessfully(
+                            amount.formatCurrency(currencyCode)
+                                .plus(" has been added into your account")
+                        )
+                    )
+                }
+            } catch (ex: Exception) {
+                _state.update {
+                    it.copy(
+                        fundAccountProgress = FundAccountProgress.ErrorFundingAccount(
+                            "Error funding account. Please retry"
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -77,9 +97,16 @@ class AccountViewModel @Inject constructor(
 
 }
 
-data class CreateAccountState(
+data class AccountState(
     val isCurrencySelected: Boolean = false,
     val selectedCurrency: String? = null,
     val countryFlag: Int? = null,
-    val isPrimaryAccount: Boolean = false
+    val isPrimaryAccount: Boolean = false,
+    val fundAccountProgress: FundAccountProgress = FundAccountProgress.Default
 )
+
+sealed class FundAccountProgress {
+    data object Default : FundAccountProgress()
+    data class FundedSuccessfully(val amount: String) : FundAccountProgress()
+    data class ErrorFundingAccount(val message: String) : FundAccountProgress()
+}

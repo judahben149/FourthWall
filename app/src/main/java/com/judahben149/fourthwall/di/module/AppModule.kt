@@ -5,7 +5,9 @@ import android.content.SharedPreferences
 import com.judahben149.fourthwall.domain.SessionManager
 import com.judahben149.fourthwall.utils.Constants.ENCRYPTED_SHARED_PREFERENCES
 import com.judahben149.fourthwall.utils.Constants.SHARED_PREFERENCES
-import com.judahben149.fourthwall.utils.text.PfiDataParser
+import com.judahben149.fourthwall.utils.CredentialUtils
+import com.judahben149.fourthwall.utils.preferences.PrefManager
+import com.judahben149.fourthwall.utils.text.FourthWallParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,14 +33,26 @@ object AppModule {
         sharedPreferences: SharedPreferences,
         @Named(ENCRYPTED_SHARED_PREFERENCES)
         encryptedSharedPreferences: SharedPreferences,
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        credentialUtils: CredentialUtils
     ): SessionManager {
-        return SessionManager(sharedPreferences, encryptedSharedPreferences, context)
+        return SessionManager(sharedPreferences, encryptedSharedPreferences, context, credentialUtils)
     }
 
     @Provides
     @Singleton
-    fun providesPfiDataParser(context: Context): PfiDataParser {
-        return PfiDataParser(context)
+    fun providesPrefManager(
+        @Named(SHARED_PREFERENCES)
+        sharedPreferences: SharedPreferences,
+        @Named(ENCRYPTED_SHARED_PREFERENCES)
+        encryptedSharedPreferences: SharedPreferences,
+    ): PrefManager {
+        return PrefManager(sharedPreferences, encryptedSharedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun providesPfiDataParser(context: Context): FourthWallParser {
+        return FourthWallParser(context)
     }
 }

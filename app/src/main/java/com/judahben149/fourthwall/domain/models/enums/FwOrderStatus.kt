@@ -1,7 +1,8 @@
 package com.judahben149.fourthwall.domain.models.enums
 
-enum class OrderStatus {
-    IN_TRANSIT,
+enum class FwOrderStatus {
+    CANCELLED,
     SUCCESSFUL,
-    FAILED
+    FAILED,
+    PENDING
 }

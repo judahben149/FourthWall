@@ -8,21 +8,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.ItemOrdersBinding
-import com.judahben149.fourthwall.domain.models.Order
-import com.judahben149.fourthwall.domain.models.enums.OrderStatus
+import com.judahben149.fourthwall.domain.models.FwOrder
+import com.judahben149.fourthwall.domain.models.enums.FwOrderStatus
 import com.judahben149.fourthwall.domain.models.enums.OrderType
 import com.judahben149.fourthwall.utils.CurrencyUtils
 import com.judahben149.fourthwall.utils.CurrencyUtils.formatCurrency
 import com.judahben149.fourthwall.utils.formatDate
 
 class OrderAdapter(
-    private val context: Context
+    private val context: Context,
+    private val onItemClicked:(Int) -> Unit
 ): RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
 
-    private var orders: List<Order> = emptyList()
+    private var fwOrders: List<FwOrder> = emptyList()
 
-    fun submitOrders(newOrders: List<Order>) {
-        orders = newOrders
+    fun submitOrders(newFwOrders: List<FwOrder>) {
+        fwOrders = newFwOrders
         notifyDataSetChanged()
     }
 
@@ -32,34 +33,37 @@ class OrderAdapter(
     }
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
-        holder.bind(orders[position])
+        holder.bind(fwOrders[position])
     }
 
-    override fun getItemCount() = orders.size
+    override fun getItemCount() = fwOrders.size
 
     inner class OrderViewHolder(private val binding: ItemOrdersBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(order: Order) {
+        fun bind(fwOrder: FwOrder) {
             binding.apply {
-                tvReceiverName.text = order.receiverName
-                tvAmount.text = order.payInAmount.formatCurrency(order.payInCurrency)
+                tvReceiverName.text = fwOrder.recipientAccount
+                tvAmount.text = fwOrder.payInAmount.formatCurrency(fwOrder.payInCurrency)
                 tvOrderTime.text =
-                    context.getString(R.string.order_time, formatDate(order.orderTime))
+                    context.getString(R.string.order_time, formatDate(fwOrder.orderTime))
 
-                tvInTransit.visibility = View.INVISIBLE
+                itemCard.setOnClickListener { onItemClicked(fwOrder.orderId) }
+
+                tvInCancelled.visibility = View.INVISIBLE
                 tvSuccess.visibility = View.INVISIBLE
                 tvFailure.visibility = View.INVISIBLE
 
-                if (order.orderType == OrderType.SENT) {
-                    when (order.orderStatus) {
-                        OrderStatus.IN_TRANSIT -> tvInTransit.visibility = View.VISIBLE
-                        OrderStatus.SUCCESSFUL -> tvSuccess.visibility = View.VISIBLE
-                        OrderStatus.FAILED -> tvFailure.visibility = View.VISIBLE
+                if (fwOrder.orderType == OrderType.SENT) {
+                    when (fwOrder.fwOrderStatus) {
+                        FwOrderStatus.CANCELLED -> tvInCancelled.visibility = View.VISIBLE
+                        FwOrderStatus.SUCCESSFUL -> tvSuccess.visibility = View.VISIBLE
+                        FwOrderStatus.FAILED -> tvFailure.visibility = View.VISIBLE
+                        FwOrderStatus.PENDING -> tvPending.visibility = View.VISIBLE
                     }
                 }
 
-                tvOrderType.text = if (order.orderType == OrderType.SENT) "Sent" else "Received"
+                tvOrderType.text = if (fwOrder.orderType == OrderType.SENT) "Sent" else "Received"
 
-                val countryFlag = CurrencyUtils.getCountryFlag(context, order.payInCurrency)
+                val countryFlag = CurrencyUtils.getCountryFlag(context, fwOrder.payInCurrency)
                 Glide.with(ivCurrencyIcon)
                     .load(countryFlag)
                     .into(ivCurrencyIcon)

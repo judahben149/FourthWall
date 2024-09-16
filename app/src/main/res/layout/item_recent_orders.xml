@@ -2,6 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_card"
     android:layout_width="match_parent"
     android:layout_height="84dp"
     android:layout_marginHorizontal="16dp"
@@ -35,6 +36,7 @@
             android:fontFamily="@font/cera_pro_light"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@id/ivCurrencyIcon"
             app:layout_constraintTop_toTopOf="@id/ivCurrencyIcon"
             tools:text="Dave" />
@@ -51,7 +53,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/ivCurrencyIcon"
             app:layout_constraintStart_toEndOf="@id/ivCurrencyIcon"
-            app:layout_constraintTop_toBottomOf="@id/tvReceiverName"
+            app:layout_constraintTop_toBottomOf="@id/tvAmount"
             tools:text="Sent" />
 
         <TextView
@@ -77,7 +79,8 @@
             android:fontFamily="@font/cera_pro_medium"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/ivForward"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toEndOf="@+id/ivCurrencyIcon"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="$21,553" />
 
@@ -85,46 +88,61 @@
             android:id="@+id/tvSuccess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/cera_pro_light"
             android:text="@string/successful"
             android:textColor="@color/green_offers"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:visibility="invisible"
             app:layout_constraintEnd_toStartOf="@id/ivForward"
-            app:layout_constraintTop_toBottomOf="@id/tvAmount" />
+            app:layout_constraintTop_toTopOf="@id/ivForward"
+            app:layout_constraintBottom_toBottomOf="@id/ivForward" />
 
         <TextView
             android:id="@+id/tvFailure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/cera_pro_light"
             android:text="@string/failed"
             android:textColor="@color/bright_red_error"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/ivForward"
             app:layout_constraintEnd_toStartOf="@id/ivForward"
-            app:layout_constraintTop_toBottomOf="@id/tvAmount" />
+            app:layout_constraintTop_toTopOf="@id/ivForward" />
 
         <TextView
-            android:id="@+id/tvInTransit"
+            android:id="@+id/tvCancelled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/cera_pro_light"
-            android:text="@string/in_transit"
-            android:textColor="@color/shaded_base_purple"
-            android:textSize="12sp"
+            android:text="@string/cancelled"
+            android:textColor="#FF5900"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:visibility="invisible"
             app:layout_constraintEnd_toStartOf="@id/ivForward"
-            app:layout_constraintTop_toBottomOf="@id/tvAmount" />
+            app:layout_constraintTop_toTopOf="@id/ivForward"
+            app:layout_constraintBottom_toBottomOf="@id/ivForward" />
+
+        <TextView
+            android:id="@+id/tvPending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/cera_pro_light"
+            android:text="@string/pending"
+            android:textColor="@color/shaded_base_purple"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@id/ivForward"
+            app:layout_constraintTop_toTopOf="@id/ivForward"
+            app:layout_constraintBottom_toBottomOf="@id/ivForward"/>
 
         <ImageView
             android:id="@+id/ivForward"

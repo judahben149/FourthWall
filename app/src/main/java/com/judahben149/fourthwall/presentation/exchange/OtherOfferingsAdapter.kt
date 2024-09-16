@@ -18,15 +18,24 @@ class OtherOfferingsAdapter(
 
     private var offerings: List<Offering> = emptyList()
     private var pfiNames: List<String> = emptyList()
+    private var pfiRatings: Map<String, Double> = emptyMap()
+    private var highestRatedPfi: String? = null
 
-    fun updateOfferings(newOfferings: List<Pair<String, Offering>>) {
+    fun updateOfferings(
+        newOfferings: List<Pair<String, Offering>>,
+        pfiRatings: Map<String, Double>
+    ) {
         offerings = newOfferings.map { it.second }
         pfiNames = newOfferings.map { it.first }
+        this.pfiRatings = pfiRatings
+
+        this.pfiRatings.setPfiWithHighestRating()
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OfferingsViewHolder {
-        val binding = ItemOtherOfferingsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemOtherOfferingsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return OfferingsViewHolder(binding)
     }
 
@@ -40,6 +49,11 @@ class OtherOfferingsAdapter(
 
     override fun getItemCount() = offerings.size
 
+    private fun Map<String, Double>.setPfiWithHighestRating() {
+        highestRatedPfi = entries.maxByOrNull { it.value }?.key
+    }
+
+
     inner class OfferingsViewHolder(private val binding: ItemOtherOfferingsBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -50,7 +64,16 @@ class OtherOfferingsAdapter(
 
             binding.run {
                 tvPfiProvider.text = pfiName
-                tvPayoutUnits.text = offering.data.payoutUnitsPerPayinUnit
+
+                try {
+                    val rating = pfiRatings.getValue(offering.metadata.from)
+                    val formattedRating = "%.1f".format(rating)
+
+                    listOf(tvPfiRating, ivPfiRating).forEach { it.visibility = View.VISIBLE }
+                    tvPfiRating.text = formattedRating
+                } catch (ex: Exception) {
+                    tvPfiNoRating.visibility = View.VISIBLE
+                }
 
                 tvValueDetail.text = context.getString(
                     R.string.value_detail_placeholder,

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layoutBackground"
+    tools:context=".presentation.fulfillment.OrderResultFragment">
+
+
+    <ImageView
+        android:id="@+id/ic_big_icon"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:contentDescription="@string/_3d_image_of_money"
+        android:maxWidth="200dp"
+        android:maxHeight="200dp"
+        android:src="@drawable/ic_checkmark_3d"
+        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tv_result_label"
+        app:layout_constraintStart_toStartOf="@id/tv_result_label"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_result_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/cera_pro_medium"
+        android:textColor="@color/textOnBackground"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ic_big_icon"
+        tools:text="You have successfully paid $2.54" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_rating_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/cera_pro_light"
+        android:textColor="@color/textOnBackground"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_result_label"
+        app:layout_constraintStart_toStartOf="@id/tv_result_label"
+        app:layout_constraintEnd_toEndOf="@id/tv_result_label"
+        tools:text="Rate your experience with" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:stepSize="1.0"
+        app:layout_constraintTop_toBottomOf="@id/tv_rating_label"
+        app:layout_constraintStart_toStartOf="@id/tv_rating_label"
+        app:layout_constraintEnd_toEndOf="@id/tv_rating_label"
+        android:visibility="visible"
+        android:progressTint="@color/base_purple"
+        android:progressBackgroundTint="#a8a8a8"
+        android:layout_marginLeft="10dp"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_go_home"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginHorizontal="48dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/primaryBtnBackgroundTint"
+        android:fontFamily="@font/cera_pro_medium"
+        android:minHeight="56dp"
+        android:text="@string/go_home"
+        android:textColor="@color/primaryBtnTextOnBackground"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

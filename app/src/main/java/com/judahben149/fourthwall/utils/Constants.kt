@@ -15,9 +15,12 @@ object Constants {
     const val USER_ID = "USER_ID"
 
     //Pref Keys
-    const val HAS_COMPLETED_ONBOARDING = "HAS_COMPLETED_ONBOARDING"
+    const val IS_USER_SIGNED_UP = "IS_USER_SIGNED_UP"
+    const val SHOULD_BEGIN_ONBOARDING = "SHOULD_BEGIN_ONBOARDING"
     const val KCC_VC_JWT = "KCC_VC_JWT"
     const val USER_DID = "USER_DID"
+    const val IS_BIOMETRICS_ENABLED = "IS_BIOMETRICS_ENABLED"
+    const val SHOULD_STORE_VC = "SHOULD_STORE_VC"
 
     // Network
     const val VC_BASE_URL = "https://mock-idv.tbddev.org"
@@ -25,4 +28,6 @@ object Constants {
 
     // Run time constants
     var currencyAccountId = -1
+
+    lateinit var pfiData: Map<String, String> //PFI DID <<<>>> PFI Name
 }

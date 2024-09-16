@@ -5,12 +5,14 @@ import com.judahben149.fourthwall.data.local.entities.CurrencyAccountEntity
 import com.judahben149.fourthwall.data.local.entities.UserAccountEntity
 import com.judahben149.fourthwall.data.local.relations.UserWithCurrencyAccounts
 import com.judahben149.fourthwall.domain.models.PfiData
-import com.judahben149.fourthwall.utils.text.PfiDataParser
+import com.judahben149.fourthwall.utils.log
+import com.judahben149.fourthwall.utils.text.FourthWallParser
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
 
 class UserAccountRepository (
     private val userAccountDao: UserAccountDao,
-    private val pfiDataParser: PfiDataParser
+    private val fourthWallParser: FourthWallParser
     ) {
 
     suspend fun insertUserAccount(userAccountEntity: UserAccountEntity) {
@@ -31,7 +33,7 @@ class UserAccountRepository (
     }
 
     suspend fun getPfiData(): List<PfiData> {
-        return pfiDataParser.parseJsonFromAssets()
+        return fourthWallParser.parseJsonFromAssets()
     }
 
     suspend fun topUpAccountBalance(accountId: Int, amount: Double) {

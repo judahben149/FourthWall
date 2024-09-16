@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class OrderEntity(
     @PrimaryKey(autoGenerate = true)
     val orderId: Int,
+    val orderExchangeId: String,
     val payInAmount: Double,
     val payOutAmount: Double,
     val payInCurrency: String,
@@ -16,7 +17,9 @@ data class OrderEntity(
     val orderType: Int,
     val orderStatus: Int,
     val pfiName: String,
-    val receiverName: String,
-    val walletAddress: String
+    val pfiDid: String,
+    val recipientAccount: String,
+    val walletAddress: String,
+    val payoutFee: Double,
 )
 

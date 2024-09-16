@@ -20,9 +20,18 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = "noteify-key"
+            keyPassword = "judahjesus"
+            storeFile = file("/Users/judahben/Documents/my secrets/keystore file/judah_keystore.jks")
+            storePassword = "judahjesus"
+        }
+    }
+
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -105,6 +114,15 @@ dependencies {
 
     // Splash Screen
     implementation(libs.splash.screen)
+
+    // Jackson
+    implementation(libs.jackson)
+
+    // Dot Indicator - View Pager
+    implementation(libs.dot.indicator)
+
+    // Balloon - tool tip
+    implementation(libs.balloon)
 
     /** required to make tbdex and key management work */
     implementation(libs.androidx.security.crypto)

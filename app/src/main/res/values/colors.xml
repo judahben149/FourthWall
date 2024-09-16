@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="dark_sea_blue">#001822</color>
     <color name="white">#FFFFFFFF</color>
 
     <color name="base_purple">#A259FF</color>
@@ -9,6 +10,9 @@
     <color name="green_offers">#00A108</color>
     <color name="red_error">#690001</color>
     <color name="bright_red_error">#C80001</color>
+    <color name="orange_warning">#E4FF9775</color>
+    <color name="red_error_alerter">#FF7171</color>
+    <color name="popping_orange">#FF5900</color>
 
 <!--    Bottom Nav Bar icon colours-->
     <color name="selected_icon_color">#A259FF</color>
@@ -27,6 +31,7 @@
     <color name="primaryBtnBackgroundTint">#A259FF</color>
     <color name="disabledPrimaryBtnBackgroundTint">#AAAAAA</color>
     <color name="primaryBtnTextOnBackground">#FFFFFFFF</color>
+    <color name="cancelSecondaryBtn">#FF7EB2</color>
 
 <!--    Chip Buttons-->
     <color name="chipButtonBackground">#90DBA3E4</color>

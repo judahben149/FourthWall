@@ -3,15 +3,22 @@ package com.judahben149.fourthwall.di.module
 import com.judahben149.fourthwall.data.repository.CredentialsRepository
 import com.judahben149.fourthwall.data.repository.OfferingsRepository
 import com.judahben149.fourthwall.data.repository.OrderRepository
+import com.judahben149.fourthwall.data.repository.PfiRatingRepository
 import com.judahben149.fourthwall.data.repository.UserAccountRepository
 import com.judahben149.fourthwall.domain.usecase.orders.GetAllOrdersUseCase
-import com.judahben149.fourthwall.domain.usecase.orders.GetUserWithCurrencyAccountsUseCase
+import com.judahben149.fourthwall.domain.usecase.orders.GetOrderDetailUseCase
+import com.judahben149.fourthwall.domain.usecase.user.GetUserWithCurrencyAccountsUseCase
 import com.judahben149.fourthwall.domain.usecase.orders.InsertOrderListUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetKccUseCase
 import com.judahben149.fourthwall.domain.usecase.orders.InsertOrdersUseCase
 import com.judahben149.fourthwall.domain.usecase.pfi.GetPfiOfferingsUseCase
+import com.judahben149.fourthwall.domain.usecase.pfiRating.GetAllAveragePfiRatingsUseCase
+import com.judahben149.fourthwall.domain.usecase.pfiRating.GetAllPfiRatingsUseCase
+import com.judahben149.fourthwall.domain.usecase.pfiRating.GetAveragePfiRatingUseCase
+import com.judahben149.fourthwall.domain.usecase.pfiRating.InsertPfiRatingUseCase
 import com.judahben149.fourthwall.domain.usecase.user.GetCurrencyAccountUseCase
 import com.judahben149.fourthwall.domain.usecase.user.InsertCurrencyAccountUseCase
+import com.judahben149.fourthwall.domain.usecase.user.InsertUserAccountUseCase
 import com.judahben149.fourthwall.domain.usecase.user.InsertUserWithCurrencyAccountsUseCase
 import com.judahben149.fourthwall.domain.usecase.user.TopUpBalanceUseCase
 import dagger.Module
@@ -94,5 +101,41 @@ object UseCaseModule {
         userAccountRepository: UserAccountRepository
     ): InsertCurrencyAccountUseCase {
         return InsertCurrencyAccountUseCase(userAccountRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideInsertPfiRatingUseCase(repository: PfiRatingRepository): InsertPfiRatingUseCase {
+        return InsertPfiRatingUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetAveragePfiRatingUseCase(repository: PfiRatingRepository): GetAveragePfiRatingUseCase {
+        return GetAveragePfiRatingUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetAllPfiRatingsUseCase(repository: PfiRatingRepository): GetAllPfiRatingsUseCase {
+        return GetAllPfiRatingsUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetAllAveragePfiRatingsUseCase(repository: PfiRatingRepository): GetAllAveragePfiRatingsUseCase {
+        return GetAllAveragePfiRatingsUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideInsertUserAccountUseCase(repository: UserAccountRepository): InsertUserAccountUseCase {
+        return InsertUserAccountUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetOrderDetailUseCase(orderRepository: OrderRepository): GetOrderDetailUseCase {
+        return GetOrderDetailUseCase(orderRepository)
     }
 }

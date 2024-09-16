@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.FragmentOnboarding2Binding
 import com.judahben149.fourthwall.utils.views.setup3DBounceAnimation
+import com.judahben149.fourthwall.utils.views.startJiggleAnimation
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -35,7 +36,7 @@ class Onboarding2Fragment : Fragment() {
             .load(R.drawable.img_calculator)
             .into(binding.icBigIcon)
 
-        binding.icBigIcon.setup3DBounceAnimation()
+        binding.icBigIcon.startJiggleAnimation()
     }
 
 
