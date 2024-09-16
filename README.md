@@ -24,7 +24,8 @@ FourthWall is a brilliant decentralized wallet application. Our solution aims to
 
 ## Overview
 
-FourthWall is an Android wallet application built with Kotlin. It leverages the power of decentralized technologies to offer a secure, transparent, and user-friendly platform for making payments globally.
+FourthWall is an Android wallet application built with Kotlin. 
+It leverages the power of decentralized technologies via the TBDex SDK to offer a secure, transparent, and user-friendly platform for making payments globally.
 
 ## Key Features
 
@@ -60,7 +61,7 @@ Fourthwall users have full control over their credentials. They can choose to un
 
 ### Customer Satisfaction
 
-At FourthWall, we take customer satisfaction seriously. After each transaction, users are prompted to rate their experience with the PFI. This feedback is aggregated, and each PFI is assigned a score based on real user reviews. These scores are updated in real-time and play a critical role in the user’s decision-making process when selecting a PFI for future transactions.
+At FourthWall, we take customer satisfaction seriously. After each transaction, users are prompted to rate their experience with the PFI. This feedback is aggregated, and each PFI is assigned a score based on user reviews. These scores are updated and play a critical role in the user’s decision-making process when selecting a PFI for future transactions.
 
 Also, we believe in maintaining high standards for the services offered through our app. PFIs with consistently low ratings will be flagged and, if necessary, removed from our platform to ensure that only trusted and user-centric PFIs are onboarded.
 
