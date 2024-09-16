@@ -1,5 +1,5 @@
 # FourthWall: A Decentralized Wallet Application
-![FourthWall Logo](https://github.com/user-attachments/assets/74967d97-bc78-4e95-b357-71fd3a99cfb3)
+<img src="https://github.com/user-attachments/assets/74967d97-bc78-4e95-b357-71fd3a99cfb3" width="96" height="96" alt="Home Screen">
 
 FourthWall is a cutting-edge, decentralized wallet application developed for the TBDex hackathon. Our solution aims to provide a seamless, secure, and user-centric experience for managing digital currencies and identities.
 
@@ -77,9 +77,39 @@ We ensure high-quality service through:
 
 ### App Screenshots
 
-<img src="path/to/screenshot1.png" width="250" alt="Home Screen">
-<img src="path/to/screenshot2.png" width="250" alt="Transaction Screen">
-<img src="path/to/screenshot3.png" width="250" alt="Settings Screen">
+#### Home Screen
+<img src="https://github.com/user-attachments/assets/c6d90e18-d1f3-4cdf-8d9c-baf772115548" width="250" alt="Home Screen (Empty)">
+<img src="https://github.com/user-attachments/assets/2b32ab93-1755-49e3-975f-870be14bd8f4" width="250" alt="Home Screen">
+
+#### Offerings Selection Flow
+<img src="https://github.com/user-attachments/assets/dbdce84f-b811-4f3d-91df-92b657556ce9" width="250" alt="Offering Selection screen">
+<img src="https://github.com/user-attachments/assets/98ac3c42-07b5-44e7-9164-9840d7c2eec1" width="250" alt="Offering Selection screen">
+<img src="https://github.com/user-attachments/assets/3e71dc01-259a-4e68-9546-8b90ded294b0" width="250" alt="Offering Selection screen">
+<img src="https://github.com/user-attachments/assets/c6cddd8f-3f01-47d3-9814-25028879968f" width="250" alt="Offering Selection screen">
+<img src="https://github.com/user-attachments/assets/d6cf5fed-d3f8-4199-9582-1880f93a4982" width="250" alt="Offering Selection screen">
+
+#### Payment Methods Flow
+<img src="https://github.com/user-attachments/assets/ddb46299-172d-42b7-b76e-ae4cc10f4701" width="250" alt="Offering Selection screen">
+<img src="https://github.com/user-attachments/assets/4d6d3b6e-e6aa-4deb-a213-1ee75d247449" width="250" alt="Offering Selection screen">
+<img src="https://github.com/user-attachments/assets/26db6d2b-59c8-4c28-b4b4-0d25e2fe475f" width="250" alt="Offering Selection screen">
+<img src="https://github.com/user-attachments/assets/6856f62c-d9a3-47d7-aefb-6b35d460650e" width="250" alt="Offering Selection screen">
+
+#### Quote Details Flow
+<img src="https://github.com/user-attachments/assets/232b5a00-7277-49e1-8c10-8a288efd990b" width="250" alt="Offering Selection screen">
+<img src="https://github.com/user-attachments/assets/c65d7533-3af6-4f7a-b491-b9101b1b2b83" width="250" alt="Offering Selection screen">
+
+#### Order Result
+<img src="https://github.com/user-attachments/assets/613be950-8dd7-4499-83de-ca5865058d37" width="250" alt="Offering Selection screen">
+<img src="https://github.com/user-attachments/assets/90fef355-483b-4ca6-bf0e-9bec3ab75010" width="250" alt="Offering Selection screen">
+
+#### Order List and Detail
+<img src="https://github.com/user-attachments/assets/eb46e888-256d-4f33-8e64-211c7151326d" width="250" alt="Offering Selection screen">
+<img src="https://github.com/user-attachments/assets/95a4e897-fe3f-4b2e-a8e4-b329598b7b31" width="250" alt="Offering Selection screen">
+
+#### Profile Screen
+<img src="https://github.com/user-attachments/assets/8f48ec33-ef57-477e-9976-b75232e72377" width="250" alt="Offering Selection screen">
+
+
 
 ### App Flow Recording
 
