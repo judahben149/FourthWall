@@ -40,7 +40,7 @@ FourthWall is an Android wallet application built with Kotlin. It leverages the 
 
 ### Profitability
 
-FourthWall charges a fee of 1.5% on currency exchanges, which is transparent and clearly communicated before each transaction. This fee allows us to facilitate smooth and reliable exchanges between different currencies. 
+FourthWall charges a fee of 1.5% on currency exchanges, which is transparent and clearly communicated before each transaction. This fee allows us to facilitate smooth and reliable channels between participating financial insritutions and other parties. 
 
 By keeping our fee structure transparent, users can confidently make informed decisions, without any hidden charges.
 
