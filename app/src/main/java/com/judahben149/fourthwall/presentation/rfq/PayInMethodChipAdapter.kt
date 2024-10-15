@@ -52,7 +52,6 @@ class PayInMethodChipAdapter(
 
     private fun CustomIconChip.toggleTick(shouldBeTicked: Boolean) {
         if (shouldBeTicked) {
-            setIconResource(R.drawable.ic_tick)
 
             val strokeWidthInDp = 1.2F
             val strokeWidthInPx = TypedValue.applyDimension(
@@ -60,6 +59,8 @@ class PayInMethodChipAdapter(
             )
 
             chipStrokeWidth = strokeWidthInPx
+            setIconResource(R.drawable.ic_tick)
+
             isChipIconVisible = true
         }
     }
