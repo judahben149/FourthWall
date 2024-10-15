@@ -29,7 +29,6 @@ object BiometricUtils {
         return BiometricPrompt.PromptInfo.Builder()
             .setTitle(title)
             .setSubtitle(subtitle)
-            .setDescription(description)
             .setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
             .build()
 
@@ -66,8 +65,8 @@ object BiometricUtils {
      */
     fun showBiometricPrompt(
         title: String = "Biometric Authentication",
-        subtitle: String = "Enter biometric credentials to proceed.",
-        description: String = "Input your Fingerprint or FaceID to ensure it's you!",
+        subtitle: String = "Complete authentication to log in to FourthWall",
+        description: String = "",
         activity: AppCompatActivity,
         listener: BiometricAuthListener,
         cryptoObject: BiometricPrompt.CryptoObject? = null,
