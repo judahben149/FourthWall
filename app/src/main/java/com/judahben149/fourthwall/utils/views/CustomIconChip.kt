@@ -47,7 +47,7 @@ class CustomIconChip @JvmOverloads constructor(
     private fun adjustPadding() {
         val iconPadding = if (iconDrawable != null) iconSize + defaultPadding else 0
         chipStartPadding = defaultPadding.toFloat()
-        textStartPadding = (defaultPadding + iconPadding - 4).toFloat()
+        textStartPadding = (defaultPadding + iconPadding - 12).toFloat()
         invalidate()
     }
 }

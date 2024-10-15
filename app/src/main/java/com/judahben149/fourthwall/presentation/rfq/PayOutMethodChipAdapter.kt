@@ -1,5 +1,6 @@
 package com.judahben149.fourthwall.presentation.rfq
 
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -51,11 +52,16 @@ class PayOutMethodChipAdapter(
 
     private fun CustomIconChip.toggleTick(shouldBeTicked: Boolean) {
         if (shouldBeTicked) {
-//            setPadding(64, 12, 16, 12)
+
+            val strokeWidthInDp = 1.2F
+            val strokeWidthInPx = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, strokeWidthInDp.toFloat(), resources.displayMetrics
+            )
+
+            chipStrokeWidth = strokeWidthInPx
             setIconResource(R.drawable.ic_tick)
+
             isChipIconVisible = true
-        } else {
-//            setPadding(16, 12, 16, 12)
         }
     }
 }
