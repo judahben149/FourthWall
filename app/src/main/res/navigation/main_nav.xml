@@ -33,7 +33,11 @@
             app:popExitAnim="@anim/pop_exit_anim_slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_orderDetailFragment"
-            app:destination="@id/orderDetailFragment" />
+            app:destination="@id/orderDetailFragment"
+            app:enterAnim="@anim/enter_anim_slide_in_right"
+            app:exitAnim="@anim/exit_anim_slide_out_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_right" />
     </fragment>
 
     <fragment
