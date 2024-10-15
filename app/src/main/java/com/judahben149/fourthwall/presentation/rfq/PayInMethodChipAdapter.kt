@@ -3,8 +3,10 @@ package com.judahben149.fourthwall.presentation.rfq
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.judahben149.fourthwall.R
 import com.judahben149.fourthwall.databinding.ItemChipBinding
 import com.judahben149.fourthwall.utils.text.formatAddSpace
+import com.judahben149.fourthwall.utils.views.CustomIconChip
 
 class PayInMethodChipAdapter(
     private val onChipClicked: (String) -> Unit
@@ -12,9 +14,11 @@ class PayInMethodChipAdapter(
     RecyclerView.Adapter<PayInMethodChipAdapter.PaymentMethodChipViewHolder>() {
 
     private var methods: List<String> = emptyList()
+    private var isPayInFieldFilled: Boolean = false
 
-    fun updatePaymentKinds(updatedKinds: List<String>) {
+    fun updatePaymentKinds(updatedKinds: List<String>, isPayInFieldFilled: Boolean) {
         methods = updatedKinds
+        this.isPayInFieldFilled = isPayInFieldFilled
         notifyDataSetChanged()
     }
 
@@ -36,11 +40,22 @@ class PayInMethodChipAdapter(
         fun bind(paymentMethod: String) {
             binding.root.run {
                 text = paymentMethod.formatAddSpace()
+                toggleTick(isPayInFieldFilled)
 
                 setOnClickListener {
                     onChipClicked(paymentMethod)
                 }
             }
+        }
+    }
+
+    private fun CustomIconChip.toggleTick(shouldBeTicked: Boolean) {
+        if (shouldBeTicked) {
+//            setPadding(64, 12, 16, 12)
+            setIconResource(R.drawable.ic_tick)
+            isChipIconVisible = true
+        } else {
+//            setPadding(16, 12, 16, 12)
         }
     }
 }

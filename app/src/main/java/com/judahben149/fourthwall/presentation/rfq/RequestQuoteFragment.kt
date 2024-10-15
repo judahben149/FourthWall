@@ -107,6 +107,8 @@ class RequestQuoteFragment : Fragment() {
 
         binding.rvPaymentInMethods.adapter = payInChipAdapter
         binding.rvPaymentOutMethods.adapter = payOutChipAdapter
+
+        binding.btnQuote.disable(resources)
     }
 
     private fun observeState() {
@@ -157,7 +159,7 @@ class RequestQuoteFragment : Fragment() {
 
                             binding.run {
                                 btnQuote.text = getString(R.string.order)
-                                btnQuote.enable(resources)
+//                                btnQuote.enable(resources)
 
                                 btnCancel.visibility = View.VISIBLE
                                 cardFeeBreakdown.visibility = View.VISIBLE
@@ -261,9 +263,12 @@ class RequestQuoteFragment : Fragment() {
         viewModel.state.value.fwOffering?.let { off ->
             val payInMethods = off.payInMethods.map { it.kind }
             val payOutMethods = off.payOutMethods.map { it.kind }
+            val isPayInFieldFilled = viewModel.state.value.isPayInFieldFilled
+            val isPayOutFieldFilled = viewModel.state.value.isPayOutFieldFilled
 
-            payInChipAdapter.updatePaymentKinds(payInMethods)
-            payOutChipAdapter.updatePaymentKinds(payOutMethods)
+
+            payInChipAdapter.updatePaymentKinds(payInMethods, isPayInFieldFilled)
+            payOutChipAdapter.updatePaymentKinds(payOutMethods, isPayOutFieldFilled)
         }
     }
 

@@ -82,6 +82,7 @@ class QuoteViewModel @Inject constructor(
         _state.update {
             it.copy(
                 payInKind = kindName,
+                isPayInFieldFilled = true
             )
         }
     }
@@ -95,14 +96,16 @@ class QuoteViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     payInKind = kindName,
-                    payInRfqRequestFields = details
+                    payInRfqRequestFields = details,
+                    isPayInFieldFilled = true
                 )
             }
         } else {
             _state.update {
                 it.copy(
                     payOutKind = kindName,
-                    payOutRfqRequestFields = details
+                    payOutRfqRequestFields = details,
+                    isPayOutFieldFilled = true
                 )
             }
         }
@@ -535,6 +538,8 @@ data class QuoteState(
     val pfiFee: Double = 0.0,
     val payInRfqRequestFields: Map<String, Any> = emptyMap(),
     val payOutRfqRequestFields: Map<String, Any> = emptyMap(),
+    val isPayInFieldFilled: Boolean = false,
+    val isPayOutFieldFilled: Boolean = false,
     val tbDexQuote: Quote? = null,
     val tbDexOrderStatus: OrderStatus? = null
 )

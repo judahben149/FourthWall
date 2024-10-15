@@ -71,6 +71,7 @@ class OtherOfferingsAdapter(
 
                     listOf(tvPfiRating, ivPfiRating).forEach { it.visibility = View.VISIBLE }
                     tvPfiRating.text = formattedRating
+                    tvPfiNoRating.visibility = View.INVISIBLE
                 } catch (ex: Exception) {
                     tvPfiNoRating.visibility = View.VISIBLE
                 }
